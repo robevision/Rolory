@@ -17,9 +17,11 @@ namespace Rolory.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        ApplicationDbContext db;
 
         public AccountController()
         {
+            db = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
@@ -139,6 +141,13 @@ namespace Rolory.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if(db.Roles.Select(r => r.Name).Single() != "Admin")
+            {
+                ViewBag.Name = "Networker";
+                return View();
+            }
+            //ViewBag.Name = new SelectList(db.Roles.Where(u => !u.Name.Contains("Admin")).ToList(), "Name");
+            ViewBag.Name = "Admin";
             return View();
         }
 
