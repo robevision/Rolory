@@ -184,6 +184,22 @@
     <Compile Include="Migrations\201903231413585_RolesImplementation.Designer.cs">
       <DependentUpon>201903231413585_RolesImplementation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903231423400_AddressModel.cs" />
+    <Compile Include="Migrations\201903231423400_AddressModel.Designer.cs">
+      <DependentUpon>201903231423400_AddressModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903231424422_NetworkerModel.cs" />
+    <Compile Include="Migrations\201903231424422_NetworkerModel.Designer.cs">
+      <DependentUpon>201903231424422_NetworkerModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903231426124_DescriptionModel.cs" />
+    <Compile Include="Migrations\201903231426124_DescriptionModel.Designer.cs">
+      <DependentUpon>201903231426124_DescriptionModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903231431363_ContactModel.cs" />
+    <Compile Include="Migrations\201903231431363_ContactModel.Designer.cs">
+      <DependentUpon>201903231431363_ContactModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -276,6 +292,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201903231413585_RolesImplementation.resx">
       <DependentUpon>201903231413585_RolesImplementation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903231423400_AddressModel.resx">
+      <DependentUpon>201903231423400_AddressModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903231424422_NetworkerModel.resx">
+      <DependentUpon>201903231424422_NetworkerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903231426124_DescriptionModel.resx">
+      <DependentUpon>201903231426124_DescriptionModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903231431363_ContactModel.resx">
+      <DependentUpon>201903231431363_ContactModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
