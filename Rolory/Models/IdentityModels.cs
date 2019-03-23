@@ -25,10 +25,10 @@ namespace Rolory.Models
         DbSet<Networker> Networkers { get; set; }
         DbSet<Description> Descriptions { get; set; }
         DbSet<Contact> Contacts { get; set; }
-        //DbSet<FamilyMember> FamilyMembers { get; set; }
-        //DbSet<Message> Messages { get; set; }
-        //DbSet<Interaction> Interactions { get; set; }
-        //DbSet<SharedActivity> SharedActivities { get; set; }
+        DbSet<FamilyMember> FamilyMembers { get; set; }
+        DbSet<Message> Messages { get; set; }
+        DbSet<Interaction> Interactions { get; set; }
+        DbSet<SharedActivity> SharedActivities { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

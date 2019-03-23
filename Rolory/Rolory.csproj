@@ -196,9 +196,9 @@
     <Compile Include="Migrations\201903231426124_DescriptionModel.Designer.cs">
       <DependentUpon>201903231426124_DescriptionModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903231431363_ContactModel.cs" />
-    <Compile Include="Migrations\201903231431363_ContactModel.Designer.cs">
-      <DependentUpon>201903231431363_ContactModel.cs</DependentUpon>
+    <Compile Include="Migrations\201903231456411_ContactModelWithAddedAddressFK.cs" />
+    <Compile Include="Migrations\201903231456411_ContactModelWithAddedAddressFK.Designer.cs">
+      <DependentUpon>201903231456411_ContactModelWithAddedAddressFK.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -302,8 +302,8 @@
     <EmbeddedResource Include="Migrations\201903231426124_DescriptionModel.resx">
       <DependentUpon>201903231426124_DescriptionModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903231431363_ContactModel.resx">
-      <DependentUpon>201903231431363_ContactModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903231456411_ContactModelWithAddedAddressFK.resx">
+      <DependentUpon>201903231456411_ContactModelWithAddedAddressFK.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

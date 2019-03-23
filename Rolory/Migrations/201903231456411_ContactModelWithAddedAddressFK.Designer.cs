@@ -7,13 +7,13 @@ namespace Rolory.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class ContactModel : IMigrationMetadata
+    public sealed partial class ContactModelWithAddedAddressFK : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ContactModel));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ContactModelWithAddedAddressFK));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903231431363_ContactModel"; }
+            get { return "201903231456411_ContactModelWithAddedAddressFK"; }
         }
         
         string IMigrationMetadata.Source

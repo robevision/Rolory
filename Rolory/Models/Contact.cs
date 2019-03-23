@@ -40,10 +40,10 @@ namespace Rolory.Models
         [ForeignKey("Address")]
         public int? addressId { get; set; }
         public Address Address { get; set; }
-        [ForeignKey("Address")]
+        [ForeignKey("AlternateAddress")]
         [Display(Name = "Alternate Address")]
         public int? altAddressId { get; set; }
-        public Address AltAddress { get; set; }
+        public Address AlternateAddress { get; set; }
         [ForeignKey("Description")]
         public int? descriptionId { get; set; }
         public Description Description { get; set; }

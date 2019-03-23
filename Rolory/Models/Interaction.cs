@@ -20,9 +20,5 @@ namespace Rolory.Models
         [ForeignKey("Contact")]
         public int contactId { get; set; }
         public Contact Contact { get; set; }
-        [ForeignKey("Networker")]
-        [Display(Name = "You")]
-        public int networkerId { get; set; }
-        public Networker Networker { get; set; }
     }
 }
