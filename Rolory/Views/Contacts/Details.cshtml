@@ -1,0 +1,154 @@
+﻿@model Rolory.Models.Contact
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Contact</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Address.addressType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.addressType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AlternateAddress.addressType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AlternateAddress.addressType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description.gender)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description.gender)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Networker.firstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Networker.firstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.image)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.image)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.prefix)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.prefix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.givenName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.givenName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.familyName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.familyName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.phoneType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.phoneType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.phoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.phoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.organization)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.organization)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.workTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.workTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.altPhoneNumberType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.altPhoneNumberType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.altPhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.altPhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.lastupdated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lastupdated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.inContact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.inContact)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

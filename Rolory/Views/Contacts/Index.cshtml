@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Rolory.Models.Contact>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Address.addressType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AlternateAddress.addressType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description.gender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Networker.firstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.image)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.prefix)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.givenName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.familyName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.phoneType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.phoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.organization)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.workTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.altPhoneNumberType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.altPhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.lastupdated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.inContact)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Address.addressType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AlternateAddress.addressType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description.gender)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Networker.firstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.image)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.prefix)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.givenName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.familyName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.phoneType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.phoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.organization)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.workTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.altPhoneNumberType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.altPhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.lastupdated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.inContact)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>

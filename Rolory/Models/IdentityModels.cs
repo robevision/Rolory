@@ -21,14 +21,14 @@ namespace Rolory.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        DbSet<Address> Addresses { get; set; }
-        DbSet<Networker> Networkers { get; set; }
-        DbSet<Description> Descriptions { get; set; }
-        DbSet<Contact> Contacts { get; set; }
-        DbSet<FamilyMember> FamilyMembers { get; set; }
-        DbSet<Message> Messages { get; set; }
-        DbSet<Interaction> Interactions { get; set; }
-        DbSet<SharedActivity> SharedActivities { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Networker> Networkers { get; set; }
+        public DbSet<Description> Descriptions { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<FamilyMember> FamilyMembers { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Interaction> Interactions { get; set; }
+        public DbSet<SharedActivity> SharedActivities { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
