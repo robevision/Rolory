@@ -200,6 +200,10 @@
     <Compile Include="Migrations\201903231456411_ContactModelWithAddedAddressFK.Designer.cs">
       <DependentUpon>201903231456411_ContactModelWithAddedAddressFK.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903231809534_FamMesInterSharModels.cs" />
+    <Compile Include="Migrations\201903231809534_FamMesInterSharModels.Designer.cs">
+      <DependentUpon>201903231809534_FamMesInterSharModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -304,6 +308,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903231456411_ContactModelWithAddedAddressFK.resx">
       <DependentUpon>201903231456411_ContactModelWithAddedAddressFK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903231809534_FamMesInterSharModels.resx">
+      <DependentUpon>201903231809534_FamMesInterSharModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
