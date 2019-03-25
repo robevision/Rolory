@@ -23,8 +23,9 @@ namespace Rolory
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      //cerulean, look for tutorials
+                "~/Content/simplex.css",
+                "~/Content/site.css"));
         }
     }
 }
