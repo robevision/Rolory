@@ -141,13 +141,14 @@ namespace Rolory.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            if(db.Roles.Select(r => r.Name).Single() != "Admin")
-            {
-                ViewBag.Name = "Networker";
-                return View();
-            }
-            //ViewBag.Name = new SelectList(db.Roles.Where(u => !u.Name.Contains("Admin")).ToList(), "Name");
-            ViewBag.Name = "Admin";
+            //if(db.Roles.Select(r => r.Name).Single() != "Admin")
+            //{
+            //    ViewBag.Name = "Networker";
+            //    return View();
+            //}
+            //ViewBag.Name = db.Roles.Where(u => !u.Name.Contains("Admin")).Single();
+            ViewBag.Name = new SelectList(db.Roles.Where(u => !u.Name.Contains("Admin")).ToList(), "Name");
+            //ViewBag.Name = "Admin";
             return View();
         }
 
@@ -160,7 +161,7 @@ namespace Rolory.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, UserRole = model.UserRole };
+                var user = new ApplicationUser {UserName = model.UserName, Email = model.Email};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -172,13 +173,13 @@ namespace Rolory.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    await this.UserManager.AddToRoleAsync(user.Id, model.UserRole);
+                    await this.UserManager.AddToRoleAsync(user.Id, "Networker");
                     return RedirectToAction("Index", "Home");
                 }
-                if (db.Roles.Select(r => r.Name).Single() != "Admin")
-                {
-                    ViewBag.Name = "Networker";
-                }
+                //if (db.Roles.Select(r => r.Name).Single() != "Admin")
+                //{
+                //    ViewBag.Name = "Networker";
+                //}
                 AddErrors(result);
             }
 

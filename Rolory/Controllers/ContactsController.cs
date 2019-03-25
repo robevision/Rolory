@@ -24,16 +24,20 @@ namespace Rolory.Controllers
         // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Contact contact = db.Contacts.Find(id);
+                if (contact == null)
+                {
+                    return RedirectToAction("Create", "Contacts");
+                }
+                return View(contact);
             }
-            Contact contact = db.Contacts.Find(id);
-            if (contact == null)
-            {
-                return HttpNotFound();
-            }
-            return View(contact);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Contacts/Create

@@ -12,9 +12,9 @@ namespace Rolory
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            createRolesAndUsers();
+            CreateRolesAndUsers();
         }
-        private void createRolesAndUsers()
+        private void CreateRolesAndUsers()
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));

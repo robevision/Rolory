@@ -50,8 +50,7 @@ namespace Rolory.Models
     {
 
         [Required]
-        [Display(Name = "UserName")]
-        [EmailAddress]
+        [Display(Name = "Username")]
         public string UserName { get; set; }
 
         [Required]
@@ -65,7 +64,6 @@ namespace Rolory.Models
 
     public class RegisterViewModel
     {
-        [Required]
         [Display(Name = "UserRole")]
         public string UserRole { get; set; }
 

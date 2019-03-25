@@ -24,7 +24,7 @@ namespace Rolory
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       //cerulean, look for tutorials
-                "~/Content/simplex.css",
+                "~/Content/lumen.css",
                 "~/Content/site.css"));
         }
     }
