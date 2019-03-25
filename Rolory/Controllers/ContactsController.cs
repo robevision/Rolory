@@ -6,17 +6,25 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Rolory.Models;
 
 namespace Rolory.Controllers
 {
+    [Authorize]
     public class ContactsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: Contacts
-        public ActionResult Index()
+        private ApplicationDbContext db;
+        public ContactsController()
         {
+            db = new ApplicationDbContext();
+        }
+        // GET: Contacts
+        public ActionResult Index(string sortOrder, string searchString)
+        {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            string userId = User.Identity.GetUserId();
             var contacts = db.Contacts.Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
             return View(contacts.ToList());
         }

@@ -5,7 +5,13 @@
 }
 
 <h2>Index</h2>
-
+@using (Html.BeginForm())
+{
+    <p>
+        Lookup Contact by Name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -65,65 +71,66 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address.addressType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AlternateAddress.addressType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description.gender)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Networker.firstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.image)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.prefix)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.givenName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.familyName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.phoneType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.phoneNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.organization)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.workTitle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.altPhoneNumberType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.altPhoneNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.lastupdated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.inContact)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address.addressType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AlternateAddress.addressType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description.gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Networker.firstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.image)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.prefix)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.givenName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.familyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.phoneType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.phoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.organization)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.workTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.altPhoneNumberType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.altPhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.lastupdated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.inContact)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
 
 </table>

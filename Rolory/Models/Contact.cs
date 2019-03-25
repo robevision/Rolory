@@ -11,7 +11,7 @@ namespace Rolory.Models
     {
         [Key]
         public int id { get; set; }
-        [Display(Name = "Photo")]
+        [Display(Name = "Upload File")]
         public string image { get; set; }
         [Display(Name = "Email")]
         public string email { get; set; }

@@ -18,16 +18,16 @@
                 </button>
         <div class="navbar-collapse collapse">
             <div class="container">
-                @*<div class="navbar-header">*@
                     <a class="navbar-brand" href="@Url.Action("Index", "Home")">
                         <img src="~/Content/images/logo.png" alt="Site Logo" style="height: 30px; width:125px" />
                     </a>
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
+                    <br />
+                        <ul class="nav navbar-nav"style="text-align:center">
+                            <li style="font-size:large">Get In Touch With:</li>
+                            <li style="display: inline-block">@Html.ActionLink("Us", "Contact", "Home",null, new { @style = "text-align:center;" })</li>
+                            <li style="display: inline-block">@Html.ActionLink("Your Contacts", "Index", "Contacts", null, new { @style = "text-transform:capitalize;" })</li>
+                        </ul>
                 @Html.Partial("_LoginPartial")
-                @*</div>*@
             </div>
         </div>
     </div>

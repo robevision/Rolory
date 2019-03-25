@@ -209,6 +209,14 @@
     <Compile Include="Migrations\201903251458381_AddedNetworkerProperties.Designer.cs">
       <DependentUpon>201903251458381_AddedNetworkerProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903251608260_FixingContactModle.cs" />
+    <Compile Include="Migrations\201903251608260_FixingContactModle.Designer.cs">
+      <DependentUpon>201903251608260_FixingContactModle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903251613367_RevertContactModel.cs" />
+    <Compile Include="Migrations\201903251613367_RevertContactModel.Designer.cs">
+      <DependentUpon>201903251613367_RevertContactModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -217,6 +225,7 @@
     <Compile Include="Models\Description.cs" />
     <Compile Include="Models\FamilyMember.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ImageController.cs" />
     <Compile Include="Models\Interaction.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
@@ -288,10 +297,12 @@
     <Content Include="Views\Contacts\Details.cshtml" />
     <Content Include="Views\Contacts\Edit.cshtml" />
     <Content Include="Views\Contacts\Index.cshtml" />
+    <Content Include="Views\Image\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
+    <Folder Include="UserImages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -327,6 +338,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903251458381_AddedNetworkerProperties.resx">
       <DependentUpon>201903251458381_AddedNetworkerProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903251608260_FixingContactModle.resx">
+      <DependentUpon>201903251608260_FixingContactModle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903251613367_RevertContactModel.resx">
+      <DependentUpon>201903251613367_RevertContactModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
