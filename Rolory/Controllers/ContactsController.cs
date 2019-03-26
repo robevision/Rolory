@@ -16,6 +16,20 @@ namespace Rolory.Controllers
     {
         private ApplicationDbContext db;
         List<SelectListItem> stateList = new List<SelectListItem>();
+        List<SelectListItem> typeList = new List<SelectListItem>();
+
+        public ContactsController()
+        {
+            db = new ApplicationDbContext();
+            GetStateSelection();
+            GetTypeList();
+        }
+        public void GetTypeList()
+        {
+            typeList.Add(new SelectListItem() { Text = "Home", Value = "Home"});
+            typeList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
+            typeList.Add(new SelectListItem() { Text = "Other", Value = "Other" });
+        }
         public void GetStateSelection()
         {
             stateList.Add(new SelectListItem() { Text = "Alabama", Value = "AL" });
@@ -69,12 +83,7 @@ namespace Rolory.Controllers
             stateList.Add(new SelectListItem() { Text = "Wisconsin", Value = "WI" });
             stateList.Add(new SelectListItem() { Text = "Wyoming", Value = "WY" });
         }
-       
-        public ContactsController()
-        {
-            db = new ApplicationDbContext();
-            GetStateSelection();
-        }
+
         // GET: Contacts
         public ActionResult Index(string sortOrder, string searchString)
         {
