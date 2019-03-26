@@ -280,7 +280,7 @@ namespace Rolory.Controllers
                 description.Relationship = Request.Form["Relationship"].ToString();
                 db.Descriptions.Add(description);
                 db.SaveChanges();
-                db.Contacts.Add(contact);
+                db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
