@@ -20,6 +20,7 @@ namespace Rolory.Models
         [Display(Name = "Activities")]
         public string UserActivities { get; set; }
         public string Occupation { get; set; }
+        [Display(Name = "Title")]
         public string WorkTitle { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
