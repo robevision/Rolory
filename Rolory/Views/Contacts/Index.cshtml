@@ -18,22 +18,22 @@
 <table class="table">
     <tr>
         <th>   
-            @Html.DisplayNameFor(model => model.image)
+            @Html.DisplayNameFor(model => model.Image)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.prefix)
+            @Html.DisplayNameFor(model => model.Prefix)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.givenName)
+            @Html.DisplayNameFor(model => model.GivenName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.familyName)
+            @Html.DisplayNameFor(model => model.FamilyName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.lastupdated)
+            @Html.DisplayNameFor(model => model.LastUpdated)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.inContact)
+            @Html.DisplayNameFor(model => model.InContact)
         </th>
         <th></th>
     </tr>
@@ -42,27 +42,27 @@
     {
     <tr>
         <td>
-            <img src="@Html.DisplayFor(modelItem => item.image)" width="25" height="25" />
+            <img src="@Html.DisplayFor(modelItem => item.Image)" width="25" height="25" />
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.prefix)
+            @Html.DisplayFor(modelItem => item.Prefix)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.givenName)
+            @Html.DisplayFor(modelItem => item.GivenName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.familyName)
+            @Html.DisplayFor(modelItem => item.FamilyName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.lastupdated)
+            @Html.DisplayFor(modelItem => item.LastUpdated)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.inContact)
+            @Html.DisplayFor(modelItem => item.InContact)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { Id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
         </td>
     </tr>
     }
