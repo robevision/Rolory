@@ -273,14 +273,16 @@ namespace Rolory.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
                 contact.DescriptionId = description.Id;
                 description.Gender = Request.Form["Gender"].ToString();
-                db.Contacts.Add(contact);
-                db.SaveChanges();
+                description.Category = Request.Form["Category"].ToString();
+                description.Relationship = Request.Form["Relationship"].ToString();
                 db.Descriptions.Add(description);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                db.Contacts.Add(contact);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
             }
 
             return View();

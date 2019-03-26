@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace Rolory.Controllers
 {
@@ -103,6 +104,10 @@ namespace Rolory.Controllers
             if(networker != null)
             {
                 ApplicationDbContext db = new ApplicationDbContext();
+                if(networker.ReceiveEmails == false)
+                {
+                    
+                }
                 db.Entry(networker).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
