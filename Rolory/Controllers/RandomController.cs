@@ -18,14 +18,28 @@ namespace Rolory.Controllers
         // GET: Random
         public ActionResult Index()
         {
-            List<Contact> pushedContacts = new List<Contact>();
+            var nextWeek = DateTime.Today.AddDays(7);
+            List<Contact> pushedContactsByBirthDate = new List<Contact>();
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
-            var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).ToList();
+            var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
             foreach(Contact contact in filteredContactList)
             {
-                //if()
+                DateTime contactBirthDate = contact.Description.BirthDate.Value;
+                int contactBirthMonth = contactBirthDate.Month;
+                var contactWorkTitle = contact.WorkTitle;
+                if(contactBirthDate != null)
+                {
+                    if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
+                    {
+                        pushedContactsByBirthDate.Add(contact);
+                    }
+                }
+                if (contactWorkTitle.Contains(networker.FirstName))
+                {
+
+                }
             }
             return View();
         }
