@@ -38,6 +38,8 @@ namespace Rolory.Models
         [Display(Name = "In Touch")]
         public bool InContact { get; set; }
         public bool Perpetual { get; set; }
+        public bool CoolDown { get; set; }
+        public DateTime? CoolDownTime { get; set; }
         [ForeignKey("Address")]
         public int? AddressId { get; set; }
         public Address Address { get; set; }

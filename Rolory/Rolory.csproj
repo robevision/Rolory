@@ -234,6 +234,10 @@
     <Compile Include="Migrations\201903261244557_NamingConventionOnModels.Designer.cs">
       <DependentUpon>201903261244557_NamingConventionOnModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903262012415_CoolDownPropertiesAdded.cs" />
+    <Compile Include="Migrations\201903262012415_CoolDownPropertiesAdded.Designer.cs">
+      <DependentUpon>201903262012415_CoolDownPropertiesAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -378,6 +382,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903261244557_NamingConventionOnModels.resx">
       <DependentUpon>201903261244557_NamingConventionOnModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903262012415_CoolDownPropertiesAdded.resx">
+      <DependentUpon>201903262012415_CoolDownPropertiesAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

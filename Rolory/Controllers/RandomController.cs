@@ -25,7 +25,7 @@ namespace Rolory.Controllers
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
             foreach(Contact contact in filteredContactList)
             {
-                if()
+                //if()
             }
             return View();
         }
