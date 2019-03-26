@@ -24,7 +24,7 @@ namespace Rolory.Models
         [Display(Name = "Phone Type")]
         public string phoneType { get; set; }
         [Display(Name = "Phone Number")]
-        public int? phoneNumber { get; set; }
+        public string phoneNumber { get; set; }
         [Display(Name = "Organization")]
         public string organization { get; set; }
         [Display(Name = "Work Title")]
@@ -32,11 +32,12 @@ namespace Rolory.Models
         [Display(Name = "Alternate Phone Type")]
         public string altPhoneNumberType { get; set; }
         [Display(Name = "Phone Number")]
-        public int? altPhoneNumber { get; set; }
+        public string altPhoneNumber { get; set; }
         [Display(Name = "Last Modified")]
         public DateTime? lastupdated { get; set; }
         [Display(Name = "In Touch")]
         public bool inContact { get; set; }
+        public bool perpetual { get; set; }
         [ForeignKey("Address")]
         public int? addressId { get; set; }
         public Address Address { get; set; }

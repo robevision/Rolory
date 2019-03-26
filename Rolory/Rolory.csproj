@@ -225,6 +225,10 @@
     <Compile Include="Migrations\201903252231448_SimplifyingNetworkerModel.Designer.cs">
       <DependentUpon>201903252231448_SimplifyingNetworkerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903260134538_IntToStringPhone.cs" />
+    <Compile Include="Migrations\201903260134538_IntToStringPhone.Designer.cs">
+      <DependentUpon>201903260134538_IntToStringPhone.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -360,6 +364,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903252231448_SimplifyingNetworkerModel.resx">
       <DependentUpon>201903252231448_SimplifyingNetworkerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903260134538_IntToStringPhone.resx">
+      <DependentUpon>201903260134538_IntToStringPhone.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

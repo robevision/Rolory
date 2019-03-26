@@ -15,6 +15,61 @@ namespace Rolory.Controllers
     public class ContactsController : Controller
     {
         private ApplicationDbContext db;
+        List<SelectListItem> stateList = new List<SelectListItem>();
+        public void GetStateSelection()
+        {
+            stateList.Add(new SelectListItem() { Text = "Alabama", Value = "AL" });
+            stateList.Add(new SelectListItem() { Text = "Alaska", Value = "AK" });
+            stateList.Add(new SelectListItem() { Text = "Arizona", Value = "AZ" });
+            stateList.Add(new SelectListItem() { Text = "Arkansas", Value = "AR" });
+            stateList.Add(new SelectListItem() { Text = "California", Value = "CA" });
+            stateList.Add(new SelectListItem() { Text = "Colorado", Value = "CO" });
+            stateList.Add(new SelectListItem() { Text = "Connecticut", Value = "CT" });
+            stateList.Add(new SelectListItem() { Text = "Delaware", Value = "DE" });
+            stateList.Add(new SelectListItem() { Text = "Florida", Value = "FL" });
+            stateList.Add(new SelectListItem() { Text = "Georgia", Value = "GA" });
+            stateList.Add(new SelectListItem() { Text = "Hawaii", Value = "HI" });
+            stateList.Add(new SelectListItem() { Text = "Idaho", Value = "ID" });
+            stateList.Add(new SelectListItem() { Text = "Illinois", Value = "IL" });
+            stateList.Add(new SelectListItem() { Text = "Indiana", Value = "IN" });
+            stateList.Add(new SelectListItem() { Text = "Iowa", Value = "IA" });
+            stateList.Add(new SelectListItem() { Text = "Kansas", Value = "KS" });
+            stateList.Add(new SelectListItem() { Text = "Kentucky", Value = "KY" });
+            stateList.Add(new SelectListItem() { Text = "Louisiana", Value = "LA" });
+            stateList.Add(new SelectListItem() { Text = "Maine", Value = "ME" });
+            stateList.Add(new SelectListItem() { Text = "Maryland", Value = "MD" });
+            stateList.Add(new SelectListItem() { Text = "Massachusetts", Value = "MA" });
+            stateList.Add(new SelectListItem() { Text = "Michigan", Value = "MI" });
+            stateList.Add(new SelectListItem() { Text = "Minnesota", Value = "MN" });
+            stateList.Add(new SelectListItem() { Text = "Connecticut", Value = "MS" });
+            stateList.Add(new SelectListItem() { Text = "Missouri", Value = "MO" });
+            stateList.Add(new SelectListItem() { Text = "Montana", Value = "MT" });
+            stateList.Add(new SelectListItem() { Text = "Nebraska", Value = "NE" });
+            stateList.Add(new SelectListItem() { Text = "Nevada", Value = "NV" });
+            stateList.Add(new SelectListItem() { Text = "New Hampshire", Value = "NH" });
+            stateList.Add(new SelectListItem() { Text = "New Jersey", Value = "NJ" });
+            stateList.Add(new SelectListItem() { Text = "New York", Value = "NY" });
+            stateList.Add(new SelectListItem() { Text = "New Mexico", Value = "NM" });
+            stateList.Add(new SelectListItem() { Text = "North Carolina", Value = "NC" });
+            stateList.Add(new SelectListItem() { Text = "North Dakota", Value = "ND" });
+            stateList.Add(new SelectListItem() { Text = "Ohio", Value = "OH" });
+            stateList.Add(new SelectListItem() { Text = "Oklahoma", Value = "OK" });
+            stateList.Add(new SelectListItem() { Text = "Oregon", Value = "OR" });
+            stateList.Add(new SelectListItem() { Text = "Pennsylvania", Value = "PA" });
+            stateList.Add(new SelectListItem() { Text = "Rhode Island", Value = "RI" });
+            stateList.Add(new SelectListItem() { Text = "South Carolina", Value = "SC" });
+            stateList.Add(new SelectListItem() { Text = "South Dakota", Value = "SD" });
+            stateList.Add(new SelectListItem() { Text = "Tennessee", Value = "TN" });
+            stateList.Add(new SelectListItem() { Text = "Texas", Value = "TX" });
+            stateList.Add(new SelectListItem() { Text = "Utah", Value = "UT" });
+            stateList.Add(new SelectListItem() { Text = "Vermont", Value = "VT" });
+            stateList.Add(new SelectListItem() { Text = "Virginia", Value = "VA" });
+            stateList.Add(new SelectListItem() { Text = "Washington", Value = "WA" });
+            stateList.Add(new SelectListItem() { Text = "West Virginia", Value = "WV" });
+            stateList.Add(new SelectListItem() { Text = "Wisconsin", Value = "WI" });
+            stateList.Add(new SelectListItem() { Text = "Wyoming", Value = "WY" });
+        }
+       
         public ContactsController()
         {
             db = new ApplicationDbContext();
@@ -33,6 +88,8 @@ namespace Rolory.Controllers
         // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
+            GetStateSelection();
+            ViewBag.States = stateList;
             if (ModelState.IsValid)
             {
                 if (id == null)

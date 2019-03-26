@@ -17,8 +17,8 @@
 </p>
 <table class="table">
     <tr>
-        <th>
-          <img src="@Html.DisplayNameFor(model => model.image)" width="25" height="25"/>
+        <th>   
+            @Html.DisplayNameFor(model => model.image)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.prefix)
@@ -42,7 +42,7 @@
     {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.image)
+            <img src="@Html.DisplayFor(modelItem => item.image)" width="25" height="25" />
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.prefix)
