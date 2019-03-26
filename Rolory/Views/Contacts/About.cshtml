@@ -1,0 +1,24 @@
+﻿@model Rolory.Models.ContactDescriptionViewModel
+
+@{
+    ViewBag.Title = "About";
+}
+<br />
+<div class="col-lg-offset-5">
+    <h2>About</h2>
+</div>
+<div style="margin-left: 410px" class="col-lg-offset-3">
+    <h3>
+        @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
+    </h3>
+</div>
+<div style="margin-left: 400px" class="col-lg-offset-3">
+    <h4>
+        @Html.DisplayFor(model => model.Contact.Email)
+    </h4>
+    <h4>
+        @Html.DisplayFor(model => model.Contact.PhoneNumber)
+    </h4>
+</div>
+
+

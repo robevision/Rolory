@@ -316,6 +316,7 @@
     <Content Include="Views\Image\Add.cshtml" />
     <Content Include="Views\User\CreateAccount.cshtml" />
     <Content Include="Views\User\Modify.cshtml" />
+    <Content Include="Views\Contacts\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

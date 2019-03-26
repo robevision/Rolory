@@ -73,6 +73,7 @@ namespace Rolory.Controllers
         public ContactsController()
         {
             db = new ApplicationDbContext();
+            GetStateSelection();
         }
         // GET: Contacts
         public ActionResult Index(string sortOrder, string searchString)
@@ -88,8 +89,7 @@ namespace Rolory.Controllers
         // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
-            GetStateSelection();
-            ViewBag.States = stateList;
+
             if (ModelState.IsValid)
             {
                 if (id == null)
@@ -109,6 +109,7 @@ namespace Rolory.Controllers
         // GET: Contacts/Create
         public ActionResult Create()
         {
+            ViewBag.States = stateList;
             ViewBag.AddressId = new SelectList(db.Addresses, "Id", "AddressType");
             ViewBag.AltAddressId = new SelectList(db.Addresses, "Id", "AddressType");
             ViewBag.DescriptionId = new SelectList(db.Descriptions, "Id", "Gender");
@@ -140,6 +141,7 @@ namespace Rolory.Controllers
         // GET: Contacts/Edit/5
         public ActionResult Edit(int? id)
         {
+            ViewBag.States = stateList;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -165,6 +167,7 @@ namespace Rolory.Controllers
         {
             if (ModelState.IsValid)
             {
+                contact.LastUpdated = DateTime.Now;
                 db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -175,7 +178,52 @@ namespace Rolory.Controllers
             ViewBag.NetworkerId = new SelectList(db.Networkers, "Id", "FirstName", contact.NetworkerId);
             return View(contact);
         }
+        [HttpGet]
+        public ActionResult About(int? id)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                ContactDescriptionViewModel contactDescription = new ContactDescriptionViewModel();
+                contactDescription.Contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+                contactDescription.Description = db.Descriptions.Where(d => d.Id == contactDescription.Contact.DescriptionId).Select(d => d).SingleOrDefault();
+                var currentId = id;
+                if (contactDescription.Description == null)
+                {
+                    return RedirectToAction("Details", "Contacts", new { id = currentId });
+                }
+                if (contactDescription == null)
+                {
+                    return RedirectToAction("Create", "Contacts");
+                }
+                return View(contactDescription);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+        public ActionResult Build([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
+        {
+            ContactDescriptionViewModel contactDescription = new ContactDescriptionViewModel();
+            contactDescription.Contact = contact;
+            return View(contactDescription);
+        }
+        [HttpPost]
+        public ActionResult Build(Contact contact, Description description)
+        {
+            if (ModelState.IsValid)
+            {
+                contact.DescriptionId = description.Id;
+                db.Contacts.Add(contact);
+                db.SaveChanges();
+                db.Descriptions.Add(description);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
 
+            return View();
+        }
         // GET: Contacts/Delete/5
         public ActionResult Delete(int? id)
         {
