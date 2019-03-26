@@ -81,7 +81,7 @@ namespace Rolory.Controllers
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             string userId = User.Identity.GetUserId();
             var user = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
-            var contacts = db.Contacts.Where(c=>c.networkerId == user.id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
+            var contacts = db.Contacts.Where(c=>c.NetworkerId == user.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
             return View(contacts.ToList());
         }
 
@@ -109,10 +109,10 @@ namespace Rolory.Controllers
         // GET: Contacts/Create
         public ActionResult Create()
         {
-            ViewBag.addressId = new SelectList(db.Addresses, "id", "addressType");
-            ViewBag.altAddressId = new SelectList(db.Addresses, "id", "addressType");
-            ViewBag.descriptionId = new SelectList(db.Descriptions, "id", "gender");
-            ViewBag.networkerId = new SelectList(db.Networkers, "id", "firstName");
+            ViewBag.AddressId = new SelectList(db.Addresses, "Id", "AddressType");
+            ViewBag.AltAddressId = new SelectList(db.Addresses, "Id", "AddressType");
+            ViewBag.DescriptionId = new SelectList(db.Descriptions, "Id", "Gender");
+            ViewBag.NetworkerId = new SelectList(db.Networkers, "Id", "FirstName");
             return View();
         }
 
@@ -121,7 +121,7 @@ namespace Rolory.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,image,email,prefix,givenName,familyName,phoneType,phoneNumber,organization,workTitle,altPhoneNumberType,altPhoneNumber,lastupdated,inContact,addressId,altAddressId,descriptionId,networkerId")] Contact contact)
+        public ActionResult Create([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
         {
             if (ModelState.IsValid)
             {
@@ -130,10 +130,10 @@ namespace Rolory.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.addressId = new SelectList(db.Addresses, "id", "addressType", contact.addressId);
-            ViewBag.altAddressId = new SelectList(db.Addresses, "id", "addressType", contact.altAddressId);
-            ViewBag.descriptionId = new SelectList(db.Descriptions, "id", "gender", contact.descriptionId);
-            ViewBag.networkerId = new SelectList(db.Networkers, "id", "firstName", contact.networkerId);
+            ViewBag.AddressId = new SelectList(db.Addresses, "Id", "AddressType", contact.AddressId);
+            ViewBag.AltAddressId = new SelectList(db.Addresses, "Id", "AddressType", contact.AltAddressId);
+            ViewBag.DescriptionId = new SelectList(db.Descriptions, "Id", "Gender", contact.DescriptionId);
+            ViewBag.NetworkerId = new SelectList(db.Networkers, "Id", "FirstName", contact.NetworkerId);
             return View(contact);
         }
 
@@ -149,10 +149,10 @@ namespace Rolory.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.addressId = new SelectList(db.Addresses, "id", "addressType", contact.addressId);
-            ViewBag.altAddressId = new SelectList(db.Addresses, "id", "addressType", contact.altAddressId);
-            ViewBag.descriptionId = new SelectList(db.Descriptions, "id", "gender", contact.descriptionId);
-            ViewBag.networkerId = new SelectList(db.Networkers, "id", "firstName", contact.networkerId);
+            ViewBag.AddressId = new SelectList(db.Addresses, "Id", "AddressType", contact.AddressId);
+            ViewBag.AltAddressId = new SelectList(db.Addresses, "Id", "AddressType", contact.AltAddressId);
+            ViewBag.DescriptionId = new SelectList(db.Descriptions, "Id", "Gender", contact.DescriptionId);
+            ViewBag.NetworkerId = new SelectList(db.Networkers, "Id", "FirstName", contact.NetworkerId);
             return View(contact);
         }
 
@@ -161,7 +161,7 @@ namespace Rolory.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,image,email,prefix,givenName,familyName,phoneType,phoneNumber,organization,workTitle,altPhoneNumberType,altPhoneNumber,lastupdated,inContact,addressId,altAddressId,descriptionId,networkerId")] Contact contact)
+        public ActionResult Edit([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
         {
             if (ModelState.IsValid)
             {
@@ -169,10 +169,10 @@ namespace Rolory.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.addressId = new SelectList(db.Addresses, "id", "addressType", contact.addressId);
-            ViewBag.altAddressId = new SelectList(db.Addresses, "id", "addressType", contact.altAddressId);
-            ViewBag.descriptionId = new SelectList(db.Descriptions, "id", "gender", contact.descriptionId);
-            ViewBag.networkerId = new SelectList(db.Networkers, "id", "firstName", contact.networkerId);
+            ViewBag.AddressId = new SelectList(db.Addresses, "id", "AddressType", contact.AddressId);
+            ViewBag.AltAddressId = new SelectList(db.Addresses, "id", "AddressType", contact.AltAddressId);
+            ViewBag.DescriptionId = new SelectList(db.Descriptions, "Id", "Gender", contact.DescriptionId);
+            ViewBag.NetworkerId = new SelectList(db.Networkers, "Id", "FirstName", contact.NetworkerId);
             return View(contact);
         }
 

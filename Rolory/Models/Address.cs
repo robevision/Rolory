@@ -10,20 +10,20 @@ namespace Rolory.Models
     public class Address
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Display(Name = "Address Type")]
-        public string addressType { get; set; }
+        public string AddressType { get; set; }
         [Display(Name = "Street Address")]
-        public string streetAddress { get; set; }
+        public string StreetAddress { get; set; }
         [Display(Name = "Unit")]
-        public string unit { get; set; }
+        public string Unit { get; set; }
         [Display(Name = "City")]
-        public string locality { get; set; }
+        public string Locality { get; set; }
         [Display(Name = "State")]
-        public string region { get; set; }
+        public string Region { get; set; }
         [Display(Name = "Zipcode")]
-        public int? zipcode { get; set; }
+        public int? ZipCode { get; set; }
         [Display(Name = "Country")]
-        public string countryName { get; set; }
+        public string CountryName { get; set; }
     }
 }

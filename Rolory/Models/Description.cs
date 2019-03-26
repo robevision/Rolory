@@ -10,21 +10,21 @@ namespace Rolory.Models
     public class Description
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Display(Name = "Gender")]
-        public string gender { get; set; }
+        public string Gender { get; set; }
         [Display(Name = "Relationship")]
-        public string relationship { get; set; }
+        public string Relationship { get; set; }
         [Display(Name = "Category")]
-        public string category { get; set; }
+        public string Category { get; set; }
         [Display(Name = "Birth Date")]
-        public DateTime? birthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         [Display(Name = "Death Date")]
-        public DateTime? deathDate { get; set; }
+        public DateTime? DeathDate { get; set; }
         [Display(Name = "Anniversary")]
-        public DateTime? anniversary { get; set; }
+        public DateTime? Anniversary { get; set; }
         [Display(Name = "General Notes")]
-        public List <string> notes { get; set; }
+        public string Notes { get; set; }
 
     }
 }

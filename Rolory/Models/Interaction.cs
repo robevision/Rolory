@@ -10,15 +10,15 @@ namespace Rolory.Models
     public class Interaction
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Display(Name = "When")]
-        public DateTime moment { get; set; }
+        public DateTime Moment { get; set; }
         [Display(Name = "Conversation Highlights")]
         [ForeignKey("Message")]
-        public int? messageId { get; set; }
+        public int? MessageId { get; set; }
         public Message Message { get; set; }
         [ForeignKey("Contact")]
-        public int contactId { get; set; }
+        public int ContactId { get; set; }
         public Contact Contact { get; set; }
     }
 }

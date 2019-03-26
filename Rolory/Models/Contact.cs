@@ -10,46 +10,46 @@ namespace Rolory.Models
     public class Contact
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Display(Name = "Upload File")]
-        public string image { get; set; }
+        public string Image { get; set; }
         [Display(Name = "Email")]
-        public string email { get; set; }
+        public string Email { get; set; }
         [Display(Name = "Prefix")]
-        public string prefix { get; set; }
+        public string Prefix { get; set; }
         [Display(Name = "First Name")]
-        public string givenName { get; set; }
+        public string GivenName { get; set; }
         [Display(Name = "Last Name")]
-        public string familyName { get; set; }
+        public string FamilyName { get; set; }
         [Display(Name = "Phone Type")]
-        public string phoneType { get; set; }
+        public string PhoneType { get; set; }
         [Display(Name = "Phone Number")]
-        public string phoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [Display(Name = "Organization")]
-        public string organization { get; set; }
+        public string Organization { get; set; }
         [Display(Name = "Work Title")]
-        public string workTitle { get; set; }
+        public string WorkTitle { get; set; }
         [Display(Name = "Alternate Phone Type")]
-        public string altPhoneNumberType { get; set; }
+        public string AltPhoneNumberType { get; set; }
         [Display(Name = "Phone Number")]
-        public string altPhoneNumber { get; set; }
+        public string AltPhoneNumber { get; set; }
         [Display(Name = "Last Modified")]
-        public DateTime? lastupdated { get; set; }
+        public DateTime? LastUpdated { get; set; }
         [Display(Name = "In Touch")]
-        public bool inContact { get; set; }
-        public bool perpetual { get; set; }
+        public bool InContact { get; set; }
+        public bool Perpetual { get; set; }
         [ForeignKey("Address")]
-        public int? addressId { get; set; }
+        public int? AddressId { get; set; }
         public Address Address { get; set; }
         [ForeignKey("AlternateAddress")]
         [Display(Name = "Alternate Address")]
-        public int? altAddressId { get; set; }
+        public int? AltAddressId { get; set; }
         public Address AlternateAddress { get; set; }
         [ForeignKey("Description")]
-        public int? descriptionId { get; set; }
+        public int? DescriptionId { get; set; }
         public Description Description { get; set; }
         [ForeignKey("Networker")]
-        public int networkerId { get; set; }
+        public int NetworkerId { get; set; }
         public Networker Networker { get; set; }
     }
 }

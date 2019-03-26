@@ -10,16 +10,16 @@ namespace Rolory.Models
     public class SharedActivity
     {
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
         [Display(Name = "Type")]
-        public string type { get; set; }
+        public string Type { get; set; }
         [Display(Name = "Activity")]
-        public string activity { get; set; }
+        public string Activity { get; set; }
         [Display(Name = "Level")]
-        public string bond { get; set; }
+        public string Bond { get; set; }
         [ForeignKey("Description")]
         [Display(Name = "Description")]
-        public int descriptionId { get; set; }
+        public int DescriptionId { get; set; }
         public Description Description { get; set; }
     }
 }

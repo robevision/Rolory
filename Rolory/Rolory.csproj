@@ -229,6 +229,10 @@
     <Compile Include="Migrations\201903260134538_IntToStringPhone.Designer.cs">
       <DependentUpon>201903260134538_IntToStringPhone.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903261244557_NamingConventionOnModels.cs" />
+    <Compile Include="Migrations\201903261244557_NamingConventionOnModels.Designer.cs">
+      <DependentUpon>201903261244557_NamingConventionOnModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -237,7 +241,7 @@
     <Compile Include="Models\Description.cs" />
     <Compile Include="Models\FamilyMember.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ImageController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Models\Interaction.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
@@ -367,6 +371,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903260134538_IntToStringPhone.resx">
       <DependentUpon>201903260134538_IntToStringPhone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903261244557_NamingConventionOnModels.resx">
+      <DependentUpon>201903261244557_NamingConventionOnModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
