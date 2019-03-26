@@ -238,6 +238,10 @@
     <Compile Include="Migrations\201903262012415_CoolDownPropertiesAdded.Designer.cs">
       <DependentUpon>201903262012415_CoolDownPropertiesAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903262058381_AddedNetworkerOccupationProperties.cs" />
+    <Compile Include="Migrations\201903262058381_AddedNetworkerOccupationProperties.Designer.cs">
+      <DependentUpon>201903262058381_AddedNetworkerOccupationProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -385,6 +389,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903262012415_CoolDownPropertiesAdded.resx">
       <DependentUpon>201903262012415_CoolDownPropertiesAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903262058381_AddedNetworkerOccupationProperties.resx">
+      <DependentUpon>201903262058381_AddedNetworkerOccupationProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

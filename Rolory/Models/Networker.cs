@@ -19,6 +19,8 @@ namespace Rolory.Models
         public bool ReceiveEmails { get; set; }
         [Display(Name = "Activities")]
         public string UserActivities { get; set; }
+        public string Occupation { get; set; }
+        public string WorkTitle { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
