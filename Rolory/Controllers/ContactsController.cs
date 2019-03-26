@@ -17,20 +17,49 @@ namespace Rolory.Controllers
         private ApplicationDbContext db;
         public List<SelectListItem> stateList = new List<SelectListItem>();
         public List<SelectListItem> typeList = new List<SelectListItem>();
+        public List<SelectListItem> genderList = new List<SelectListItem>();
+        public List<SelectListItem> relationshipList = new List<SelectListItem>();
+        public List<SelectListItem> categoryList = new List<SelectListItem>();
 
         public ContactsController()
         {
             db = new ApplicationDbContext();
             GetStateSelection();
-            GetTypeList();
+            GetTypeSelection();
+            GetGenderSelection();
+            GetRelationshipSelection();
+            GetCategorySelection();
         }
-        public void GetTypeList()
+        private void GetRelationshipSelection()
+        {
+            relationshipList.Add(new SelectListItem() { Text = "Acquaintance", Value = "Acquaintance" });
+            relationshipList.Add(new SelectListItem() { Text = "Manager", Value = "Manager" });
+            relationshipList.Add(new SelectListItem() { Text = "Co-Worker", Value = "Co-Worker" });
+            relationshipList.Add(new SelectListItem() { Text = "Classmate", Value = "Classmate" });
+            relationshipList.Add(new SelectListItem() { Text = "Friend", Value = "Friend" });
+            relationshipList.Add(new SelectListItem() { Text = "Family", Value = "Family" });
+        }
+        private void GetCategorySelection()
+        {
+            categoryList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
+            categoryList.Add(new SelectListItem() { Text = "School", Value = "School" });
+            categoryList.Add(new SelectListItem() { Text = "Family", Value = "Family" });
+            categoryList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
+            //Be able to add custom category in the future
+            categoryList.Add(new SelectListItem() { Text = "Other", Value = "Other" });
+        }
+        private void GetGenderSelection()
+        {
+            genderList.Add(new SelectListItem() { Text = "Male", Value = "Male" });
+            genderList.Add(new SelectListItem() { Text = "Female", Value = "Female" });
+        }
+        private void GetTypeSelection()
         {
             typeList.Add(new SelectListItem() { Text = "Home", Value = "Home"});
             typeList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
             typeList.Add(new SelectListItem() { Text = "Other", Value = "Other" });
         }
-        public void GetStateSelection()
+        private void GetStateSelection()
         {
             stateList.Add(new SelectListItem() { Text = "Alabama", Value = "AL" });
             stateList.Add(new SelectListItem() { Text = "Alaska", Value = "AK" });
@@ -219,10 +248,24 @@ namespace Rolory.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-        public ActionResult Build([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
+        [HttpGet]
+        public ActionResult Build(int? id)
         {
+            ViewBag.Gender = genderList;
+            ViewBag.Category = categoryList;
+            ViewBag.Relationship = relationshipList;
+            var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            if(contact == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ContactDescriptionViewModel contactDescription = new ContactDescriptionViewModel();
             contactDescription.Contact = contact;
+            if(contact.DescriptionId != null)
+            {
+                //Bring to Description Edit Page when you create that View
+                return RedirectToAction("Index", "Home");
+            }
             return View(contactDescription);
         }
         [HttpPost]
@@ -230,7 +273,9 @@ namespace Rolory.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 contact.DescriptionId = description.Id;
+                description.Gender = Request.Form["Gender"].ToString();
                 db.Contacts.Add(contact);
                 db.SaveChanges();
                 db.Descriptions.Add(description);
