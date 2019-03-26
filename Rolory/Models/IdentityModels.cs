@@ -38,5 +38,7 @@ namespace Rolory.Models
         {
             return new ApplicationDbContext();
         }
+
+       
     }
 }

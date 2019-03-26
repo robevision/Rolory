@@ -217,6 +217,14 @@
     <Compile Include="Migrations\201903251613367_RevertContactModel.Designer.cs">
       <DependentUpon>201903251613367_RevertContactModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903252152465_SolidifyRemainingMods.cs" />
+    <Compile Include="Migrations\201903252152465_SolidifyRemainingMods.Designer.cs">
+      <DependentUpon>201903252152465_SolidifyRemainingMods.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903252231448_SimplifyingNetworkerModel.cs" />
+    <Compile Include="Migrations\201903252231448_SimplifyingNetworkerModel.Designer.cs">
+      <DependentUpon>201903252231448_SimplifyingNetworkerModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -298,6 +306,8 @@
     <Content Include="Views\Contacts\Edit.cshtml" />
     <Content Include="Views\Contacts\Index.cshtml" />
     <Content Include="Views\Image\Add.cshtml" />
+    <Content Include="Views\User\CreateAccount.cshtml" />
+    <Content Include="Views\User\Modify.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -344,6 +354,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903251613367_RevertContactModel.resx">
       <DependentUpon>201903251613367_RevertContactModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903252152465_SolidifyRemainingMods.resx">
+      <DependentUpon>201903252152465_SolidifyRemainingMods.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903252231448_SimplifyingNetworkerModel.resx">
+      <DependentUpon>201903252231448_SimplifyingNetworkerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

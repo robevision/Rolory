@@ -40,6 +40,8 @@ namespace Rolory
                 var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
                 role.Name = "Networker";
                 roleManager.Create(role);
+                var user = new ApplicationUser();
+                var primaryResult = userManager.AddToRole(user.Id, "Networker");
             }
         }
     }

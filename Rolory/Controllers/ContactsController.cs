@@ -25,7 +25,8 @@ namespace Rolory.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             string userId = User.Identity.GetUserId();
-            var contacts = db.Contacts.Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
+            var user = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
+            var contacts = db.Contacts.Where(c=>c.networkerId == user.id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
             return View(contacts.ToList());
         }
 

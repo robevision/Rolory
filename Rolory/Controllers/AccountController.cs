@@ -174,12 +174,11 @@ namespace Rolory.Controllers
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     await this.UserManager.AddToRoleAsync(user.Id, "Networker");
-                    return RedirectToAction("Index", "Home");
+                    if (model.UserRole == "Networker")
+                    {
+                        return RedirectToAction("CreateAccount", "User");
+                    }
                 }
-                //if (db.Roles.Select(r => r.Name).Single() != "Admin")
-                //{
-                //    ViewBag.Name = "Networker";
-                //}
                 AddErrors(result);
             }
 

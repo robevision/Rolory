@@ -16,8 +16,6 @@ namespace Rolory.Models
         [Display(Name = "Last Name")]
         public string lastName { get; set; }
         public bool receiveEmails { get; set; }
-        public List <string> availability { get; set; }
-        public List <string> interests { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Rolory.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -55,10 +56,58 @@ namespace Rolory.Controllers
                 ViewBag.Name = "Not Logged IN";
             }
 
-
             return View();
 
 
+        }
+        public ActionResult Manage(int? id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            string userId = User.Identity.GetUserId();
+            var networker = db.Networkers.Where(n => n.UserId == userId).Select(n=>n.UserId).SingleOrDefault(); 
+            if (networker != null)
+            {
+                return RedirectToAction("Modify", "User");
+            }
+           return RedirectToAction("CreateAccount", "User");
+        }
+        //GET
+        public ActionResult CreateAccount(ApplicationUser user)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            string userId = User.Identity.GetUserId();
+            ViewBag.ID = new SelectList(db.Networkers, "Id", "Name");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CreateAccount(Networker networker)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            string userId = User.Identity.GetUserId();
+            networker.UserId = userId;
+            db.Networkers.Add(networker);
+            db.SaveChanges();
+            return RedirectToAction("Index","Home");
+        }
+        [HttpGet]
+        public ActionResult Modify()
+        {
+            string userId = User.Identity.GetUserId();
+            ApplicationDbContext db = new ApplicationDbContext();
+            Networker networker = db.Networkers.Where(n=>n.UserId==userId).SingleOrDefault();
+            return View(networker);
+        }
+        [HttpPost]
+        public ActionResult Modify(Networker networker)
+        {
+            if(networker != null)
+            {
+                ApplicationDbContext db = new ApplicationDbContext();
+                db.Entry(networker).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
         }
     }
 }
