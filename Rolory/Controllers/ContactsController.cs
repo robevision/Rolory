@@ -15,8 +15,8 @@ namespace Rolory.Controllers
     public class ContactsController : Controller
     {
         private ApplicationDbContext db;
-        List<SelectListItem> stateList = new List<SelectListItem>();
-        List<SelectListItem> typeList = new List<SelectListItem>();
+        public List<SelectListItem> stateList = new List<SelectListItem>();
+        public List<SelectListItem> typeList = new List<SelectListItem>();
 
         public ContactsController()
         {
@@ -151,6 +151,7 @@ namespace Rolory.Controllers
         public ActionResult Edit(int? id)
         {
             ViewBag.States = stateList;
+            ViewBag.Types = typeList;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -177,6 +178,12 @@ namespace Rolory.Controllers
             if (ModelState.IsValid)
             {
                 contact.LastUpdated = DateTime.Now;
+                contact.PhoneType = Request.Form["Phone Type"].ToString();
+                contact.AltPhoneNumberType = Request.Form["Alternate Phone Type"].ToString();
+                var PhoneType = db.Contacts.Where(c=>c.Id == contact.Id).Select(c => c.PhoneType).SingleOrDefault();
+                PhoneType = contact.PhoneType;
+                var altPhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AltPhoneNumberType).SingleOrDefault();
+                altPhoneType = contact.AltPhoneNumberType;
                 db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
