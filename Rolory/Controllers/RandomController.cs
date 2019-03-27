@@ -10,7 +10,7 @@ namespace Rolory.Controllers
 {
     public class RandomController : Controller
     {
-        ApplicationDbContext db;
+        private ApplicationDbContext db;
         Random random;
         public RandomController()
         {

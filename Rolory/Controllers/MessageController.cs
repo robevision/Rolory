@@ -11,27 +11,43 @@ namespace Rolory.Controllers
 {
     public class MessageController : Controller
     {
-        ApplicationDbContext db;
+        private ApplicationDbContext db;
         // GET: Message
        public MessageController()
         {
             db = new ApplicationDbContext();
         }
-        public ActionResult SendEmail(int id, string subject, string body, string cc = null, string bcc = null)
+        //BuildEmail(5)
+        public ActionResult BuildEmail(int id, string subject, string body, string cc = null, string bcc = null)
         {
-            //string userId = User.Identity.GetUserId();
+            string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.Id == id).SingleOrDefault();
+            var user = db.Users.Where(u => u.Id == userId).SingleOrDefault();
             Message message = new Message();
             message.NetworkerId = id;
-            message.ToEmail = networker.EmailAddress;
+            var emailAddressNullCheck = user.Email;
             message.Subject = subject;
             message.Body = body;
             message.EmailCC = cc;
             message.EmailBCC = bcc;
-            return View();
+            if (emailAddressNullCheck != null && networker.ReceiveEmails == true)
+            {
+                message.ToEmail = user.Email;
+                message.IsEmail = true;
+                message.Postmark = DateTime.Now;
+                return RedirectToAction("SendEmail", "Message", new { builtMessage = message });
+            }
+            else
+            {
+                message.IsActive = true;
+                message.IsEmail = false;
+                message.Postmark = DateTime.Now;
+                return RedirectToAction("SendMessage", "Message", new { builtMessage = message });
+            }
+         
+            
         }
-        [HttpPost]
-        public ActionResult SendEmail(Message message)
+        public void SendEmail(Message builtMessage)
         {
             try
             {
@@ -51,15 +67,21 @@ namespace Rolory.Controllers
                 WebMail.From = "rolorycontactmanager@gmail.com";
 
                 //Send email  
-                WebMail.Send(to: message.ToEmail, subject: message.Subject, body: message.Body, cc: message.EmailCC, bcc: message.EmailBCC, isBodyHtml: true);
+                WebMail.Send(to: builtMessage.ToEmail, subject: builtMessage.Subject, body: builtMessage.Body, cc: builtMessage.EmailCC, bcc: builtMessage.EmailBCC, isBodyHtml: true);
                 ViewBag.Status = "Email Sent Successfully.";
+                db.Messages.Add(builtMessage);
+                db.SaveChanges();
             }
             catch (Exception)
             {
                 ViewBag.Status = "Problem while sending email, Please check details.";
 
             }
-            return View();
+        }
+        public void SendMessage(Message builtMessage)
+        {
+            db.Messages.Add(builtMessage);
+            db.SaveChanges();
         }
     }
 }

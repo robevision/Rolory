@@ -10,7 +10,7 @@ namespace Rolory.Models
     public class ImageController : Controller
     {
         // GET: Image
-        ApplicationDbContext db;
+        private ApplicationDbContext db;
         public ActionResult Add()
         {
             db = new ApplicationDbContext();

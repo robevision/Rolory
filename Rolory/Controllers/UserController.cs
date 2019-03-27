@@ -96,6 +96,7 @@ namespace Rolory.Controllers
             string userId = User.Identity.GetUserId();
             ApplicationDbContext db = new ApplicationDbContext();
             Networker networker = db.Networkers.Where(n=>n.UserId==userId).SingleOrDefault();
+            ViewBag.Email = db.Users.Where(u => u.Id == userId).Select(u => u.Email);
             return View(networker);
         }
         [HttpPost]

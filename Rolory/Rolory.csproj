@@ -255,6 +255,10 @@
     <Compile Include="Migrations\201903271348552_IsEmailBoolMessageModel.Designer.cs">
       <DependentUpon>201903271348552_IsEmailBoolMessageModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903271443553_RemovedEmailFromNetworkerModel.cs" />
+    <Compile Include="Migrations\201903271443553_RemovedEmailFromNetworkerModel.Designer.cs">
+      <DependentUpon>201903271443553_RemovedEmailFromNetworkerModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -415,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903271348552_IsEmailBoolMessageModel.resx">
       <DependentUpon>201903271348552_IsEmailBoolMessageModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903271443553_RemovedEmailFromNetworkerModel.resx">
+      <DependentUpon>201903271443553_RemovedEmailFromNetworkerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
