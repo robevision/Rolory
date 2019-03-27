@@ -247,6 +247,10 @@
     <Compile Include="Migrations\201903271308153_EmailPropertiesToMessageModel.Designer.cs">
       <DependentUpon>201903271308153_EmailPropertiesToMessageModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903271317500_AddedNetworkerEmailProperty.cs" />
+    <Compile Include="Migrations\201903271317500_AddedNetworkerEmailProperty.Designer.cs">
+      <DependentUpon>201903271317500_AddedNetworkerEmailProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -401,6 +405,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903271308153_EmailPropertiesToMessageModel.resx">
       <DependentUpon>201903271308153_EmailPropertiesToMessageModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903271317500_AddedNetworkerEmailProperty.resx">
+      <DependentUpon>201903271317500_AddedNetworkerEmailProperty.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
