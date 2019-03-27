@@ -10,27 +10,29 @@
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
-        
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+
+        @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>*@
         <div class="navbar-collapse collapse">
             <div class="container">
-                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                        <img src="~/Content/images/logo.png" alt="Site Logo" style="height: 30px; width:125px" />
-                    </a>
-                        <ul class="nav navbar-nav">
-                            <li style="font-size:medium"><br /><h4>Get In Touch With:</h4></li>
-                            <li><br />@Html.ActionLink("Us", "Contact", "Home")</li>
-                            <li><br />@Html.ActionLink("Your Contacts", "Index", "Contacts")</li>
-                        </ul>
-                        <br/>
-                        <ul class="nav navbar-nav">
-                            <li>@Html.ActionLink("Select","Index","Random")</li>
-                        </ul>
-                @Html.Partial("_LoginPartial")
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                    <img src="~/Content/images/logo.png" alt="Site Logo" style="height: 30px; width:125px" />
+                </a>
+                <ul class="nav navbar-nav">
+                    <li style="font-size:medium"><br /><h4>Get In Touch With:</h4></li>
+                    <li><br />@Html.ActionLink("Us", "Contact", "Home")</li>
+                    <li><br />@Html.ActionLink("Your Contacts", "Index", "Random")</li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><br />@Html.ActionLink("Search", "Index", "Contacts")</li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><br />@Html.ActionLink("Notifications", "Index", "Messages")</li>
+                </ul>
+                <h5><br />@Html.Partial("_LoginPartial")</h5>
             </div>
         </div>
     </div>

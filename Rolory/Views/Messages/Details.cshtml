@@ -1,0 +1,90 @@
+﻿@model Rolory.Models.Message
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Message</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Networker.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Networker.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Subject)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Postmark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Postmark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ToEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ToEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailCC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailCC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailBCC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailBCC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

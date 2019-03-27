@@ -148,6 +148,7 @@ namespace Rolory.Controllers
         public ActionResult Create()
         {
             ViewBag.States = stateList;
+            ViewBag.Types = typeList;
             ViewBag.AddressId = new SelectList(db.Addresses, "Id", "AddressType");
             ViewBag.AltAddressId = new SelectList(db.Addresses, "Id", "AddressType");
             ViewBag.DescriptionId = new SelectList(db.Descriptions, "Id", "Gender");
@@ -164,6 +165,20 @@ namespace Rolory.Controllers
         {
             if (ModelState.IsValid)
             {
+                string userId = User.Identity.GetUserId();
+                var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+                contact.NetworkerId = networker.Id;
+                contact.LastUpdated = DateTime.Now;
+                contact.PhoneType = Request.Form["Phone Type"].ToString();
+                contact.AltPhoneNumberType = Request.Form["Alternate Phone Type"].ToString();
+                var PhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.PhoneType).SingleOrDefault();
+                PhoneType = contact.PhoneType;
+                var altPhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AltPhoneNumberType).SingleOrDefault();
+                altPhoneType = contact.AltPhoneNumberType;
+                Description description = new Description();
+                contact.DescriptionId = description.Id;
+                db.Descriptions.Add(description);
+                db.SaveChanges();
                 db.Contacts.Add(contact);
                 db.SaveChanges();
                 return RedirectToAction("Index");

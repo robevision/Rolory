@@ -23,7 +23,7 @@ namespace Rolory.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            msg.BuildEmail(3, "Test", "Testy test test. This is a test to see if this email works. Testing testing, test, test.");
+            //msg.BuildEmail(3, "Test", "Testy test test. This is a test to see if this email works. Testing testing, test, test.");
             var nextWeek = DateTime.Today.AddDays(7);
             List<Contact> pushedContacts = new List<Contact>();
             List<Contact> pushedContactsByBirthDate = new List<Contact>();

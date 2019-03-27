@@ -16,6 +16,22 @@ namespace Rolory.Controllers
         {
             db = new ApplicationDbContext();
         }
+        public void BuildMessage(int id, string subject, string body, DateTime? postmark = null)
+        {
+            var networker = db.Networkers.Where(n => n.Id == id).SingleOrDefault();
+            var user = db.Users.Where(u => u.Id == networker.UserId).SingleOrDefault();
+            Message message = new Message();
+            message.NetworkerId = id;
+            message.Subject = subject;
+            message.Body = body;
+            if(postmark == null)
+            {
+                postmark = DateTime.Now;
+            }
+            message.Postmark = postmark.Value;
+            message.IsActive = true;
+            SendMessage(message);
+        }
         public void BuildEmail(int id, string subject, string body, string cc = null, string bcc = null)
         {
             var networker = db.Networkers.Where(n => n.Id == id).SingleOrDefault();
@@ -76,6 +92,7 @@ namespace Rolory.Controllers
                 errorMessage.Body = "Unsuccessful email";
                 errorMessage.NetworkerId = builtMessage.NetworkerId;
                 errorMessage.Postmark = DateTime.Now;
+                SendMessage(builtMessage);
                 db.Messages.Add(errorMessage);
                 db.SaveChanges();
             }
