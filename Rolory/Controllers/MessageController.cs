@@ -41,7 +41,7 @@ namespace Rolory.Controllers
                 WebMail.From = "rolorycontactmanager@gmail.com";
 
                 //Send email  
-                WebMail.Send(to: message.ToEmail, subject: message.EmailSubject, body: message.EMailBody, cc: message.EmailCC, bcc: message.EmailBCC, isBodyHtml: true);
+                WebMail.Send(to: message.ToEmail, subject: message.Subject, body: message.Body, cc: message.EmailCC, bcc: message.EmailBCC, isBodyHtml: true);
                 ViewBag.Status = "Email Sent Successfully.";
             }
             catch (Exception)
