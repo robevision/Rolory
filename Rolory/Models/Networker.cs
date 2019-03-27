@@ -17,6 +17,7 @@ namespace Rolory.Models
         public string LastName { get; set; }
         [Display(Name = "Email Notifications")]
         public bool ReceiveEmails { get; set; }
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Activities")]
         public string UserActivities { get; set; }
         public string Occupation { get; set; }
