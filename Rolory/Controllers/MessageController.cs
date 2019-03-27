@@ -18,6 +18,7 @@ namespace Rolory.Controllers
         }
         public ActionResult SendEmail()
         {
+            
             return View();
         }
         [HttpPost]
