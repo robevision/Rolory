@@ -11,16 +11,19 @@ namespace Rolory.Controllers
     public class RandomController : Controller
     {
         private ApplicationDbContext db;
+        private MessageManagement msg;
         Random random;
         public RandomController()
         {
             db = new ApplicationDbContext();
             random = new Random();
+            msg = new MessageManagement();
         }
         // GET: Random
         [HttpGet]
         public ActionResult Index()
         {
+            msg.BuildEmail(3, "Test", "Testy test test. This is a test to see if this email works. Testing testing, test, test.");
             var nextWeek = DateTime.Today.AddDays(7);
             List<Contact> pushedContacts = new List<Contact>();
             List<Contact> pushedContactsByBirthDate = new List<Contact>();
@@ -83,16 +86,21 @@ namespace Rolory.Controllers
             pushedContacts.Add(pushedContactsByAnniversaryDate.SingleOrDefault());
             pushedContacts.Add(pushedContactsByProfession.SingleOrDefault());
             pushedContacts.Add(pushedContactsByRelationship.SingleOrDefault());
-            if (pushedContacts == null)
+            if (pushedContacts.Count == 4 && pushedContacts[0] == null && pushedContacts[1] == null && pushedContacts[2] == null && pushedContacts[3] == null)
             {
-                Contact contact = null;
-                do
+                if(filteredContactList.Count != 0)
                 {
-                    int r = random.Next(filteredContactList.Count);
-                    contact = filteredContactList[r];
+                    Contact contact = null;
+                    do
+                    {
+                        int r = random.Next(filteredContactList.Count);
+                        contact = filteredContactList[r];
+                    }
+                    while (contact == null);
+                    return View(contact);
                 }
-                while (contact == null);
-                return View(contact);
+                return RedirectToAction("Complete", "Random");
+              
             }
             Contact filteredContact = null;
             do
@@ -117,12 +125,17 @@ namespace Rolory.Controllers
             {
                 ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
             }
+           
             return View(filteredContact);
         }
         [HttpPost]
         public ActionResult Index(Contact contact)
         {
             return RedirectToAction("Index", "Random");
+        }
+        public ActionResult Complete()
+        {
+            return View();
         }
         // GET: Random/Details/5
         public ActionResult Details(int id)

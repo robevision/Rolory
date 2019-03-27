@@ -1,28 +1,25 @@
-﻿using Microsoft.AspNet.Identity;
-using Rolory.Models;
+﻿using Rolory.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
-using System.Web.Mvc;
 
 namespace Rolory.Controllers
 {
-    public class MessageController : Controller
+    public class MessageManagement
     {
         private ApplicationDbContext db;
+        private Message errorMessage;
         // GET: Message
-       public MessageController()
+        public MessageManagement()
         {
             db = new ApplicationDbContext();
         }
-        //BuildEmail(5)
-        public ActionResult BuildEmail(int id, string subject, string body, string cc = null, string bcc = null)
+        public void BuildEmail(int id, string subject, string body, string cc = null, string bcc = null)
         {
-            string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.Id == id).SingleOrDefault();
-            var user = db.Users.Where(u => u.Id == userId).SingleOrDefault();
+            var user = db.Users.Where(u => u.Id == networker.UserId).SingleOrDefault();
             Message message = new Message();
             message.NetworkerId = id;
             var emailAddressNullCheck = user.Email;
@@ -30,23 +27,24 @@ namespace Rolory.Controllers
             message.Body = body;
             message.EmailCC = cc;
             message.EmailBCC = bcc;
+
             if (emailAddressNullCheck != null && networker.ReceiveEmails == true)
             {
                 message.ToEmail = user.Email;
                 message.IsEmail = true;
                 message.Postmark = DateTime.Now;
-                return RedirectToAction("SendEmail", "Message", new { builtMessage = message });
+                SendEmail(message);
             }
+
             else
             {
                 message.IsActive = true;
                 message.IsEmail = false;
                 message.Postmark = DateTime.Now;
-                return RedirectToAction("SendMessage", "Message", new { builtMessage = message });
+                SendMessage(message);
             }
-         
-            
         }
+
         public void SendEmail(Message builtMessage)
         {
             try
@@ -68,14 +66,18 @@ namespace Rolory.Controllers
 
                 //Send email  
                 WebMail.Send(to: builtMessage.ToEmail, subject: builtMessage.Subject, body: builtMessage.Body, cc: builtMessage.EmailCC, bcc: builtMessage.EmailBCC, isBodyHtml: true);
-                ViewBag.Status = "Email Sent Successfully.";
                 db.Messages.Add(builtMessage);
                 db.SaveChanges();
             }
             catch (Exception)
             {
-                ViewBag.Status = "Problem while sending email, Please check details.";
-
+                errorMessage = new Message();
+                errorMessage.Subject = "Error";
+                errorMessage.Body = "Unsuccessful email";
+                errorMessage.NetworkerId = builtMessage.NetworkerId;
+                errorMessage.Postmark = DateTime.Now;
+                db.Messages.Add(errorMessage);
+                db.SaveChanges();
             }
         }
         public void SendMessage(Message builtMessage)
