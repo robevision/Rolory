@@ -176,6 +176,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InteractionsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessageManagement.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
@@ -352,12 +353,16 @@
     <Content Include="Views\Messages\Details.cshtml" />
     <Content Include="Views\Messages\Edit.cshtml" />
     <Content Include="Views\Messages\Index.cshtml" />
+    <Content Include="Views\Interactions\Create.cshtml" />
+    <Content Include="Views\Interactions\Delete.cshtml" />
+    <Content Include="Views\Interactions\Details.cshtml" />
+    <Content Include="Views\Interactions\Edit.cshtml" />
+    <Content Include="Views\Interactions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
     <Folder Include="UserImages\" />
-    <Folder Include="Views\Message\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
