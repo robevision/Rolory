@@ -177,6 +177,7 @@ namespace Rolory.Controllers
                 altPhoneType = contact.AltPhoneNumberType;
                 Description description = new Description();
                 contact.DescriptionId = description.Id;
+                contact.Description = description;
                 db.Descriptions.Add(description);
                 db.SaveChanges();
                 db.Contacts.Add(contact);
