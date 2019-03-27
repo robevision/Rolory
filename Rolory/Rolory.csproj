@@ -327,12 +327,12 @@
     <Content Include="Views\User\Modify.cshtml" />
     <Content Include="Views\Contacts\About.cshtml" />
     <Content Include="Views\Contacts\Build.cshtml" />
+    <Content Include="Views\Random\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
     <Folder Include="UserImages\" />
-    <Folder Include="Views\Random\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

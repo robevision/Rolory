@@ -18,6 +18,7 @@ namespace Rolory.Controllers
             random = new Random();
         }
         // GET: Random
+        [HttpGet]
         public ActionResult Index()
         {
             var nextWeek = DateTime.Today.AddDays(7);
@@ -32,13 +33,24 @@ namespace Rolory.Controllers
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
             foreach(Contact contact in filteredContactList)
             {
+                contact.Description = db.Contacts.Where(c=>c.DescriptionId == contact.DescriptionId).Select(c=>c.Description).SingleOrDefault();
+                DateTime? birthDateNullTest = contact.Description.BirthDate;
+                DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
+                if (birthDateNullTest == null)
+                {
+                    contact.Description.BirthDate = new DateTime(0001, 12, 25);
+                }
                 DateTime contactBirthDate = contact.Description.BirthDate.Value;
                 int contactBirthMonth = contactBirthDate.Month;
                 var contactWorkTitle = contact.WorkTitle;
+                if (anniversaryDateNullTest == null)
+                {
+                    contact.Description.Anniversary = new DateTime(0001, 12, 25);
+                }
                 DateTime contactAnniversary = contact.Description.Anniversary.Value;
                 int contactAnniversaryMonth = contactAnniversary.Month;
                 var contactRelation = contact.Description.Relationship;
-                if(contactBirthDate != null)
+                if(!contactBirthDate.ToString().Contains("12/25/0001"))
                 {
                     if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
                     {
@@ -52,7 +64,7 @@ namespace Rolory.Controllers
                         pushedContactsByProfession.Add(contact);
                     }
                 }
-                if (contactAnniversary != null)
+                if (!contactAnniversary.ToString().Contains("12/25/0001"))
                 {
                     if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
                     {
@@ -93,8 +105,21 @@ namespace Rolory.Controllers
             {
                 ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
             }
-            return View();
+            else if (filteredContact.Id == pushedContactsByAnniversaryDate.Select(p => p.Id).SingleOrDefault())
+            {
+                ViewBag.Message = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?";
+            }
+            else if (filteredContact.Id == pushedContactsByProfession.Select(p => p.Id).SingleOrDefault())
+            {
+                ViewBag.Message = $"{filteredContact.GivenName} and you share a career. Why not reach out?";
+            }
+            else if (filteredContact.Id == pushedContactsByRelationship.Select(p => p.Id).SingleOrDefault())
+            {
+                ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
+            }
+            return View(filteredContact);
         }
+        [HttpPost]
         public ActionResult Index(Contact contact)
         {
             return RedirectToAction("Index", "Random");
