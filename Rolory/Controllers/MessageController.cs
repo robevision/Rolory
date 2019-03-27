@@ -1,4 +1,5 @@
-﻿using Rolory.Models;
+﻿using Microsoft.AspNet.Identity;
+using Rolory.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,17 @@ namespace Rolory.Controllers
         {
             db = new ApplicationDbContext();
         }
-        public ActionResult SendEmail()
+        public ActionResult SendEmail(int id, string subject, string body, string cc = null, string bcc = null)
         {
-            
+            //string userId = User.Identity.GetUserId();
+            var networker = db.Networkers.Where(n => n.Id == id).SingleOrDefault();
+            Message message = new Message();
+            message.NetworkerId = id;
+            message.ToEmail = networker.EmailAddress;
+            message.Subject = subject;
+            message.Body = body;
+            message.EmailCC = cc;
+            message.EmailBCC = bcc;
             return View();
         }
         [HttpPost]

@@ -26,6 +26,7 @@ namespace Rolory.Models
         [DataType(DataType.EmailAddress)]
         [Display(Name = "BCC")]
         public string EmailBCC { get; set; }
+        public bool IsEmail { get; set; }
         [Display(Name = "New")]
         public bool? IsActive { get; set; }
         [ForeignKey("Networker")]
