@@ -15,13 +15,13 @@ namespace Rolory.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Interactions
-        public ActionResult Index(int id)
+        public ActionResult Index(int? id)
         {
-            ViewBag.Contact = db.Contacts.Where(c => c.Id == id).SingleOrDefault();
+            int contactId = db.Contacts.Where(c => c.Id == id).Select(c=>c.Id).SingleOrDefault();
             var interactions = db.Interactions.Include(i => i.Contact).Include(i => i.Message);
+            ViewBag.Id = contactId;
             return View(interactions.ToList());
         }
-
         // GET: Interactions/Details/5
         public ActionResult Details(int? id)
         {
@@ -38,12 +38,17 @@ namespace Rolory.Controllers
         }
 
         // GET: Interactions/Create
-        public ActionResult Create(Contact contact)
+        [HttpGet]
+        public ActionResult Create(int id)
         {
             Interaction interaction = new Interaction();
-            interaction.ContactId = contact.Id;
-            ViewBag.MessageId = new SelectList(db.Messages, "Id", "Subject");
-            return View(interaction);
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            ContactInteractionViewModel contactInteraction = new ContactInteractionViewModel();
+            contactInteraction.Contact = contact;
+            //interaction.ContactId = id;
+            //interaction.Contact = contact;
+            contactInteraction.Interaction = interaction;
+            return View(contactInteraction);
         }
 
         // POST: Interactions/Create
@@ -51,19 +56,20 @@ namespace Rolory.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Moment,MessageId,ContactId")] Interaction interaction)
+        public ActionResult Create(ContactInteractionViewModel contactInteraction)
         {
             if (ModelState.IsValid)
             {
-                interaction.Message.Postmark = DateTime.Now;
-                db.Interactions.Add(interaction);
+                contactInteraction.Interaction.ContactId = contactInteraction.Contact.Id;
+                contactInteraction.Interaction.Contact = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c).SingleOrDefault();
+                contactInteraction.Interaction.Message.NetworkerId = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.NetworkerId).SingleOrDefault();
+                contactInteraction.Interaction.Message.Networker = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.Networker).SingleOrDefault();
+                contactInteraction.Interaction.Message.Postmark = DateTime.Now;
+                db.Interactions.Add(contactInteraction.Interaction);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.ContactId = new SelectList(db.Contacts, "Id", "Image", interaction.ContactId);
-            ViewBag.MessageId = new SelectList(db.Messages, "Id", "Subject", interaction.MessageId);
-            return View(interaction);
+            return View(contactInteraction);
         }
 
         // GET: Interactions/Edit/5
@@ -127,13 +133,13 @@ namespace Rolory.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

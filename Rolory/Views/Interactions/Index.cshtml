@@ -2,18 +2,18 @@
 
 @{
     ViewBag.Title = "Index";
-    var contact = ViewBag.Contact;
 }
 
+<br/>
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", "Interactions", new { contact = Model.Where(c => c.Contact == contact).Select(c => c) })
+    @Html.ActionLink("Create New", "Create", "Interactions", new { id = @ViewBag.Id}, htmlAttributes: new { @class = "" })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Contact.Image)
+            @Html.DisplayNameFor(model => model.Contact.GivenName) @Html.DisplayNameFor(model => model.Contact.FamilyName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Message.Subject)
@@ -24,23 +24,25 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Contact.Image)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Message.Subject)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Moment)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact.GivenName) @Html.DisplayNameFor(model => model.Contact.FamilyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Moment)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+        
+    }
 
 </table>

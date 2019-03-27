@@ -353,11 +353,11 @@
     <Content Include="Views\Messages\Details.cshtml" />
     <Content Include="Views\Messages\Edit.cshtml" />
     <Content Include="Views\Messages\Index.cshtml" />
-    <Content Include="Views\Interactions\Create.cshtml" />
     <Content Include="Views\Interactions\Delete.cshtml" />
     <Content Include="Views\Interactions\Details.cshtml" />
     <Content Include="Views\Interactions\Edit.cshtml" />
     <Content Include="Views\Interactions\Index.cshtml" />
+    <Content Include="Views\Interactions\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
