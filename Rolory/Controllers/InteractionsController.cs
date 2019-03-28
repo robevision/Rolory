@@ -37,8 +37,13 @@ namespace Rolory.Controllers
             return View(interactions.ToList());
         }
         // GET: Interactions/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? messageId)
         {
+            ViewBag.Message = db.Messages.Where(m => m.Id == messageId).SingleOrDefault();
+            if (messageId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -99,8 +104,8 @@ namespace Rolory.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ContactId = new SelectList(db.Contacts, "Id", "Image", interaction.ContactId);
-            ViewBag.MessageId = new SelectList(db.Messages, "Id", "Subject", interaction.MessageId);
+            interaction.MessageId = db.Messages.Where(m => m.Id == interaction.MessageId).Select(m=>m.Id).SingleOrDefault();
+            interaction.Message = db.Messages.Where(m => m.Id == interaction.MessageId).SingleOrDefault();
             return View(interaction);
         }
 
@@ -109,13 +114,19 @@ namespace Rolory.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Moment,MessageId,ContactId")] Interaction interaction)
+        public ActionResult Edit([Bind(Include = "Id,Moment,Message,MessageId,ContactId")] Interaction interaction)
         {
             if (ModelState.IsValid)
             {
+                interaction.Contact = db.Contacts.Where(c => c.Id == interaction.ContactId).SingleOrDefault();
+                interaction.Message.Id = interaction.MessageId.Value;
+                interaction.Message.Postmark = DateTime.Now;
+                Message message = interaction.Message;
+                interaction.Message.NetworkerId = interaction.Contact.NetworkerId;
+                db.Entry(message).State = EntityState.Modified;
                 db.Entry(interaction).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = interaction.ContactId });
             }
             ViewBag.ContactId = new SelectList(db.Contacts, "Id", "Image", interaction.ContactId);
             ViewBag.MessageId = new SelectList(db.Messages, "Id", "Subject", interaction.MessageId);

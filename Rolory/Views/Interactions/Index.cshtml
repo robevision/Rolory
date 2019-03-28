@@ -30,7 +30,8 @@
             @Html.DisplayFor(modelItem => item.Moment)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Contact.GivenName) @Html.DisplayNameFor(model => model.Contact.FamilyName)
+            @Html.DisplayFor(modelItem => item.Contact.GivenName) 
+            @Html.DisplayFor(modelItem => item.Contact.FamilyName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Message.Subject)
@@ -38,7 +39,7 @@
 
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id, messageId = item.Message.Id }, null) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
     </tr>

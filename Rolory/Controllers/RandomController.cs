@@ -109,6 +109,8 @@ namespace Rolory.Controllers
                         contact = filteredContactList[r];
                     }
                     while (contact == null);
+                    contact.CoolDown = true;
+                    contact.CoolDownTime = DateTime.Now;
                     return View(contact);
                 }
                 return RedirectToAction("Complete", "Random");
@@ -137,7 +139,8 @@ namespace Rolory.Controllers
             {
                 ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
             }
-           
+            filteredContact.CoolDown = true;
+            filteredContact.CoolDownTime = DateTime.Now;
             return View(filteredContact);
         }
         [HttpPost]

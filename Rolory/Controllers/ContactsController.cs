@@ -290,8 +290,7 @@ namespace Rolory.Controllers
             contactDescription.Contact = contact;
             if(contact.DescriptionId != null)
             {
-                //Bring to Description Edit Page when you create that View
-                return RedirectToAction("Expand", "Contacts");
+                return RedirectToAction("Expand", "Contacts", new { passedId = id });
             }
             return View(contactDescription);
         }
@@ -314,9 +313,20 @@ namespace Rolory.Controllers
 
             return View();
         }
-        public ActionResult Expand(int? id)
+        [HttpGet]
+        public ActionResult Expand(int? passedId)
         {
-            return View();
+            ViewBag.Gender = genderList;
+            ViewBag.Category = categoryList;
+            ViewBag.Relationship = relationshipList;
+            ViewBag.States = stateList;
+            ViewBag.Types = typeList;
+            var contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
+            var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
+            ContactDescriptionViewModel contactDescriptionViewModel = new ContactDescriptionViewModel();
+            contactDescriptionViewModel.Contact = contact;
+            contactDescriptionViewModel.Description = description;
+            return View(contactDescriptionViewModel);
         }
         // GET: Contacts/Delete/5
         public ActionResult Delete(int? id)
