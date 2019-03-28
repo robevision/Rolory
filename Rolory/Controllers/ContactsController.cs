@@ -119,8 +119,19 @@ namespace Rolory.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
             string userId = User.Identity.GetUserId();
-            var user = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
-            var contacts = db.Contacts.Where(c=>c.NetworkerId == user.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
+            var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
+            var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
+            if (networkerNullCheck == false)
+            {
+                return RedirectToAction("CreateAccount", "User");
+            }
+            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).SingleOrDefault();
+            if (contactsNullCheck == null)
+            {
+                //Add a page to send the logged in user to a message that says they have no contacts logged
+                return RedirectToAction("Create", "Contacts");
+            }
+            var contacts = db.Contacts.Where(c=>c.NetworkerId == networker.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
             return View(contacts.ToList());
         }
 
@@ -280,7 +291,7 @@ namespace Rolory.Controllers
             if(contact.DescriptionId != null)
             {
                 //Bring to Description Edit Page when you create that View
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Expand", "Contacts");
             }
             return View(contactDescription);
         }
@@ -301,6 +312,10 @@ namespace Rolory.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            return View();
+        }
+        public ActionResult Expand(int? id)
+        {
             return View();
         }
         // GET: Contacts/Delete/5

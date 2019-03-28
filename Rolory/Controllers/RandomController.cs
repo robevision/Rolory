@@ -33,6 +33,17 @@ namespace Rolory.Controllers
             List<Contact> pushedContactsByRelationship = new List<Contact>();
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+            var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
+            if (networkerNullCheck == false)
+            {
+               return RedirectToAction("CreateAccount", "User");
+            }
+            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).SingleOrDefault();
+            if (contactsNullCheck == null)
+            {
+                //Add a page to send the logged in user to a message that says they have no contacts logged
+               return RedirectToAction("Create", "Contacts");
+            }
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
             foreach(Contact contact in filteredContactList)

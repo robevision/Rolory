@@ -3,8 +3,8 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
+<br/>
+<h2>Contacts</h2>
 @using (Html.BeginForm())
 {
     <p>
@@ -18,7 +18,7 @@
 <table class="table">
     <tr>
         <th>   
-            @Html.DisplayNameFor(model => model.Image)
+            @Html.DisplayName("Photo")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Prefix)
@@ -57,7 +57,7 @@
             @Html.DisplayFor(modelItem => item.LastUpdated)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.InContact)
+            @Html.ValueFor(modelItem => item.InContact)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |

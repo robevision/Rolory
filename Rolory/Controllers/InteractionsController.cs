@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Rolory.Models;
 
 namespace Rolory.Controllers
@@ -17,8 +18,21 @@ namespace Rolory.Controllers
         // GET: Interactions
         public ActionResult Index(int? id)
         {
-            int contactId = db.Contacts.Where(c => c.Id == id).Select(c=>c.Id).SingleOrDefault();
-            var interactions = db.Interactions.Include(i => i.Contact).Include(i => i.Message);
+            string userId = User.Identity.GetUserId();
+            var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
+            var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
+            if (networkerNullCheck == false)
+            {
+                return RedirectToAction("CreateAccount", "User");
+            }
+            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).SingleOrDefault();
+            if (contactsNullCheck == null)
+            {
+                //Add a page to send the logged in user to a message that says they have no contacts logged
+                return RedirectToAction("Create", "Contacts");
+            }
+            int contactId = db.Contacts.Where(c => c.Id == id).Where(c=>c.NetworkerId == networker.Id).Select(c=>c.Id).SingleOrDefault();
+            var interactions = db.Interactions.Where(i => i.ContactId == contactId).Include(i => i.Message);
             ViewBag.Id = contactId;
             return View(interactions.ToList());
         }
@@ -65,6 +79,7 @@ namespace Rolory.Controllers
                 contactInteraction.Interaction.Message.NetworkerId = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.NetworkerId).SingleOrDefault();
                 contactInteraction.Interaction.Message.Networker = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.Networker).SingleOrDefault();
                 contactInteraction.Interaction.Message.Postmark = DateTime.Now;
+                contactInteraction.Interaction.Message.IsInteraction = true;
                 db.Interactions.Add(contactInteraction.Interaction);
                 db.SaveChanges();
                 return RedirectToAction("Index");
