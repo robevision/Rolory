@@ -29,6 +29,7 @@ namespace Rolory.Models
         public bool IsEmail { get; set; }
         [Display(Name = "New")]
         public bool? IsActive { get; set; }
+        public bool IsInteraction { get; set; }
         [ForeignKey("Networker")]
         public int NetworkerId { get; set; }
         public Networker Networker { get; set; }

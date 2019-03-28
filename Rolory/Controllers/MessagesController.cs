@@ -6,10 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Rolory.Models;
 
 namespace Rolory.Controllers
 {
+    [Authorize]
     public class MessagesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -17,7 +19,9 @@ namespace Rolory.Controllers
         // GET: Messages
         public ActionResult Index()
         {
-            var messages = db.Messages.Include(m => m.Networker);
+            string userId = User.Identity.GetUserId();
+            var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
+            var messages = db.Messages.Where(m => m.Networker == networker).Where(m=>m.IsEmail == false).Select(m => m).ToList();
             return View(messages.ToList());
         }
 

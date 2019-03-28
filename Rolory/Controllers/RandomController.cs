@@ -20,6 +20,7 @@ namespace Rolory.Controllers
             msg = new MessageManagement();
         }
         // GET: Random
+        [Authorize]
         [HttpGet]
         public ActionResult Index()
         {
