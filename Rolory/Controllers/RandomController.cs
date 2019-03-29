@@ -2,6 +2,7 @@
 using Rolory.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -44,6 +45,21 @@ namespace Rolory.Controllers
                 //Add a page to send the logged in user to a message that says they have no contacts logged
                return RedirectToAction("Create", "Contacts");
             }
+            DateTime endCoolDownTimer = DateTime.Now;
+            List<Contact> contactsBackInPool = new List<Contact>();
+            var contactsWithCoolDown = db.Contacts.Where(c => c.CoolDown == true).ToList();
+            foreach (Contact contact in contactsWithCoolDown)
+            {
+                if(contact.CoolDownTime.Value.AddHours(1) <= endCoolDownTimer)
+                {
+                    contactsBackInPool.Add(contact);
+                }
+            }
+            List<bool> coolDownProperty = contactsBackInPool.Where(c => c.CoolDown == true).Select(c=>c.CoolDown).ToList();
+            for (int i = 0; i < coolDownProperty.Count(); i++)
+            {
+                coolDownProperty[i] = false;
+            }
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
             foreach(Contact contact in filteredContactList)
@@ -53,19 +69,19 @@ namespace Rolory.Controllers
                 DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
                 if (birthDateNullTest == null)
                 {
-                    contact.Description.BirthDate = new DateTime(0001, 12, 25);
+                    contact.Description.BirthDate = new DateTime(1801, 12, 25);
                 }
                 DateTime contactBirthDate = contact.Description.BirthDate.Value;
                 int contactBirthMonth = contactBirthDate.Month;
                 var contactWorkTitle = contact.WorkTitle;
                 if (anniversaryDateNullTest == null)
                 {
-                    contact.Description.Anniversary = new DateTime(0001, 12, 25);
+                    contact.Description.Anniversary = new DateTime(1801, 12, 25);
                 }
                 DateTime contactAnniversary = contact.Description.Anniversary.Value;
                 int contactAnniversaryMonth = contactAnniversary.Month;
                 var contactRelation = contact.Description.Relationship;
-                if(!contactBirthDate.ToString().Contains("12/25/0001"))
+                if(!contactBirthDate.ToString().Contains("12/25/1801"))
                 {
                     if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
                     {
@@ -79,7 +95,7 @@ namespace Rolory.Controllers
                         pushedContactsByProfession.Add(contact);
                     }
                 }
-                if (!contactAnniversary.ToString().Contains("12/25/0001"))
+                if (!contactAnniversary.ToString().Contains("12/25/1801"))
                 {
                     if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
                     {
@@ -110,7 +126,11 @@ namespace Rolory.Controllers
                     }
                     while (contact == null);
                     contact.CoolDown = true;
-                    contact.CoolDownTime = DateTime.Now;
+                    string timeNow = DateTime.Now.ToString();
+                    DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
+                    contact.CoolDownTime = nullableTimeNow;
+                    db.Entry(contact).State = EntityState.Modified;
+                    db.SaveChanges();
                     return View(contact);
                 }
                 return RedirectToAction("Complete", "Random");
@@ -141,6 +161,8 @@ namespace Rolory.Controllers
             }
             filteredContact.CoolDown = true;
             filteredContact.CoolDownTime = DateTime.Now;
+            db.Entry(filteredContact).State = EntityState.Modified;
+            db.SaveChanges();
             return View(filteredContact);
         }
         [HttpPost]

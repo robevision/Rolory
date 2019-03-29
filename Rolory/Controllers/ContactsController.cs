@@ -150,7 +150,18 @@ namespace Rolory.Controllers
                 {
                     return RedirectToAction("Create", "Contacts");
                 }
-                return View(contact);
+                string inTouch = Convert.ToString(contact.InContact).ToLower();
+                switch (inTouch)
+                {
+                    case "true":
+                        ViewBag.InTouch = "Yes";
+                        return View(contact);
+                    case "false":
+                        ViewBag.InTouch = "No";
+                        return View(contact);
+                    default:
+                        return View(contact);
+                }
             }
             return RedirectToAction("Index", "Home");
         }
