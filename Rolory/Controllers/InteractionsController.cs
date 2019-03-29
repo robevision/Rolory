@@ -16,8 +16,9 @@ namespace Rolory.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Interactions
-        public ActionResult Index(int? id)
+        public ActionResult Index(int? id, bool? inTouch = null)
         {
+          
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
             var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
@@ -32,6 +33,14 @@ namespace Rolory.Controllers
                 return RedirectToAction("Create", "Contacts");
             }
             int contactId = db.Contacts.Where(c => c.Id == id).Where(c=>c.NetworkerId == networker.Id).Select(c=>c.Id).SingleOrDefault();
+            var contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
+            if (inTouch != null)
+            {
+                contact.InContact = Convert.ToBoolean(inTouch);
+                db.Entry(contact).State = EntityState.Modified;
+                db.SaveChanges();
+
+            }
             var interactions = db.Interactions.Where(i => i.ContactId == contactId).Include(i => i.Message);
             ViewBag.Id = contactId;
             return View(interactions.ToList());

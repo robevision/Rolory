@@ -125,8 +125,8 @@ namespace Rolory.Controllers
             {
                 return RedirectToAction("CreateAccount", "User");
             }
-            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).SingleOrDefault();
-            if (contactsNullCheck == null)
+            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
+            if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
             {
                 //Add a page to send the logged in user to a message that says they have no contacts logged
                 return RedirectToAction("Create", "Contacts");
@@ -248,8 +248,6 @@ namespace Rolory.Controllers
             if (ModelState.IsValid)
             {
                 contact.LastUpdated = DateTime.Now;
-                //contact.PhoneType = Request.Form["Phone Type"].ToString();
-                //contact.AltPhoneNumberType = Request.Form["Alternate Phone Type"].ToString();
                 var inContact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.InContact).SingleOrDefault();
                 inContact = contact.InContact;
                 var phoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.PhoneType).SingleOrDefault();

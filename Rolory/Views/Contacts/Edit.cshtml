@@ -79,7 +79,10 @@
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.DescriptionId)
     @Html.HiddenFor(model => model.NetworkerId)
+    @Html.HiddenFor(model => model.AddressId)
+    @Html.HiddenFor(model => model.AltAddressId)
     <div class="form-group">
         @Html.LabelFor(model => model.Prefix, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -115,7 +118,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.PhoneType, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.PhoneType, types, "Select Type", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.PhoneType, types, Model.PhoneType, htmlAttributes: new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.PhoneType, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -148,7 +151,6 @@
         @Html.LabelFor(model => model.AltPhoneNumberType, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.DropDownListFor(model => model.AltPhoneNumberType, types, Model.AltPhoneNumberType, htmlAttributes: new { @class = "form-control" })
-            @*@Html.DropDownListFor(model => model.AltPhoneNumberType, types, "Select Type", htmlAttributes: new { @class = "form-control" })*@
 
             @Html.ValidationMessageFor(model => model.AltPhoneNumberType, "", new { @class = "text-danger" })
         </div>
@@ -163,14 +165,14 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.InContact, htmlAttributes: new { @class = "control-label col-md-2" })
-    <label class="switch">
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round">
 
-        <input type="checkbox" value="model.Contact.InContact">
-        <span class="slider round">
-            @Html.EditorFor(model => model.InContact, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.InContact, "", new { @class = "text-danger" })
-        </span>
-    </label>
+                @Html.CheckBoxFor(model => model.InContact, new { htmlAttributes = new { @class = "slider round form-control" } })
+                @Html.ValidationMessageFor(model => model.InContact, "", new { @class = "text-danger" })
+            </span>
+        </label>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

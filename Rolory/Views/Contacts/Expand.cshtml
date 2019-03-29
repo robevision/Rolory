@@ -256,8 +256,8 @@
         @Html.LabelFor(model => model.Contact.Description.Anniversary, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             <input type="date" />
-                   @Html.EditorFor(model => model.Contact.Description.Anniversary, new { htmlAttributes = new { @class = "form-control" } })
-                   @Html.ValidationMessageFor(model => model.Contact.Description.Anniversary, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Contact.Description.Anniversary, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Contact.Description.Anniversary, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
@@ -274,18 +274,18 @@
             @Html.ValidationMessageFor(model => model.Contact.Description.Notes, "", new { @class = "text-danger" })
         </div>
     </div>
-    <!-- Rounded switch -->
-    @Html.Label("Stay In Contact", htmlAttributes: new { @class = "control-label col-md-2" })
-    <label class="switch">
+    <div class="form-group">
+        <!-- Rounded switch -->
+        @Html.Label("Stay In Contact", htmlAttributes: new { @class = "control-label col-md-2" })
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round">
+                   @Html.CheckBoxFor(model => model.Contact.Perpetual, new { htmlAttributes = new { @class = "slider round form-control"} })
+                   @Html.ValidationMessageFor(model => model.Contact.Perpetual, "", new { @class = "text-danger" })
+            </span>
+        </label>
+    </div>
 
-        @*<input type="checkbox" checked>*@
-
-        <span class="slider round">
-
-            @Html.CheckBoxFor(model => model.Contact.Perpetual, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Contact.Perpetual, "", new { @class = "text-danger" })
-        </span>
-    </label>
     <br />
     <br />
     <div class="form-group">

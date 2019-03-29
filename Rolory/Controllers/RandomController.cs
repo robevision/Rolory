@@ -39,8 +39,8 @@ namespace Rolory.Controllers
             {
                return RedirectToAction("CreateAccount", "User");
             }
-            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).SingleOrDefault();
-            if (contactsNullCheck == null)
+            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
+            if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
             {
                 //Add a page to send the logged in user to a message that says they have no contacts logged
                return RedirectToAction("Create", "Contacts");
@@ -181,6 +181,22 @@ namespace Rolory.Controllers
         }
         public ActionResult Complete()
         {
+            return View();
+        }
+        public ActionResult GetInTouch(int? id)
+        {
+            var today = DateTime.Now.Day;
+            var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            if(contact.Description.BirthDate.Value.Month == DateTime.Now.Month)
+            {
+                if (contact.Description.BirthDate.Value.Day == today)
+                {
+                    ViewBag.Message = $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can a conversation going about how both of you have been!";
+                }
+                //if (contact.Description.BirthDate.Value.Day > today && contact.Description.Birthdate.Value.Day) ;
+            }
+            
+            
             return View();
         }
         // GET: Random/Details/5
