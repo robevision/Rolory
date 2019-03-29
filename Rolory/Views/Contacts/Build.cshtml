@@ -6,15 +6,15 @@
     IEnumerable<SelectListItem> category = ViewBag.Category;
     IEnumerable<SelectListItem> relationship = ViewBag.Relationship;
 }
-
-<h2>Build</h2>
+<br/>
+<h2>Details</h2>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
 <div class="form-horizontal">
-    <h4>Details</h4>
+  
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Contact.Id)
@@ -22,28 +22,29 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Description.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("Gender", gender, "Select Gender", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.Description.Gender, gender, "Select Gender", new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Description.BirthDate, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.Description.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Description.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Description.BirthDate, "", new { @class = "text-danger" })
+            <input type="date"
+                   @Html.EditorFor(model => model.Description.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+                   @Html.ValidationMessageFor(model => model.Description.BirthDate, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.Description.Category, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("Category", category, "Select Category", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.Description.Category, category, "Select Category", new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Description.Category, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.Description.Relationship, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("Relationship", relationship, "Select Relationship", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.Description.Relationship, relationship, "Select Relationship", new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Description.Relationship, "", new { @class = "text-danger" })
         </div>
     </div>

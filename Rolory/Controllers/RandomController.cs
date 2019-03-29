@@ -60,6 +60,15 @@ namespace Rolory.Controllers
             {
                 coolDownProperty[i] = false;
             }
+            foreach (Contact contact in contactsBackInPool)
+            {
+                foreach(bool coolDownBool in coolDownProperty)
+                {
+                    contact.CoolDown = coolDownBool;
+                    db.Entry(contact).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
             foreach(Contact contact in filteredContactList)

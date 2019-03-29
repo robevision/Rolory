@@ -2,8 +2,70 @@
 
 @{
     ViewBag.Title = "Edit";
-    IEnumerable <SelectListItem> types = ViewBag.Types;
+    IEnumerable<SelectListItem> types = ViewBag.Types;
     IEnumerable<SelectListItem> states = ViewBag.States;
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+    </style>
 }
 
 <h2>Edit</h2>
@@ -11,13 +73,13 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
 <div class="form-horizontal">
     <h4>Contact</h4>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Id)
-    @Html.HiddenFor(model=>model.NetworkerId)
+    @Html.HiddenFor(model => model.NetworkerId)
     <div class="form-group">
         @Html.LabelFor(model => model.Prefix, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -53,7 +115,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.PhoneType, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("Phone Type", types, "Select Type", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.PhoneType, types, "Select Type", htmlAttributes: new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.PhoneType, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -85,7 +147,9 @@
     <div class="form-group">
         @Html.LabelFor(model => model.AltPhoneNumberType, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("Alternate Phone Type", types, "Select Type", htmlAttributes: new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.AltPhoneNumberType, types, Model.AltPhoneNumberType, htmlAttributes: new { @class = "form-control" })
+            @*@Html.DropDownListFor(model => model.AltPhoneNumberType, types, "Select Type", htmlAttributes: new { @class = "form-control" })*@
+
             @Html.ValidationMessageFor(model => model.AltPhoneNumberType, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -99,12 +163,14 @@
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.InContact, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <div class="checkbox">
-                @Html.EditorFor(model => model.InContact)
-                @Html.ValidationMessageFor(model => model.InContact, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <label class="switch">
+
+        <input type="checkbox" value="model.Contact.InContact">
+        <span class="slider round">
+            @Html.EditorFor(model => model.InContact, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.InContact, "", new { @class = "text-danger" })
+        </span>
+    </label>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

@@ -40,7 +40,7 @@
                     pointer-events:none
                 }
 
-                .w3-btn .w3-disabled:hover, .w3-btn:disabled: hover {
+                .w3-btn .w3-disabled:hover, .w3-btn:disabled:hover {
                     box-shadow:none
                 }
     </style>
@@ -54,7 +54,7 @@
 <h4>@message</h4>
 <div>
     <h4>Are you in touch with @Html.DisplayFor(model => model.GivenName)?</h4>
-    <button class="w3-button w3-round-xlarge"> @Html.ActionLink("Yes", "Index", "Home")</button>
+    <button class="w3-button w3-round-xlarge"> @Html.ActionLink("Yes", "Details", "Interactions")</button>
     <button class="w3-button w3-round-xlarge">@Html.ActionLink("No", "Index", "Home")</button>
 </div>
 <h5>@Html.ActionLink("Skip >>", "Index", "Random")</h5>

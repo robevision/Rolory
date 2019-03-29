@@ -132,6 +132,9 @@ namespace Rolory.Controllers
                 return RedirectToAction("Create", "Contacts");
             }
             var contacts = db.Contacts.Where(c=>c.NetworkerId == networker.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
+            ViewBag.InTouch = null;
+            ViewBag.True = "True";
+            ViewBag.False = "False";
             return View(contacts.ToList());
         }
 
@@ -245,10 +248,12 @@ namespace Rolory.Controllers
             if (ModelState.IsValid)
             {
                 contact.LastUpdated = DateTime.Now;
-                contact.PhoneType = Request.Form["Phone Type"].ToString();
-                contact.AltPhoneNumberType = Request.Form["Alternate Phone Type"].ToString();
-                var PhoneType = db.Contacts.Where(c=>c.Id == contact.Id).Select(c => c.PhoneType).SingleOrDefault();
-                PhoneType = contact.PhoneType;
+                //contact.PhoneType = Request.Form["Phone Type"].ToString();
+                //contact.AltPhoneNumberType = Request.Form["Alternate Phone Type"].ToString();
+                var inContact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.InContact).SingleOrDefault();
+                inContact = contact.InContact;
+                var phoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.PhoneType).SingleOrDefault();
+                phoneType = contact.PhoneType;
                 var altPhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AltPhoneNumberType).SingleOrDefault();
                 altPhoneType = contact.AltPhoneNumberType;
                 db.Entry(contact).State = EntityState.Modified;
@@ -312,9 +317,12 @@ namespace Rolory.Controllers
             {
                 contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
                 contact.DescriptionId = description.Id;
-                description.Gender = Request.Form["Gender"].ToString();
-                description.Category = Request.Form["Category"].ToString();
-                description.Relationship = Request.Form["Relationship"].ToString();
+                var gender = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Gender).SingleOrDefault();
+                gender = description.Gender;
+                var category = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Category).SingleOrDefault();
+                category = description.Category;
+                var relationship = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Relationship).SingleOrDefault();
+                relationship = description.Relationship;
                 db.Descriptions.Add(description);
                 db.SaveChanges();
                 db.Entry(contact).State = EntityState.Modified;
@@ -338,6 +346,11 @@ namespace Rolory.Controllers
             contactDescriptionViewModel.Contact = contact;
             contactDescriptionViewModel.Description = description;
             return View(contactDescriptionViewModel);
+        }
+        [HttpPost]
+        public ActionResult Expand(ContactDescriptionViewModel contactDescription)
+        {
+            return RedirectToAction("Details","Contacts", new { id = contactDescription.Contact.Id });
         }
         // GET: Contacts/Delete/5
         public ActionResult Delete(int? id)

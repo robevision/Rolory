@@ -32,14 +32,15 @@
         <th>
             @Html.DisplayNameFor(model => model.LastUpdated)
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.InContact)
-        </th>
+        </th>*@
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
+
     <tr>
         <td>
             <img src="@Html.DisplayFor(modelItem => item.Image)" width="25" height="25" />
@@ -57,7 +58,10 @@
             @Html.DisplayFor(modelItem => item.LastUpdated)
         </td>
         <td>
-            @Html.ValueFor(modelItem => item.InContact)
+            @*@if (Html.DisplayTextFor(modelItem => item.InContact) == Html.DisplayText("True")) { ViewBag.InTouch = "Yes"; }
+            @if (Html.DisplayTextFor(modelItem => item.InContact) == Html.DisplayText("False")) { ViewBag.InTouch = "No"; }
+            @Html.ViewBag.InTouch*@
+            @*@Html.DisplayTextFor(modelItem => item.InContact)*@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
