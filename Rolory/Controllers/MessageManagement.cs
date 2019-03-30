@@ -1,6 +1,7 @@
 ﻿using Rolory.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
@@ -29,8 +30,16 @@ namespace Rolory.Controllers
                 postmark = DateTime.Now;
             }
             message.Postmark = postmark.Value;
-            message.IsActive = true;
-            SendMessage(message);
+            if(message.Postmark >= DateTime.Now)
+            {
+                message.IsActive = true;
+                SendMessage(message);
+            }
+            else
+            {
+                HoldMessage(message);
+            }
+            
         }
         public void BuildEmail(int id, string subject, string body, string cc = null, string bcc = null)
         {
@@ -101,6 +110,30 @@ namespace Rolory.Controllers
         {
             db.Messages.Add(builtMessage);
             db.SaveChanges();
+        }
+        public void HoldMessage(Message builtMessage)
+        {
+            db.Messages.Add(builtMessage);
+            db.SaveChanges();
+            CycleMessages();
+        }
+        public void CycleMessages()
+        {
+            var messageList = db.Messages.Where(m => m.Postmark.Day == DateTime.Now.Day).Where(m => m.IsActive == null).Select(m => m).ToList();
+            var isActiveList = db.Messages.Where(m => m.Postmark.Day == DateTime.Now.Day).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+            for (int i = 0; i < isActiveList.Count(); i++)
+            {
+                isActiveList[i] = true;
+            }
+            foreach (Message message in messageList)
+            {
+                foreach (bool? isActive in isActiveList)
+                {
+                    message.IsActive = isActive;
+                    db.Entry(message).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }

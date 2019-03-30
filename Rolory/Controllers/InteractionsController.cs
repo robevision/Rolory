@@ -13,8 +13,13 @@ namespace Rolory.Controllers
 {
     public class InteractionsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
+        private ApplicationDbContext db;
+        private MessageManagement msg;
+       public InteractionsController()
+        {
+            db = new ApplicationDbContext();
+            msg = new MessageManagement();
+        }
         // GET: Interactions
         public ActionResult Index(int? id, bool? inTouch = null)
         {
@@ -114,11 +119,23 @@ namespace Rolory.Controllers
             ViewBag.Date = nonNullReminder; 
             return View(contact);
         }
+        [HttpPost]
         public ActionResult CreatePlan(Contact contact)
         {
+            var contactId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Id).SingleOrDefault();
+            var reminder = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Reminder).SingleOrDefault();
+            var partialReminder = contact.Reminder.ToString();
+            var reminderTime = Request.Form["Time"].ToString();
+            string concatReminder = partialReminder + reminderTime;
+            DateTime fullReminder = Convert.ToDateTime(concatReminder);
+            contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
+            contact.Reminder = fullReminder;
+            var subject = $"Reach Out To {contact.GivenName} {contact.FamilyName} Today";
+            var body = $"You set a reminder to contact {contact.GivenName} {contact.FamilyName} on {contact.Reminder}. {contact.PhoneNumber} {contact.Email}.";
+            var postMark = contact.Reminder;
             db.Entry(contact).State = EntityState.Modified;
             db.SaveChanges();
-            contact.Reminder = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Reminder).SingleOrDefault();
+            msg.BuildMessage(contact.NetworkerId, subject, body, postMark);
             return RedirectToAction("Index", "Home");
         }
         // GET: Interactions/Edit/5
