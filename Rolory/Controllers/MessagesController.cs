@@ -42,6 +42,9 @@ namespace Rolory.Controllers
             {
                 return HttpNotFound();
             }
+            message.IsActive = false;
+            db.Entry(message).State = EntityState.Modified;
+            db.SaveChanges();
             return View(message);
         }
 

@@ -30,7 +30,7 @@ namespace Rolory.Controllers
                 postmark = DateTime.Now;
             }
             message.Postmark = postmark.Value;
-            if(message.Postmark >= DateTime.Now)
+            if(message.Postmark <= DateTime.Now && message.Postmark.TimeOfDay <= DateTime.Now.TimeOfDay)
             {
                 message.IsActive = true;
                 SendMessage(message);
@@ -119,8 +119,8 @@ namespace Rolory.Controllers
         }
         public void CycleMessages()
         {
-            var messageList = db.Messages.Where(m => m.Postmark.Day == DateTime.Now.Day).Where(m => m.IsActive == null).Select(m => m).ToList();
-            var isActiveList = db.Messages.Where(m => m.Postmark.Day == DateTime.Now.Day).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+            var messageList = db.Messages.Where(m => m.Postmark == DateTime.Now).Where(m => m.IsActive == null).Select(m => m).ToList();
+            var isActiveList = db.Messages.Where(m => m.Postmark == DateTime.Now).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
             for (int i = 0; i < isActiveList.Count(); i++)
             {
                 isActiveList[i] = true;

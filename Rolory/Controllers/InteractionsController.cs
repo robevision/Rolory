@@ -132,8 +132,8 @@ namespace Rolory.Controllers
             DateTime? fullReminder = Convert.ToDateTime(concatReminder);
             contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
             contact.Reminder = fullReminder;
-            var subject = $"Reach Out To {contact.GivenName} {contact.FamilyName} Today";
-            var body = $"You set a reminder to contact {contact.GivenName} {contact.FamilyName} on {contact.Reminder}. {contact.PhoneNumber} {contact.Email}.";
+            var subject = $"Reach Out To {contact.GivenName} {contact.FamilyName} Today".ToString();
+            var body = $"You set a reminder to contact {contact.GivenName} {contact.FamilyName} on {contact.Reminder}. {contact.PhoneNumber} {contact.Email}.".ToString();
             var postMark = contact.Reminder;
             db.Entry(contact).State = EntityState.Modified;
             db.SaveChanges();
