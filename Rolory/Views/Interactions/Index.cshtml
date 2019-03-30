@@ -8,7 +8,8 @@
 <h2>Interactions</h2>
 
 <p>
-    @Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = @ViewBag.Id}, htmlAttributes: new { @class = "" })
+    @Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })
+    @Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = ViewBag.Id}, htmlAttributes: new { @class = "" })
 </p>
 <table class="table">
     <tr>

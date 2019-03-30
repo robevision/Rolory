@@ -11,8 +11,10 @@ namespace Rolory.Models
     {
         [Key]
         public int Id { get; set; }
+        [DataType(DataType.Upload)]
         [Display(Name = "Upload File")]
         public string Image { get; set; }
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
         public string Email { get; set; }
         [Display(Name = "Prefix")]
@@ -23,6 +25,7 @@ namespace Rolory.Models
         public string FamilyName { get; set; }
         [Display(Name = "Phone Type")]
         public string PhoneType { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         [Display(Name = "Organization")]
@@ -31,6 +34,7 @@ namespace Rolory.Models
         public string WorkTitle { get; set; }
         [Display(Name = "Alternate Phone Type")]
         public string AltPhoneNumberType { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number")]
         public string AltPhoneNumber { get; set; }
         [Display(Name = "Last Modified")]
@@ -41,6 +45,7 @@ namespace Rolory.Models
         public bool Perpetual { get; set; }
         public bool CoolDown { get; set; }
         public DateTime? CoolDownTime { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? Reminder { get; set; }
         [ForeignKey("Address")]
         public int? AddressId { get; set; }

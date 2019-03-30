@@ -73,8 +73,7 @@ namespace Rolory.Controllers
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             ContactInteractionViewModel contactInteraction = new ContactInteractionViewModel();
             contactInteraction.Contact = contact;
-            //interaction.ContactId = id;
-            //interaction.Contact = contact;
+            ViewBag.Id = id;
             contactInteraction.Interaction = interaction;
             return View(contactInteraction);
         }
@@ -103,12 +102,16 @@ namespace Rolory.Controllers
         [HttpGet]
         public ActionResult CreatePlan(int id)
         {
+           
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             var reminder = contact.Reminder;
             if(reminder != null)
             {
+                //might need another view for modifying reminder event. Maybe an EditPlan.
                 RedirectToAction("Details", "Interactions");
             }
+            DateTime nonNullReminder = new DateTime(0001, 01, 01);
+            ViewBag.Date = nonNullReminder; 
             return View(contact);
         }
         public ActionResult CreatePlan(Contact contact)

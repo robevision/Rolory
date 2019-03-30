@@ -17,12 +17,16 @@ namespace Rolory.Models
         public string Relationship { get; set; }
         [Display(Name = "Category")]
         public string Category { get; set; }
+        [DataType(DataType.Date)]
         [Display(Name = "Birth Date")]
         public DateTime? BirthDate { get; set; }
+        [DataType(DataType.Date)]
         [Display(Name = "Death Date")]
         public DateTime? DeathDate { get; set; }
+        [DataType(DataType.Date)]
         [Display(Name = "Anniversary")]
         public DateTime? Anniversary { get; set; }
+        [DataType(DataType.MultilineText)]
         [Display(Name = "General Notes")]
         public string Notes { get; set; }
 
