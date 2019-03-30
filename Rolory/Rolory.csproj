@@ -265,6 +265,10 @@
     <Compile Include="Migrations\201903281327524_BoolAddedToMessageModel.Designer.cs">
       <DependentUpon>201903281327524_BoolAddedToMessageModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903300114595_DateTimePropsInContactModel.cs" />
+    <Compile Include="Migrations\201903300114595_DateTimePropsInContactModel.Designer.cs">
+      <DependentUpon>201903300114595_DateTimePropsInContactModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -444,6 +448,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903281327524_BoolAddedToMessageModel.resx">
       <DependentUpon>201903281327524_BoolAddedToMessageModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903300114595_DateTimePropsInContactModel.resx">
+      <DependentUpon>201903300114595_DateTimePropsInContactModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -104,7 +104,7 @@ namespace Rolory.Controllers
         public ActionResult CreatePlan(int id)
         {
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
-            contact.
+      
             return View(contact);
         }
         // GET: Interactions/Edit/5
