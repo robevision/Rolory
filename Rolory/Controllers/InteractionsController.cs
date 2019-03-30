@@ -124,10 +124,12 @@ namespace Rolory.Controllers
         {
             var contactId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Id).SingleOrDefault();
             var reminder = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Reminder).SingleOrDefault();
-            var partialReminder = contact.Reminder.ToString();
-            var reminderTime = Request.Form["Time"].ToString();
-            string concatReminder = partialReminder + reminderTime;
-            DateTime fullReminder = Convert.ToDateTime(concatReminder);
+            var year = contact.Reminder.Value.Year.ToString();
+            var month = contact.Reminder.Value.Month.ToString();
+            var day = contact.Reminder.Value.Day.ToString();
+            var time = Request.Form["Time"].ToString();
+            var concatReminder = $"{year}, {month}, {day}, {time}";
+            DateTime? fullReminder = Convert.ToDateTime(concatReminder);
             contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
             contact.Reminder = fullReminder;
             var subject = $"Reach Out To {contact.GivenName} {contact.FamilyName} Today";

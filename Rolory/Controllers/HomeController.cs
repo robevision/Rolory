@@ -8,8 +8,11 @@ namespace Rolory.Controllers
 {
     public class HomeController : Controller
     {
+        MessageManagement msg;
         public ActionResult Index()
         {
+            msg = new MessageManagement();
+            msg.CycleMessages();
             return View();
         }
 

@@ -21,7 +21,7 @@ namespace Rolory.Controllers
         {
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
-            var messages = db.Messages.Where(m => m.NetworkerId == networker.Id).Where(m=>m.IsEmail == false).Where(m=>m.IsInteraction==false).Select(m => m).ToList();
+            var messages = db.Messages.Where(m => m.NetworkerId == networker.Id).Where(m=>m.IsEmail == false).Where(m=>m.IsInteraction==false).Where(m=>m.IsActive!=null).Select(m => m).ToList();
             var messagesNullCheck = db.Messages.Where(m => m.NetworkerId == networker.Id).Where(m => m.IsEmail == false).Where(m => m.IsInteraction == false).Select(m => m).Any();
             if (messagesNullCheck == false)
             {
