@@ -180,7 +180,14 @@ namespace Rolory.Controllers
             ViewBag.MessageId = new SelectList(db.Messages, "Id", "Subject", interaction.MessageId);
             return View(interaction);
         }
-
+        public ActionResult DisplayRecent()
+        {
+            var twoWeeksAgo = DateTime.Now.AddDays(-13);
+            string userId = User.Identity.GetUserId();
+                    var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
+                    var interactionList = db.Interactions.Where(i => i.Moment >= twoWeeksAgo).Where(i => i.Contact.NetworkerId == networker.Id).Select(m => m).ToList();
+            return View(interactionList);
+        }
         // GET: Interactions/Delete/5
         public ActionResult Delete(int? id)
         {

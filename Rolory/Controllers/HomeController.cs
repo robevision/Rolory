@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Rolory.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,8 +11,10 @@ namespace Rolory.Controllers
     public class HomeController : Controller
     {
         MessageManagement msg;
+        ApplicationDbContext db;
         public ActionResult Index()
         {
+            db = new ApplicationDbContext();
             msg = new MessageManagement();
             msg.CycleMessages();
             return View();

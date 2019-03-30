@@ -14,8 +14,14 @@ namespace Rolory.Controllers
     [Authorize]
     public class MessagesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db;
+        private MessageManagement msg;
 
+        public MessagesController()
+        {
+            db = new ApplicationDbContext();
+            msg = new MessageManagement();
+        }
         // GET: Messages
         public ActionResult Index()
         {
@@ -27,6 +33,7 @@ namespace Rolory.Controllers
             {
                 return View("Empty");
             }
+            ViewBag.Id = networker.Id;
             return View(messages.ToList());
         }
 
@@ -47,10 +54,17 @@ namespace Rolory.Controllers
             db.SaveChanges();
             return View(message);
         }
-
+        [HttpGet]
+        public ActionResult Get(int id)
+        {
+           
+            msg.GenerateEmail(id);
+            return RedirectToAction("Index", "Messages");
+        }
         // GET: Messages/Create
         public ActionResult Create()
         {
+           
             ViewBag.NetworkerId = new SelectList(db.Networkers, "Id", "FirstName");
             return View();
         }

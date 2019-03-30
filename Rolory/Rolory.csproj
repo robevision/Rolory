@@ -374,6 +374,7 @@
     <Content Include="Views\Messages\Empty.cshtml" />
     <Content Include="Views\Contacts\Expand.cshtml" />
     <Content Include="Views\Interactions\CreatePlan.cshtml" />
+    <Content Include="Views\Interactions\DisplayRecent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

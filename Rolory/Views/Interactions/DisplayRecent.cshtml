@@ -1,0 +1,42 @@
+﻿@model Rolory.Models.Interaction
+
+@{
+    ViewBag.Title = "DisplayRecent";
+}
+
+<h2>DisplayRecent</h2>
+
+<div>
+    <h4>Interaction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Contact.Image)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contact.Image)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Message.Subject)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Message.Subject)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Moment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Moment)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

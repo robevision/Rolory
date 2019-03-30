@@ -168,6 +168,7 @@ namespace Rolory.Controllers
             {
                 ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
             }
+            
             filteredContact.CoolDown = true;
             filteredContact.CoolDownTime = DateTime.Now;
             db.Entry(filteredContact).State = EntityState.Modified;

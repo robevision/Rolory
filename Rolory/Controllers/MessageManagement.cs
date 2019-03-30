@@ -12,10 +12,12 @@ namespace Rolory.Controllers
     {
         private ApplicationDbContext db;
         private Message errorMessage;
+        private Random random;
         // GET: Message
         public MessageManagement()
         {
             db = new ApplicationDbContext();
+            random = new Random();
         }
         public void BuildMessage(int id, string subject, string body, DateTime? postmark = null)
         {
@@ -55,10 +57,17 @@ namespace Rolory.Controllers
 
             if (emailAddressNullCheck != null && networker.ReceiveEmails == true)
             {
-                message.ToEmail = user.Email;
-                message.IsEmail = true;
-                message.Postmark = DateTime.Now;
-                SendEmail(message);
+                if (networker.EmailFrequency > 0)
+                {
+                    networker.EmailFrequency--;
+                    db.Entry(networker).State = EntityState.Modified;
+                    db.SaveChanges();
+                    message.ToEmail = user.Email;
+                    message.IsEmail = true;
+                    message.Postmark = DateTime.Now;
+                    SendEmail(message);
+                }
+               
             }
 
             else
@@ -119,8 +128,8 @@ namespace Rolory.Controllers
         }
         public void CycleMessages()
         {
-            var messageList = db.Messages.Where(m => m.Postmark == DateTime.Now).Where(m => m.IsActive == null).Select(m => m).ToList();
-            var isActiveList = db.Messages.Where(m => m.Postmark == DateTime.Now).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+            var messageList = db.Messages.Where(m => m.Postmark >= DateTime.Now).Where(m => m.IsActive == null).Select(m => m).ToList();
+            var isActiveList = db.Messages.Where(m => m.Postmark >= DateTime.Now).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
             for (int i = 0; i < isActiveList.Count(); i++)
             {
                 isActiveList[i] = true;
@@ -134,6 +143,117 @@ namespace Rolory.Controllers
                     db.SaveChanges();
                 }
             }
+        }
+        public void GenerateEmail(int? id)
+        {
+            var nextWeek = DateTime.Today.AddDays(7);
+            List<Contact> pushedContacts = new List<Contact>();
+            List<Contact> pushedContactsByBirthDate = new List<Contact>();
+            List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
+            List<Contact> pushedContactsByProfession = new List<Contact>();
+            List<Contact> pushedContactsByRelationship = new List<Contact>();
+            string subject;
+            string body;
+            var networker = db.Networkers.Where(n => n.Id == id).Select(n => n).SingleOrDefault();
+            var contactsList = db.Contacts.Where(c => c.NetworkerId == id).Where(c => c.InContact == false).Where(c => c.Description.DeathDate == null).Select(c => c).ToList();
+            Contact filteredContact = null;
+            var filteredContactList = contactsList.Where(c => c.Perpetual == false).ToList();
+            foreach (Contact contact in filteredContactList)
+            {
+                contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                DateTime? birthDateNullTest = contact.Description.BirthDate;
+                DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
+                if (birthDateNullTest == null)
+                {
+                    contact.Description.BirthDate = new DateTime(1801, 12, 25);
+                }
+                DateTime contactBirthDate = contact.Description.BirthDate.Value;
+                int contactBirthMonth = contactBirthDate.Month;
+                var contactWorkTitle = contact.WorkTitle;
+                if (anniversaryDateNullTest == null)
+                {
+                    contact.Description.Anniversary = new DateTime(1801, 12, 25);
+                }
+                DateTime contactAnniversary = contact.Description.Anniversary.Value;
+                int contactAnniversaryMonth = contactAnniversary.Month;
+                var contactRelation = contact.Description.Relationship;
+                if (!contactBirthDate.ToString().Contains("12/25/1801"))
+                {
+                    if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
+                    {
+                        pushedContactsByBirthDate.Add(contact);
+                    }
+                }
+                if (contactWorkTitle != null && networker.WorkTitle != null)
+                {
+                    if (contactWorkTitle.Contains(networker.WorkTitle))
+                    {
+                        pushedContactsByProfession.Add(contact);
+                    }
+                }
+                if (!contactAnniversary.ToString().Contains("12/25/1801"))
+                {
+                    if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
+                    {
+                        pushedContactsByAnniversaryDate.Add(contact);
+                    }
+                }
+                if (contactRelation != null)
+                {
+                    if (contactRelation == "Friend" || contactRelation == "Family")
+                    {
+                        pushedContactsByRelationship.Add(contact);
+                    }
+                }
+            }
+            pushedContacts.Add(pushedContactsByBirthDate.SingleOrDefault());
+            pushedContacts.Add(pushedContactsByAnniversaryDate.SingleOrDefault());
+            pushedContacts.Add(pushedContactsByProfession.SingleOrDefault());
+            pushedContacts.Add(pushedContactsByRelationship.SingleOrDefault());
+            //pushedContacts.Add(pushedContactsBySharedActivities.SingleOrDefault());
+            do
+            {
+                int r = random.Next(pushedContacts.Count);
+                filteredContact = pushedContacts[r];
+            }
+            while (filteredContact == null);
+            if (filteredContact.Id == pushedContactsByBirthDate.Select(p => p.Id).SingleOrDefault())
+            {
+                subject = $"{filteredContact.GivenName}'s Birthday".ToString();
+                body = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?".ToString();
+                if (filteredContact != null && networker.EmailFrequency > 0)
+                {
+                    BuildEmail(networker.Id, subject, body);
+                }
+            }
+            else if (filteredContact.Id == pushedContactsByAnniversaryDate.Select(p => p.Id).SingleOrDefault())
+            {
+                subject = $"{filteredContact.GivenName}'s Anniversary".ToString();
+                body = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?".ToString();
+                if (filteredContact != null && networker.EmailFrequency > 0)
+                {
+                    BuildEmail(networker.Id, subject, body);
+                }
+            }
+            else if (filteredContact.Id == pushedContactsByProfession.Select(p => p.Id).SingleOrDefault())
+            {
+                subject = $"{filteredContact.GivenName}'s Job Is Similar To Yours".ToString();
+                body = $"{filteredContact.GivenName} and you share a career. Why not reach out?".ToString();
+                if (filteredContact != null && networker.EmailFrequency > 0)
+                {
+                    BuildEmail(networker.Id, subject, body);
+                }
+            }
+            else if (filteredContact.Id == pushedContactsByRelationship.Select(p => p.Id).SingleOrDefault())
+            {
+                subject = $"Remember {filteredContact.GivenName} {filteredContact.FamilyName}?".ToString();
+                body = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.".ToString();
+                if (filteredContact != null && networker.EmailFrequency > 0)
+                {
+                    BuildEmail(networker.Id, subject, body);
+                }
+            }
+
         }
     }
 }
