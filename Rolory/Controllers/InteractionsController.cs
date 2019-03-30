@@ -104,8 +104,19 @@ namespace Rolory.Controllers
         public ActionResult CreatePlan(int id)
         {
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
-      
+            var reminder = contact.Reminder;
+            if(reminder != null)
+            {
+                RedirectToAction("Details", "Interactions");
+            }
             return View(contact);
+        }
+        public ActionResult CreatePlan(Contact contact)
+        {
+            db.Entry(contact).State = EntityState.Modified;
+            db.SaveChanges();
+            contact.Reminder = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Reminder).SingleOrDefault();
+            return RedirectToAction("Index", "Home");
         }
         // GET: Interactions/Edit/5
         public ActionResult Edit(int? id)
