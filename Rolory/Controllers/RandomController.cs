@@ -185,18 +185,72 @@ namespace Rolory.Controllers
         }
         public ActionResult GetInTouch(int? id)
         {
+            string userId = User.Identity.GetUserId();
+            var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
             var today = DateTime.Now.Day;
+            var week = DateTime.Now.AddDays(6);
+            DateTime weekAgo = DateTime.Now.AddDays(-6);
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
-            if(contact.Description.BirthDate.Value.Month == DateTime.Now.Month)
+           
+
+            if(contact.WorkTitle != null)
             {
-                if (contact.Description.BirthDate.Value.Day == today)
+                if (contact.WorkTitle == networker.WorkTitle || contact.WorkTitle.Contains(networker.WorkTitle))
                 {
-                    ViewBag.Message = $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can a conversation going about how both of you have been!";
+                    ViewBag.Message = $"You and {contact.GivenName} may have a similar occupation. Why not set up a coffee to share your experiences?";
                 }
-                //if (contact.Description.BirthDate.Value.Day > today && contact.Description.Birthdate.Value.Day) ;
             }
-            
-            
+            if(contact.Description.Relationship != null)
+            {
+                if (contact.Description.Relationship == "Friend")
+                {
+                    
+                }
+                if(contact.Description.Relationship == "Family")
+                {
+
+                }
+                if(contact.Description.Relationship == "Classmate")
+                {
+
+                }
+            }
+            if (contact.Description.Anniversary.Value != null)
+            {
+                if (contact.Description.Anniversary.Value.Month == DateTime.Now.Month)
+                {
+                    if (contact.Description.Anniversary.Value.Day == today)
+                    {
+                        ViewBag.Message = $"It is {contact.GivenName}'s Wedding Anniversary today! Just a simple 'Happy Anniversary' can get a conversation going about how both of you have been!";
+                    }
+                    else if (contact.Description.Anniversary.Value.Day > today && contact.Description.Anniversary.Value <= weekAgo)
+                    {
+                        ViewBag.Message = $"It was {contact.GivenName}'s Wedding Anniversary on {contact.Description.Anniversary.Value.DayOfWeek}! Just a simple 'Happy Anniversary' shows you're thinking of them.";
+                    }
+                    else if (contact.Description.Anniversary.Value.Day < today && contact.Description.Anniversary.Value >= week)
+                    {
+                        ViewBag.Message = $"{contact.GivenName}'s Anniversary is coming up! It's on {contact.Description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Anniversary' shows you're thinking of them.";
+                    }
+                }
+            }
+            if (contact.Description.BirthDate.Value != null)
+            {
+                if (contact.Description.BirthDate.Value.Month == DateTime.Now.Month)
+                {
+                    if (contact.Description.BirthDate.Value.Day == today)
+                    {
+                        ViewBag.Message = $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can get a conversation going about how both of you have been!";
+                    }
+                    else if (contact.Description.BirthDate.Value.Day > today && contact.Description.BirthDate.Value <= weekAgo)
+                    {
+                        ViewBag.Message = $"It was {contact.GivenName}'s Birthday on {contact.Description.BirthDate.Value.DayOfWeek}! Just a simple 'Happy Belated Birthday' shows you're thinking of them.";
+                    }
+                    else if (contact.Description.BirthDate.Value.Day < today && contact.Description.BirthDate.Value >= week)
+                    {
+                        ViewBag.Message = $"{contact.GivenName}'s Birthday is coming up! It's on {contact.Description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Birthday' shows you're thinking of them.";
+                    }
+                }
+            }
             return View();
         }
         // GET: Random/Details/5

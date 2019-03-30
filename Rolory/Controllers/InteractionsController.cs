@@ -26,8 +26,8 @@ namespace Rolory.Controllers
             {
                 return RedirectToAction("CreateAccount", "User");
             }
-            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).SingleOrDefault();
-            if (contactsNullCheck == null)
+            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
+            if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
             {
                 //Add a page to send the logged in user to a message that says they have no contacts logged
                 return RedirectToAction("Create", "Contacts");
@@ -100,7 +100,13 @@ namespace Rolory.Controllers
             }
             return View(contactInteraction);
         }
-
+        [HttpGet]
+        public ActionResult CreatePlan(int id)
+        {
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            contact.
+            return View(contact);
+        }
         // GET: Interactions/Edit/5
         public ActionResult Edit(int? id)
         {

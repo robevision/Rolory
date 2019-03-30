@@ -41,9 +41,9 @@ namespace Rolory.Controllers
         }
         private void GetCategorySelection()
         {
-            categoryList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
             categoryList.Add(new SelectListItem() { Text = "School", Value = "School" });
             categoryList.Add(new SelectListItem() { Text = "Family", Value = "Family" });
+            categoryList.Add(new SelectListItem() { Text = "Event", Value = "Event" });
             categoryList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
             //Be able to add custom category in the future
             categoryList.Add(new SelectListItem() { Text = "Other", Value = "Other" });
