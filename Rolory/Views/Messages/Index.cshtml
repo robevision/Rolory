@@ -12,7 +12,7 @@
         </div>
     </div>
 </div>
-
+<p><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Get Email","Get",new { id = ViewBag.Id },null)</a></p>
 <table class="table">
     <tr>
         <th>
@@ -56,6 +56,4 @@
     }
 
 </table>
-<div class="col-lg-10">
-    @Html.ActionLink("Get Email", "Get", new { id = ViewBag.Id })
-</div>
+

@@ -230,7 +230,7 @@ namespace Rolory.Controllers
                     }
                     while (contact == null);
                 subject = $"Remember {contact.GivenName} {contact.FamilyName}?".ToString();
-                body = $"You should get back in touch with {contact.GivenName}.It's been a while.".ToString();
+                body = $"You should get back in touch with {contact.GivenName}. It's been a while.".ToString();
                 if (contact != null && networker.EmailFrequency > 0)
                 {
                     BuildEmail(networker.Id, subject, body);

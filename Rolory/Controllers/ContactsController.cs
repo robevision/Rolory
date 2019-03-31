@@ -370,7 +370,7 @@ namespace Rolory.Controllers
         public ActionResult Expand(ContactDescriptionViewModel contactDescription)
         {
             var contact = contactDescription.Contact;
-            var description = contactDescription.Description;
+            var description = contactDescription.Contact.Description;
             db.Entry(description).State = EntityState.Modified;
             db.SaveChanges();
             db.Entry(contact).State = EntityState.Modified;
