@@ -8,7 +8,7 @@
 @using (Html.BeginForm())
 {
     <p>
-        Lookup Contact by Name: @Html.TextBox("SearchString")
+        Lookup Contact by Name: @Html.TextBox("searchString")
         <input type="submit" value="Search" />
     </p>
 }
@@ -27,10 +27,10 @@
             @Html.DisplayNameFor(model => model.GivenName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FamilyName)
+            @Html.ActionLink("Last Name","Index", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LastUpdated)
+            @Html.ActionLink("Last Modified","Index", new { sortOrder = ViewBag.DateSortParm })
         </th>
         @*<th>
             @Html.DisplayNameFor(model => model.InContact)

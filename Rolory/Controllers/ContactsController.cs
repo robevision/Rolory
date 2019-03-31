@@ -132,6 +132,27 @@ namespace Rolory.Controllers
                 return RedirectToAction("Create", "Contacts");
             }
             var contacts = db.Contacts.Where(c=>c.NetworkerId == networker.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
+            
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.FamilyName);
+                    break;
+                case "Date":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.LastUpdated);
+                    break;
+                case "date_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.LastUpdated);
+                    break;
+                default:
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.FamilyName);
+                    break;
+            }
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c => c.FamilyName.Contains(searchString));
+            }
+
             ViewBag.InTouch = null;
             ViewBag.True = "True";
             ViewBag.False = "False";

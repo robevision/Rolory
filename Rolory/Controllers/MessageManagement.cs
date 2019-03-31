@@ -211,46 +211,78 @@ namespace Rolory.Controllers
             pushedContacts.Add(pushedContactsByProfession.SingleOrDefault());
             pushedContacts.Add(pushedContactsByRelationship.SingleOrDefault());
             //pushedContacts.Add(pushedContactsBySharedActivities.SingleOrDefault());
-            do
+            if (pushedContacts.Count > 4)
             {
-                int r = random.Next(pushedContacts.Count);
-                filteredContact = pushedContacts[r];
+                do
+                {
+                    int r = random.Next(pushedContacts.Count);
+                    filteredContact = pushedContacts[r];
+                }
+                while (filteredContact == null);
             }
-            while (filteredContact == null);
-            if (filteredContact.Id == pushedContactsByBirthDate.Select(p => p.Id).SingleOrDefault())
-            {
-                subject = $"{filteredContact.GivenName}'s Birthday".ToString();
-                body = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?".ToString();
-                if (filteredContact != null && networker.EmailFrequency > 0)
+            else if (filteredContactList.Count != 0)
+                {
+                    Contact contact = null;
+                    do
+                    {
+                        int r = random.Next(filteredContactList.Count);
+                        contact = filteredContactList[r];
+                    }
+                    while (contact == null);
+                subject = $"Remember {contact.GivenName} {contact.FamilyName}?".ToString();
+                body = $"You should get back in touch with {contact.GivenName}.It's been a while.".ToString();
+                if (contact != null && networker.EmailFrequency > 0)
                 {
                     BuildEmail(networker.Id, subject, body);
                 }
             }
-            else if (filteredContact.Id == pushedContactsByAnniversaryDate.Select(p => p.Id).SingleOrDefault())
+            if (filteredContact != null)
             {
-                subject = $"{filteredContact.GivenName}'s Anniversary".ToString();
-                body = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?".ToString();
-                if (filteredContact != null && networker.EmailFrequency > 0)
+
+                if (filteredContact.Id == pushedContactsByBirthDate.Select(p => p.Id).SingleOrDefault())
                 {
-                    BuildEmail(networker.Id, subject, body);
+                    subject = $"{filteredContact.GivenName}'s Birthday".ToString();
+                    body = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?".ToString();
+                    if (filteredContact != null && networker.EmailFrequency > 0)
+                    {
+                        BuildEmail(networker.Id, subject, body);
+                    }
                 }
-            }
-            else if (filteredContact.Id == pushedContactsByProfession.Select(p => p.Id).SingleOrDefault())
-            {
-                subject = $"{filteredContact.GivenName}'s Job Is Similar To Yours".ToString();
-                body = $"{filteredContact.GivenName} and you share a career. Why not reach out?".ToString();
-                if (filteredContact != null && networker.EmailFrequency > 0)
+                else if (filteredContact.Id == pushedContactsByAnniversaryDate.Select(p => p.Id).SingleOrDefault())
                 {
-                    BuildEmail(networker.Id, subject, body);
+                    subject = $"{filteredContact.GivenName}'s Anniversary".ToString();
+                    body = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?".ToString();
+                    if (filteredContact != null && networker.EmailFrequency > 0)
+                    {
+                        BuildEmail(networker.Id, subject, body);
+                    }
                 }
-            }
-            else if (filteredContact.Id == pushedContactsByRelationship.Select(p => p.Id).SingleOrDefault())
-            {
-                subject = $"Remember {filteredContact.GivenName} {filteredContact.FamilyName}?".ToString();
-                body = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.".ToString();
-                if (filteredContact != null && networker.EmailFrequency > 0)
+                else if (filteredContact.Id == pushedContactsByProfession.Select(p => p.Id).SingleOrDefault())
                 {
-                    BuildEmail(networker.Id, subject, body);
+                    subject = $"{filteredContact.GivenName}'s Job Is Similar To Yours".ToString();
+                    body = $"{filteredContact.GivenName} and you share a career. Why not reach out?".ToString();
+                    if (filteredContact != null && networker.EmailFrequency > 0)
+                    {
+                        BuildEmail(networker.Id, subject, body);
+                    }
+                }
+                else if (filteredContact.Id == pushedContactsByRelationship.Select(p => p.Id).SingleOrDefault())
+                {
+                    subject = $"Remember {filteredContact.GivenName} {filteredContact.FamilyName}?".ToString();
+                    body = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.".ToString();
+                    if (filteredContact != null && networker.EmailFrequency > 0)
+                    {
+                        BuildEmail(networker.Id, subject, body);
+                    }
+                }
+                else
+                {
+                    subject = $"Remember {filteredContact.GivenName} {filteredContact.FamilyName}?".ToString();
+                    body = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.".ToString();
+                    if (filteredContact != null && networker.EmailFrequency > 0)
+                    {
+                        BuildEmail(networker.Id, subject, body);
+                    }
                 }
             }
 

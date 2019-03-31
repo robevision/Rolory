@@ -4,12 +4,21 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<br />
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>Notifications</h2>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10">
+        @Html.ActionLink("Create New", "Create")
+    </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-    @Html.ActionLink("Get Email", "Get", new { id = ViewBag.Id })
-</p>
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -42,41 +51,45 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Networker.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Subject)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Body)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Postmark)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ToEmail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailCC)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailBCC)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsEmail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Networker.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Postmark)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailCC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailBCC)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
+<div class="col-lg-10">
+    @Html.ActionLink("Get Email", "Get", new { id = ViewBag.Id })
+</div>

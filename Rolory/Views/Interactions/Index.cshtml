@@ -5,12 +5,26 @@
 }
 
 <br/>
-<h2>Interactions</h2>
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>Interactions</h2>
+        </div>
+     </div>
+</div>
 
-<p>
-    @Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })
-    @Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = ViewBag.Id}, htmlAttributes: new { @class = "" })
-</p>
+<div class="row">
+    <div class="col-md-4"style="width:auto; margin:auto;">
+        <h4 class="btn-lg"> @Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })</h4>
+    </div>
+    <div class="col-md-4" style="width:auto; margin:auto;">
+        <h4 class="btn-group"> @Html.ActionLink("View Recent Interactions From All Contacts", "DisplayRecent", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })</h4>
+    </div>
+    <div class="col-md-4"style="width:auto; margin:auto;">
+        <h4 class="btn-lg">  @Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })</h4> 
+    </div>
+</div>
+
 <table class="table">
     <tr>
         <th>
