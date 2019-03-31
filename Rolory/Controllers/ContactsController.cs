@@ -369,6 +369,12 @@ namespace Rolory.Controllers
         [HttpPost]
         public ActionResult Expand(ContactDescriptionViewModel contactDescription)
         {
+            var contact = contactDescription.Contact;
+            var description = contactDescription.Description;
+            db.Entry(description).State = EntityState.Modified;
+            db.SaveChanges();
+            db.Entry(contact).State = EntityState.Modified;
+            db.SaveChanges();
             return RedirectToAction("Details","Contacts", new { id = contactDescription.Contact.Id });
         }
         // GET: Contacts/Delete/5

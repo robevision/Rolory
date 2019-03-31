@@ -54,8 +54,8 @@
 <h4>@message</h4>
 <div>
     <h4>Are you in touch with @Html.DisplayFor(model => model.GivenName)?</h4>
-    <button class="w3-button w3-round-xlarge"> @Html.ActionLink("Yes", "GetInTouch", "Random", new { id = Model.Id, inTouch = true })</button>
+    <button class="w3-button w3-round-xlarge"> @Html.ActionLink("Yes", "GetInTouch", "Random", new { id = Model.Id}, null)</button>
     <button class="w3-button w3-round-xlarge"> @Html.ActionLink("I Just Did!", "Index", "Interactions", new { id = Model.Id, inTouch = true }, null)</button>
-    <button class="w3-button w3-round-xlarge">@Html.ActionLink("No", "No", "Home")</button>
+    <button class="w3-button w3-round-xlarge">@Html.ActionLink("No", "Index", "Random")</button>
 </div>
 <h5>@Html.ActionLink("Skip >>", "Index", "Random")</h5>
