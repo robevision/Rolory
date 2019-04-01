@@ -273,6 +273,10 @@
     <Compile Include="Migrations\201903301901250_EmailPropsNetworkerModel.Designer.cs">
       <DependentUpon>201903301901250_EmailPropsNetworkerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904011344288_AddressFKtoNetworkerModel.cs" />
+    <Compile Include="Migrations\201904011344288_AddressFKtoNetworkerModel.Designer.cs">
+      <DependentUpon>201904011344288_AddressFKtoNetworkerModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -460,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903301901250_EmailPropsNetworkerModel.resx">
       <DependentUpon>201903301901250_EmailPropsNetworkerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904011344288_AddressFKtoNetworkerModel.resx">
+      <DependentUpon>201904011344288_AddressFKtoNetworkerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
