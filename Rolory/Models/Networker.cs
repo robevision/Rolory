@@ -25,8 +25,12 @@ namespace Rolory.Models
         public string Occupation { get; set; }
         [Display(Name = "Title")]
         public string WorkTitle { get; set; }
+        public int? Goal { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("Address")]
+        public int? AddressId { get; set; }
+        public Address Address { get; set; }
     }
 }
