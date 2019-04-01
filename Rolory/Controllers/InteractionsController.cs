@@ -92,7 +92,10 @@ namespace Rolory.Controllers
         {
             if (ModelState.IsValid)
             {
+                string goalCode = "5C0R3";
                 contactInteraction.Interaction.ContactId = contactInteraction.Contact.Id;
+                var networkerId = contactInteraction.Interaction.Contact.NetworkerId;
+                var networker = db.Networkers.Where(n => n.Id == networkerId).Select(n => n).SingleOrDefault();
                 contactInteraction.Interaction.Contact = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c).SingleOrDefault();
                 contactInteraction.Interaction.Message.NetworkerId = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.NetworkerId).SingleOrDefault();
                 contactInteraction.Interaction.Message.Networker = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.Networker).SingleOrDefault();
@@ -100,6 +103,16 @@ namespace Rolory.Controllers
                 contactInteraction.Interaction.Message.IsInteraction = true;
                 db.Interactions.Add(contactInteraction.Interaction);
                 db.SaveChanges();
+                networker.RunningTally++;
+                db.Entry(networker).State = EntityState.Modified;
+                db.SaveChanges();
+                if (networker.Goal != null && networker.RunningTally >= networker.Goal)
+                {
+                    networker.RunningTally = 0;
+                    db.Entry(networker).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Goal", "Interactions", new { code = goalCode });
+                }
                 return RedirectToAction("Index");
             }
             return View(contactInteraction);
@@ -213,14 +226,22 @@ namespace Rolory.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public ActionResult Goal(string code)
+        {
 
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
+            if (code == "5C0R3")
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Interactions");
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

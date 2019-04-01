@@ -290,6 +290,10 @@
     <Compile Include="Migrations\201904012215148_RunningTallyNetworkerModel.Designer.cs">
       <DependentUpon>201904012215148_RunningTallyNetworkerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904012220426_RunningTallyNetworkerModel1.cs" />
+    <Compile Include="Migrations\201904012220426_RunningTallyNetworkerModel1.Designer.cs">
+      <DependentUpon>201904012220426_RunningTallyNetworkerModel1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -395,6 +399,7 @@
     <Content Include="Views\Contacts\Expand.cshtml" />
     <Content Include="Views\Interactions\CreatePlan.cshtml" />
     <Content Include="Views\Interactions\DisplayRecent.cshtml" />
+    <Content Include="Views\Interactions\Goal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -492,6 +497,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904012215148_RunningTallyNetworkerModel.resx">
       <DependentUpon>201904012215148_RunningTallyNetworkerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904012220426_RunningTallyNetworkerModel1.resx">
+      <DependentUpon>201904012220426_RunningTallyNetworkerModel1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

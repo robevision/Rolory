@@ -27,6 +27,8 @@ namespace Rolory.Models
         public string WorkTitle { get; set; }
         public int RunningTally { get; set; }
         public int? Goal { get; set; }
+        public bool GoalActive { get; set; }
+        public bool GoalStatus { get; set; }
         public string Availability { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
