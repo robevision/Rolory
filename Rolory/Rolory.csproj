@@ -182,6 +182,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\RandomController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\WeatherManagement.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -284,9 +285,11 @@
     <Compile Include="Models\ContactDetailsViewModels.cs" />
     <Compile Include="Models\Description.cs" />
     <Compile Include="Models\FamilyMember.cs" />
+    <Compile Include="Models\Geography.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Models\Interaction.cs" />
+    <Compile Include="Models\Access.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Networker.cs" />
