@@ -144,6 +144,14 @@ namespace Rolory.Controllers
                 }
             }
         }
+        public void GenerateAllUserEmails()
+        {
+            var networkersList = db.Networkers.Where(n => n.ReceiveEmails == true).Where(n => n.EmailFrequency > 0).ToList();
+            foreach (Networker networker in networkersList)
+            {
+                GenerateEmail(networker.Id);
+            }
+        }
         public void GenerateEmail(int? id)
         {
             var nextWeek = DateTime.Today.AddDays(7);

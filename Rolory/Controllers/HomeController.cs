@@ -11,12 +11,11 @@ namespace Rolory.Controllers
     public class HomeController : Controller
     {
         MessageManagement msg;
-        ApplicationDbContext db;
         public ActionResult Index()
         {
-            db = new ApplicationDbContext();
             msg = new MessageManagement();
             msg.CycleMessages();
+            msg.GenerateAllUserEmails();
             return View();
         }
 

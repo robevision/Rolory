@@ -30,6 +30,11 @@ namespace Rolory.Controllers
             double convertedTemp = temp - 273.15;
             return convertedTemp;
         }
+        public double ConvertCelsiusToFahrenheit(double temp)
+        {
+            double convertedTemp = (temp * 9 / 5) + 32;
+            return convertedTemp;
+        }
         public async Task<Address> SetLatLong(Address address)
             {
                 // This is the geoDecoderRing 
@@ -67,5 +72,21 @@ namespace Rolory.Controllers
                     return null;
                 }
             }
+        public async void FindWeatherToday(int? id)
+        {
+            var latitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Latitude).SingleOrDefault();
+            var longitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
+            StringBuilder stringBuilder = new StringBuilder();
+            string url = @"https://api.openweathermap.org/data/2.5/weather?" + "lat=" + latitude + "&lon=" + longitude + "&units=metric" + "&key=" + Models.Access.weath;
+            WebRequest request = WebRequest.Create(url);
+            WebResponse response = await request.GetResponseAsync();
+            System.IO.Stream data = response.GetResponseStream();
+            StreamReader reader = new StreamReader(data);
+            string responseFromServer = reader.ReadToEnd();
+            response.Close();
+
+            var root = JsonConvert.DeserializeObject<Geography.AddressAPIData>(responseFromServer);
+            var location = root.results[0].geometry.location;
         }
+    }
     }

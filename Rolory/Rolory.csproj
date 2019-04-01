@@ -282,6 +282,10 @@
     <Compile Include="Migrations\201904011453112_IntToFloatAddressModel.Designer.cs">
       <DependentUpon>201904011453112_IntToFloatAddressModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904011830342_AvailabilityPropNetworkerModel.cs" />
+    <Compile Include="Migrations\201904011830342_AvailabilityPropNetworkerModel.Designer.cs">
+      <DependentUpon>201904011830342_AvailabilityPropNetworkerModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -298,6 +302,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Networker.cs" />
     <Compile Include="Models\SharedActivity.cs" />
+    <Compile Include="Models\WeatherData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -477,6 +482,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904011453112_IntToFloatAddressModel.resx">
       <DependentUpon>201904011453112_IntToFloatAddressModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904011830342_AvailabilityPropNetworkerModel.resx">
+      <DependentUpon>201904011830342_AvailabilityPropNetworkerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

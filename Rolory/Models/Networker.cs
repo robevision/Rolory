@@ -26,6 +26,7 @@ namespace Rolory.Models
         [Display(Name = "Title")]
         public string WorkTitle { get; set; }
         public int? Goal { get; set; }
+        public string Availability { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
