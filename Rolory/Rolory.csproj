@@ -294,6 +294,10 @@
     <Compile Include="Migrations\201904012220426_RunningTallyNetworkerModel1.Designer.cs">
       <DependentUpon>201904012220426_RunningTallyNetworkerModel1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904012255577_GoalPropsNetworkerModel.cs" />
+    <Compile Include="Migrations\201904012255577_GoalPropsNetworkerModel.Designer.cs">
+      <DependentUpon>201904012255577_GoalPropsNetworkerModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -500,6 +504,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904012220426_RunningTallyNetworkerModel1.resx">
       <DependentUpon>201904012220426_RunningTallyNetworkerModel1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904012255577_GoalPropsNetworkerModel.resx">
+      <DependentUpon>201904012255577_GoalPropsNetworkerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
