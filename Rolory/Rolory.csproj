@@ -278,6 +278,10 @@
     <Compile Include="Migrations\201904011344288_AddressFKtoNetworkerModel.Designer.cs">
       <DependentUpon>201904011344288_AddressFKtoNetworkerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904011453112_IntToFloatAddressModel.cs" />
+    <Compile Include="Migrations\201904011453112_IntToFloatAddressModel.Designer.cs">
+      <DependentUpon>201904011453112_IntToFloatAddressModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -470,6 +474,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904011344288_AddressFKtoNetworkerModel.resx">
       <DependentUpon>201904011344288_AddressFKtoNetworkerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904011453112_IntToFloatAddressModel.resx">
+      <DependentUpon>201904011453112_IntToFloatAddressModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
