@@ -13,8 +13,13 @@ namespace Rolory.Controllers
         MessageManagement msg;
         public ActionResult Index()
         {
+            ViewBag.Alert = null;
             msg = new MessageManagement();
             msg.CycleMessages();
+            if (msg.CycleMessages() == true)
+            {
+                ViewBag.Alert = "You have a new message!";
+            }
             msg.GenerateAllUserEmails();
             return View();
         }

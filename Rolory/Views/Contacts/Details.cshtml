@@ -57,18 +57,24 @@
             @Html.DisplayFor(model => model.Address.AddressType)
         </dd>
 
+        @if (Model.AlternateAddress != null && Model.AlternateAddress.AddressType != null)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.AlternateAddress.AddressType);
+            </dt>
+
+
+
+            <dd>
+                @Html.DisplayFor(model => model.AlternateAddress.AddressType)
+            </dd>
+        }
+        @if (Model.Description != null && Model.Description.Gender != null)
+        {
         <dt>
-            @if (Html.DisplayFor(model => model.AlternateAddress.AddressType) != null) { Html.DisplayNameFor(model => model.AlternateAddress.AddressType); }
+         @Html.DisplayNameFor(model => model.Description.Gender); 
         </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AlternateAddress.AddressType)
-        </dd>
-
-        <dt>
-            @if (Html.DisplayFor(model => model.Description.Gender) != null) { Html.DisplayNameFor(model => model.Description.Gender); }
-        </dt>
-
+        }
         <dd>
             @Html.DisplayFor(model => model.Description.Gender)
         </dd>

@@ -126,10 +126,15 @@ namespace Rolory.Controllers
             db.SaveChanges();
             CycleMessages();
         }
-        public void CycleMessages()
+        public bool CycleMessages()
         {
-            var messageList = db.Messages.Where(m => m.Postmark >= DateTime.Now).Where(m => m.IsActive == null).Select(m => m).ToList();
-            var isActiveList = db.Messages.Where(m => m.Postmark >= DateTime.Now).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+            bool activeMessageFound = false;
+            var messageList = db.Messages.Where(m=>m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m=>m.Postmark >= DateTime.Today).Where(m=>m.Postmark.Hour >= DateTime.Now.Hour).Where(m => m.IsActive == null).Select(m => m).ToList();
+            var isActiveList = db.Messages.Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark >= DateTime.Today).Where(m => m.Postmark.Hour >= DateTime.Now.Hour).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+            if(isActiveList.Contains(null))
+            {
+                activeMessageFound = true;
+            }
             for (int i = 0; i < isActiveList.Count(); i++)
             {
                 isActiveList[i] = true;
@@ -143,6 +148,7 @@ namespace Rolory.Controllers
                     db.SaveChanges();
                 }
             }
+            return activeMessageFound;
         }
         public void GenerateAllUserEmails()
         {
