@@ -4,23 +4,57 @@
     ViewBag.Title = "About";
 }
 <br />
-<div class="col-lg-offset-5">
-    <h2>About</h2>
-    <h2>@Html.ActionLink("Interactions","Index","Interactions", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "" })</h2>
-    <h2>@Html.ActionLink("Details","Details","Contacts",new {id = Model.Contact.Id}, null)</h2>
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>About</h2>
+        </div>
+    </div>
 </div>
-<div style="margin-left: 410px" class="col-lg-offset-3">
-    <h3>
-        @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
-    </h3>
-</div>
-<div style="margin-left: 400px" class="col-lg-offset-3">
-    <h4>
-        @Html.DisplayFor(model => model.Contact.Email)
-    </h4>
-    <h4>
-        @Html.DisplayFor(model => model.Contact.PhoneNumber)
-    </h4>
-</div>
+<div class="container">
+    <div class="col-md-4">
+
+    </div>
+    <br />
+    <img src="@Model.Contact.Image" width="150px" height="200px" />
+
+
+    <div class="col-md-4"></div>
+    <div class="col-md-4" style="text-align:center">
+        <h3>
+            @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
+        </h3>
+        <div class="col-lg-2">
+            <br/>
+            <h4 style="text-align:center">
+                @Html.DisplayFor(model => model.Contact.Email)
+            </h4>
+            <h4 style="text-align:center">
+                @Html.DisplayFor(model => model.Contact.PhoneNumber)
+            </h4>
+        </div>
+    </div>
+    
+    </div>
+
+<div class="container">
+    <div class="col-md-12"> <a class="btn btn-primary btn-xlg" src=@Html.ActionLink("Details", "Details", "Contacts", new { id = Model.Contact.Id }, null)</a></div>
+    <div class="col-lg-8"> <h2><a class="btn btn-primary btn-xlg" src=@Html.ActionLink("Interactions", "Index", "Interactions", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "" })</a></h2></div>
+       
+    </div>
+
+    <div class="container">
+
+    </div>
+
+
+
+
+
+
+
+
+
+
 
 

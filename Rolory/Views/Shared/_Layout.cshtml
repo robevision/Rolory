@@ -17,10 +17,17 @@
             <span class="icon-bar"></span>
         </button>*@
         <div class="navbar-collapse collapse">
-            <div class="container">
+            <div class="col-md-1">
+              
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                    <img src="~/Content/images/logo.png" alt="Site Logo" style="height: 30px; width:125px" />
+                    <img src="~/Content/images/logo.png" alt="Site Logo" style="height: 40px; width:167px" />
                 </a>
+            </div>
+            <div class="container">
+                <div class="col-md-2">
+
+                </div>
+
                 <ul class="nav navbar-nav">
                     <li style="font-size:medium"><br /><h4>Get In Touch With:</h4></li>
                     <li><br />@Html.ActionLink("Us", "Contact", "Home")</li>

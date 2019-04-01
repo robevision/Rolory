@@ -11,6 +11,8 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Id)
     @Html.HiddenFor(model => model.UserId)
+    @Html.HiddenFor(model => model.Availability)
+    @Html.HiddenFor(model => model.UserActivities)
 
     <div class="form-group">
         @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -41,21 +43,42 @@
             @Html.ValidationMessageFor(model => model.WorkTitle, "", new { @class = "text-danger" })
         </div>
     </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReceiveEmails, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.ReceiveEmails)
-                    @Html.ValidationMessageFor(model => model.ReceiveEmails, "", new { @class = "text-danger" })
-                </div>
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Availability, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.Editor("Availability", Model.Availability, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserActivities, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.Editor("Activities", Model.UserActivities, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.UserActivities, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Reach Out Goal Per Day", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Goal, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Goal, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReceiveEmails, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.ReceiveEmails)
+                @Html.ValidationMessageFor(model => model.ReceiveEmails, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
     }
 
     <div>

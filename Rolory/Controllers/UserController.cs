@@ -109,6 +109,14 @@ namespace Rolory.Controllers
                 {
                     
                 }
+                string availabilityString = networker.Availability;
+                string addedAvailability = Request.Form["Availability"].ToString();
+                string updatedAvailabilityString = availabilityString + "," + " " + addedAvailability;
+                networker.Availability = updatedAvailabilityString;
+                string activitiesString = networker.UserActivities;
+                string addedActivities = Request.Form["Activities"].ToString();
+                string updatedActivitiesString = activitiesString + "," + " " + addedActivities;
+                networker.UserActivities = updatedActivitiesString;
                 db.Entry(networker).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
