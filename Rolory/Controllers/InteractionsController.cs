@@ -19,6 +19,7 @@ namespace Rolory.Controllers
         {
             db = new ApplicationDbContext();
             msg = new MessageManagement();
+            CycleGoalStatus();
         }
         // GET: Interactions
         public ActionResult Index(int? id, bool? inTouch = null)
@@ -115,6 +116,7 @@ namespace Rolory.Controllers
                 db.SaveChanges();
                 if (networker.Goal != null && networker.RunningTally >= networker.Goal && networker.GoalStatus == true)
                 {
+                    networker.GoalCoolDown = DateTime.Now;
                     networker.GoalStatus = false;
                     networker.RunningTally = 0;
                     db.Entry(networker).State = EntityState.Modified;
@@ -242,6 +244,23 @@ namespace Rolory.Controllers
                 return View();
             }
             return RedirectToAction("Index", "Interactions");
+        }
+        public void CycleGoalStatus()
+        {
+            var networkers = db.Networkers.Select(n => n).ToList();
+            var networkersList = db.Networkers.Where(n => n.GoalActive == true).ToList();
+            if (!networkersList.Contains(null))
+            {
+                foreach (Networker networker in networkersList)
+                {
+                    if (networker.GoalCoolDown.AddHours(9) >= DateTime.Now)
+                    {
+                        networker.GoalStatus = true;
+                        db.Entry(networker).State = EntityState.Modified;
+                    }
+                }
+                db.SaveChanges();
+            }  
         }
         protected override void Dispose(bool disposing)
         {

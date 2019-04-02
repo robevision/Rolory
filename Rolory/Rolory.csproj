@@ -298,6 +298,10 @@
     <Compile Include="Migrations\201904012255577_GoalPropsNetworkerModel.Designer.cs">
       <DependentUpon>201904012255577_GoalPropsNetworkerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904020025236_GoalCoolDownPropNetworkerModel.cs" />
+    <Compile Include="Migrations\201904020025236_GoalCoolDownPropNetworkerModel.Designer.cs">
+      <DependentUpon>201904020025236_GoalCoolDownPropNetworkerModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -507,6 +511,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904012255577_GoalPropsNetworkerModel.resx">
       <DependentUpon>201904012255577_GoalPropsNetworkerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904020025236_GoalCoolDownPropNetworkerModel.resx">
+      <DependentUpon>201904020025236_GoalCoolDownPropNetworkerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
