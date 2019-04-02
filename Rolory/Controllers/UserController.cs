@@ -102,6 +102,13 @@ namespace Rolory.Controllers
         [HttpPost]
         public ActionResult Modify(Networker networker)
         {
+            string monday = null;
+            string tuesday = null;
+            string wednesday = null;
+            string thursday = null;
+            string friday = null;
+            string saturday = null;
+            string sunday = null;
             if(networker != null)
             {
                 ApplicationDbContext db = new ApplicationDbContext();
@@ -109,14 +116,48 @@ namespace Rolory.Controllers
                 {
                     
                 }
-                string availabilityString = networker.Availability;
-                string addedAvailability = Request.Form["Availability"].ToString();
-                string updatedAvailabilityString = availabilityString + "," + " " + addedAvailability;
-                networker.Availability = updatedAvailabilityString;
-                string activitiesString = networker.UserActivities;
-                string addedActivities = Request.Form["Activities"].ToString();
-                string updatedActivitiesString = activitiesString + "," + " " + addedActivities;
-                networker.UserActivities = updatedActivitiesString;
+
+                if (Request.Form["Monday"] != null)
+                {
+                    monday = Request.Form["Monday"].ToString();
+                }
+                if (Request.Form["Tuesday"] != null)
+                {
+                    tuesday = Request.Form["Tuesday"].ToString();
+                }
+                if (Request.Form["Wednesday"] != null)
+                {
+                    wednesday = (Request.Form["Wednesday"].ToString());
+                }
+                if (Request.Form["Thursday"] != null)
+                {
+                    thursday = Request.Form["Thursday"].ToString();
+                }
+                if (Request.Form["Friday"] != null)
+                {
+                    friday = Request.Form["Friday"].ToString();
+                }
+                if (Request.Form["Saturday"] != null)
+                {
+                    saturday = Request.Form["Saturday"].ToString();
+                }
+                if (Request.Form["Sunday"] != null)
+                {
+                    sunday = Request.Form["Sunday"].ToString();
+                }
+
+                string availabilityString = db.Networkers.Where(n => n.Id == networker.Id).Select(n => n.Availability).SingleOrDefault();
+                string addedAvailability = monday + tuesday + wednesday + thursday + friday + saturday + sunday;
+                networker.Availability = addedAvailability;
+                //if (!availabilityString.Contains(addedAvailability))
+                //{
+                //    string updatedAvailabilityString = availabilityString + "," + " " + addedAvailability;
+                //    networker.Availability = updatedAvailabilityString;
+                //}
+                //string activitiesString = networker.UserActivities;
+                //string addedActivities = Request.Form["Activities"].ToString();
+                //string updatedActivitiesString = activitiesString + "," + " " + addedActivities;
+                //networker.UserActivities = updatedActivitiesString;
                 if (networker.Goal != null || networker.Goal != 0)
                 {
                     networker.GoalActive = true;

@@ -13,6 +13,7 @@
     @Html.HiddenFor(model => model.UserId)
     @Html.HiddenFor(model => model.Availability)
     @Html.HiddenFor(model => model.UserActivities)
+    @Html.HiddenFor(model => model.GoalCoolDown)
 
     <div class="form-group">
         @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -43,20 +44,83 @@
             @Html.ValidationMessageFor(model => model.WorkTitle, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="form-group">
+    @*<div class="form-group">
         @Html.LabelFor(model => model.Availability, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.Editor("Availability", Model.Availability, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
         </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.UserActivities, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.Editor("Activities", Model.UserActivities, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.UserActivities, "", new { @class = "text-danger" })
+    </div>*@
+    <div class="container">
+        @Html.Label("Availability:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-1">
+            @Html.Label("Monday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Monday", "Monday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+        <div class="col-md-1">
+            @Html.Label("Tuesday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Tuesday", "Tuesday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="col-md-1">
+            @Html.Label("Wednesday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Wednesday", "Wednesday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="col-md-1">
+            @Html.Label("Thursday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Thursday", "Thursday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="col-md-1">
+            @Html.Label("Friday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Friday", "Friday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="col-md-1">
+            @Html.Label("Saturday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Saturday", "Saturday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+        <div class="col-md-1">
+            @Html.Label("Sunday", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-lg-1">
+                @Html.RadioButton("Sunday", "Sunday", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Availability, "", new { @class = "text-danger" })
+            </div>
+
         </div>
     </div>
+   
+ 
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.UserActivities, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Editor("Activities", Model.UserActivities, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UserActivities, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
     <div class="form-group">
         @Html.Label("Reach Out Goal Per Day", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
