@@ -13,27 +13,36 @@ namespace Rolory.Controllers
     {
         private ApplicationDbContext db;
         private MessageManagement msg;
+        private RandomManagement rndmngmnt;
         Random random;
         public RandomController()
         {
             db = new ApplicationDbContext();
             random = new Random();
             msg = new MessageManagement();
+            rndmngmnt = new RandomManagement();
         }
         // GET: Random
         [Authorize]
         [HttpGet]
         public ActionResult Index()
         {
-            //msg.BuildEmail(3, "Test", "Testy test test. This is a test to see if this email works. Testing testing, test, test.");
-            var nextWeek = DateTime.Today.AddDays(7);
+            var nextWeek = DateTime.Today.AddDays(6);
+            //instantiated lists
             List<Contact> pushedContacts = new List<Contact>();
             List<Contact> pushedContactsByBirthDate = new List<Contact>();
             List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
             List<Contact> pushedContactsByProfession = new List<Contact>();
             List<Contact> pushedContactsByRelationship = new List<Contact>();
+            List<Contact> pushedContactsBySharedActivities = new List<Contact>();
+
+            List<Contact> filteredContactsBySharedActivities = new List<Contact>();
+
+            //get who is logged in and only their contacts
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+
+            //null check for networker profile
             var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
             if (networkerNullCheck == false)
             {
@@ -45,92 +54,29 @@ namespace Rolory.Controllers
                 //Add a page to send the logged in user to a message that says they have no contacts logged
                return RedirectToAction("Create", "Contacts");
             }
-            DateTime endCoolDownTimer = DateTime.Now;
-            List<Contact> contactsBackInPool = new List<Contact>();
-            var contactsWithCoolDown = db.Contacts.Where(c => c.CoolDown == true).ToList();
-            foreach (Contact contact in contactsWithCoolDown)
-            {
-                if(contact.CoolDownTime.Value.AddHours(1) <= endCoolDownTimer)
-                {
-                    contactsBackInPool.Add(contact);
-                }
-            }
-            List<bool> coolDownProperty = contactsBackInPool.Where(c => c.CoolDown == true).Select(c=>c.CoolDown).ToList();
-            for (int i = 0; i < coolDownProperty.Count(); i++)
-            {
-                coolDownProperty[i] = false;
-            }
-            foreach (Contact contact in contactsBackInPool)
-            {
-                foreach(bool coolDownBool in coolDownProperty)
-                {
-                    contact.CoolDown = coolDownBool;
-                    db.Entry(contact).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
-            }
+
+            rndmngmnt.CheckContactCoolDown();
+
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
-            foreach(Contact contact in filteredContactList)
-            {
-                contact.Description = db.Contacts.Where(c=>c.DescriptionId == contact.DescriptionId).Select(c=>c.Description).SingleOrDefault();
-                DateTime? birthDateNullTest = contact.Description.BirthDate;
-                DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
-                if (birthDateNullTest == null)
-                {
-                    contact.Description.BirthDate = new DateTime(1801, 12, 25);
-                }
-                DateTime contactBirthDate = contact.Description.BirthDate.Value;
-                int contactBirthMonth = contactBirthDate.Month;
-                var contactWorkTitle = contact.WorkTitle;
-                if (anniversaryDateNullTest == null)
-                {
-                    contact.Description.Anniversary = new DateTime(1801, 12, 25);
-                }
-                DateTime contactAnniversary = contact.Description.Anniversary.Value;
-                int contactAnniversaryMonth = contactAnniversary.Month;
-                string contactRelation = contact.Description.Relationship;
-                //need to query for networker id by getting list of contacts with description. Basically all contacts with description. Their ids then foreach to query whether those match with the ones thathave sharedactivities attached.
-                List<int> contactActivities = db.SharedActivities.Select(s => s.Description.Id).ToList();
-                //
-                if(!contactBirthDate.ToString().Contains("12/25/1801"))
-                {
-                    if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
-                    {
-                        pushedContactsByBirthDate.Add(contact);
-                    }
-                }
-                if(contactWorkTitle != null && networker.WorkTitle != null)
-                {
-                    if (contactWorkTitle.Contains(networker.WorkTitle))
-                    {
-                        pushedContactsByProfession.Add(contact);
-                    }
-                }
-                if (!contactAnniversary.ToString().Contains("12/25/1801"))
-                {
-                    if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
-                    {
-                        pushedContactsByAnniversaryDate.Add(contact);
-                    }
-                }
-                if (contactRelation != null)
-                {
-                    if (contactRelation == "Friend" || contactRelation == "Family")
-                    {
-                        pushedContactsByRelationship.Add(contact);
-                    }
-                }
-                if (contactActivities != null)
-                {
 
-                }
+            pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
+            pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
+            pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
+            pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
+            filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
+            rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
+            foreach(Contact contact in filteredContactsBySharedActivities)
+            {
+
             }
+
             pushedContacts.Add(pushedContactsByBirthDate.SingleOrDefault());
             pushedContacts.Add(pushedContactsByAnniversaryDate.SingleOrDefault());
             pushedContacts.Add(pushedContactsByProfession.SingleOrDefault());
             pushedContacts.Add(pushedContactsByRelationship.SingleOrDefault());
-            if (pushedContacts.Count == 4 && pushedContacts[0] == null && pushedContacts[1] == null && pushedContacts[2] == null && pushedContacts[3] == null)
+            pushedContacts.Add(pushedContactsBySharedActivities.SingleOrDefault());
+            if (pushedContacts.Count == 5 && pushedContacts.Contains(null))
             {
                 if(filteredContactList.Count != 0)
                 {

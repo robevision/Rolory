@@ -17,6 +17,8 @@ namespace Rolory.Models
         public string Activity { get; set; }
         [Display(Name = "Level")]
         public string Bond { get; set; }
+        public int? Season { get; set; }
+        public DateTime? CoolDownTime { get; set; }
         [ForeignKey("Description")]
         [Display(Name = "Description")]
         public int DescriptionId { get; set; }
