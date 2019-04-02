@@ -181,6 +181,7 @@
     <Compile Include="Controllers\MessageManagement.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\RandomController.cs" />
+    <Compile Include="Controllers\RandomManagement.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WeatherManagement.cs" />
     <Compile Include="Global.asax.cs">
@@ -408,6 +409,9 @@
     <Content Include="Views\Interactions\CreatePlan.cshtml" />
     <Content Include="Views\Interactions\DisplayRecent.cshtml" />
     <Content Include="Views\Interactions\Goal.cshtml" />
+    <Content Include="Views\Random\ConnectQuery.cshtml" />
+    <Content Include="Views\Random\Interact.cshtml" />
+    <Content Include="Views\Random\ProvideContext.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

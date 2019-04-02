@@ -89,7 +89,10 @@ namespace Rolory.Controllers
                 }
                 DateTime contactAnniversary = contact.Description.Anniversary.Value;
                 int contactAnniversaryMonth = contactAnniversary.Month;
-                var contactRelation = contact.Description.Relationship;
+                string contactRelation = contact.Description.Relationship;
+                //need to query for networker id by getting list of contacts with description. Basically all contacts with description. Their ids then foreach to query whether those match with the ones thathave sharedactivities attached.
+                List<int> contactActivities = db.SharedActivities.Select(s => s.Description.Id).ToList();
+                //
                 if(!contactBirthDate.ToString().Contains("12/25/1801"))
                 {
                     if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
@@ -117,6 +120,10 @@ namespace Rolory.Controllers
                     {
                         pushedContactsByRelationship.Add(contact);
                     }
+                }
+                if (contactActivities != null)
+                {
+
                 }
             }
             pushedContacts.Add(pushedContactsByBirthDate.SingleOrDefault());
@@ -252,36 +259,39 @@ namespace Rolory.Controllers
                     }
                 }
             }
-            return View();
+            return View(contact);
         }
         // GET: Random/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: Random/Create
-        public ActionResult Create()
+        public ActionResult ProvideContext(int? id)
         {
-            return View();
-        }
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            //Update Info About Person or Log A Moment
+            return View(contact);
 
-        // POST: Random/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        }
+        public ActionResult UpdateInfo(int? id, string question=null, string answer=null)
         {
-            try
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            //Update Info. Will be recursive in adding info about the person to log. Have a button for when they want to go to the next person.
+            if (question != null && answer != null)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                ViewBag.Message = "hi";
             }
-            catch
-            {
-                return View();
-            }
+            
+            return View(contact);
         }
-
+        public ActionResult ConnectQuery(int? id)
+        {
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault(); 
+            //Would you like to connect?
+            return View(contact);
+        }
+        public ActionResult Interact(int? id)
+        {
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            return View(contact);
+        }
         // GET: Random/Edit/5
         public ActionResult Edit(int id)
         {

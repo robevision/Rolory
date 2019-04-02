@@ -72,8 +72,9 @@ namespace Rolory.Controllers
                     return null;
                 }
             }
-        public async void FindWeatherToday(int? id)
+        public async Task<string> FindWeatherToday(int? id)
         {
+            string weatherToday;
             var latitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Latitude).SingleOrDefault();
             var longitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
             StringBuilder stringBuilder = new StringBuilder();
@@ -85,8 +86,29 @@ namespace Rolory.Controllers
             string responseFromServer = reader.ReadToEnd();
             response.Close();
 
-            var root = JsonConvert.DeserializeObject<Geography.AddressAPIData>(responseFromServer);
-            var location = root.results[0].geometry.location;
+            var root = JsonConvert.DeserializeObject<WeatherData.RootObject>(responseFromServer);
+            List <WeatherData.Weather> weekWeather = root.weather;
+            weatherToday = weekWeather[0].description;
+            return weatherToday;
+        }
+        public async Task<string> FindWeatherInFourDays(int? id)
+        {
+            string weatherInFourDays;
+            var latitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Latitude).SingleOrDefault();
+            var longitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
+            StringBuilder stringBuilder = new StringBuilder();
+            string url = @"https://api.openweathermap.org/data/2.5/weather?" + "lat=" + latitude + "&lon=" + longitude + "&units=metric" + "&key=" + Models.Access.weath;
+            WebRequest request = WebRequest.Create(url);
+            WebResponse response = await request.GetResponseAsync();
+            System.IO.Stream data = response.GetResponseStream();
+            StreamReader reader = new StreamReader(data);
+            string responseFromServer = reader.ReadToEnd();
+            response.Close();
+
+            var root = JsonConvert.DeserializeObject<WeatherData.RootObject>(responseFromServer);
+            List<WeatherData.Weather> weekWeather = root.weather;
+            weatherInFourDays = weekWeather[4].description;
+            return weatherInFourDays;
         }
     }
     }
