@@ -29,6 +29,7 @@ namespace Rolory.Models
         public int? Goal { get; set; }
         public bool GoalActive { get; set; }
         public bool GoalStatus { get; set; }
+        public DateTime GoalCoolDown { get; set; }
         public string Availability { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }

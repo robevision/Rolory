@@ -9,6 +9,8 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Contact.Id)
+    @Html.HiddenFor(model => model.Contact.NetworkerId)
 
     <div class="form-horizontal">
         <h4>Interaction</h4>
@@ -45,7 +47,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { id = Model.Contact.Id}, null)
 </div>
 
 

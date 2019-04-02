@@ -93,12 +93,19 @@ namespace Rolory.Controllers
             if (ModelState.IsValid)
             {
                 string goalCode = "5C0R3";
-                contactInteraction.Interaction.ContactId = contactInteraction.Contact.Id;
+                var contactId = contactInteraction.Contact.Id;
+                contactInteraction.Contact = db.Contacts.Where(c => c.Id == contactId).SingleOrDefault();
+                contactInteraction.Interaction.Contact = contactInteraction.Contact;
+                contactInteraction.Interaction.Contact.Id = contactId;
+                contactInteraction.Interaction.ContactId = contactId;
                 var networkerId = contactInteraction.Interaction.Contact.NetworkerId;
                 var networker = db.Networkers.Where(n => n.Id == networkerId).Select(n => n).SingleOrDefault();
+                contactInteraction.Interaction.Message.NetworkerId = networkerId;
+                contactInteraction.Interaction.Message.Networker = networker;
                 contactInteraction.Interaction.Contact = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c).SingleOrDefault();
                 contactInteraction.Interaction.Message.NetworkerId = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.NetworkerId).SingleOrDefault();
-                contactInteraction.Interaction.Message.Networker = db.Contacts.Where(c => c.Id == contactInteraction.Interaction.ContactId).Select(c => c.Networker).SingleOrDefault();
+                contactInteraction.Interaction.Message.Networker = networker;
+                contactInteraction.Interaction.Message.Networker.Id = networkerId;
                 contactInteraction.Interaction.Message.Postmark = DateTime.Now;
                 contactInteraction.Interaction.Message.IsInteraction = true;
                 db.Interactions.Add(contactInteraction.Interaction);
@@ -106,14 +113,15 @@ namespace Rolory.Controllers
                 networker.RunningTally++;
                 db.Entry(networker).State = EntityState.Modified;
                 db.SaveChanges();
-                if (networker.Goal != null && networker.RunningTally >= networker.Goal)
+                if (networker.Goal != null && networker.RunningTally >= networker.Goal && networker.GoalStatus == true)
                 {
+                    networker.GoalStatus = false;
                     networker.RunningTally = 0;
                     db.Entry(networker).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Goal", "Interactions", new { code = goalCode });
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {id = contactInteraction.Contact.Id});
             }
             return View(contactInteraction);
         }

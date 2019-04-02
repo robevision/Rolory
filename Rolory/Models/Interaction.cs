@@ -11,6 +11,7 @@ namespace Rolory.Models
     {
         [Key]
         public int Id { get; set; }
+        [DataType(DataType.Date)]
         [Display(Name = "When")]
         public DateTime Moment { get; set; }
         [Display(Name = "Conversation Highlights")]

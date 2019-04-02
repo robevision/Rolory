@@ -117,6 +117,10 @@ namespace Rolory.Controllers
                 string addedActivities = Request.Form["Activities"].ToString();
                 string updatedActivitiesString = activitiesString + "," + " " + addedActivities;
                 networker.UserActivities = updatedActivitiesString;
+                if (networker.Goal != null || networker.Goal != 0)
+                {
+                    networker.GoalActive = true;
+                }
                 db.Entry(networker).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
