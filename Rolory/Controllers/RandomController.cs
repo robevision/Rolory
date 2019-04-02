@@ -49,14 +49,20 @@ namespace Rolory.Controllers
                return RedirectToAction("CreateAccount", "User");
             }
             var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
-            if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
+            try
             {
-                //Add a page to send the logged in user to a message that says they have no contacts logged
-               return RedirectToAction("Create", "Contacts");
+                if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
+                {
+
+                    return RedirectToAction("Null", "Contacts");
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Null", "Contacts");
             }
 
             rndmngmnt.CheckContactCoolDown();
-
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
 
@@ -64,12 +70,8 @@ namespace Rolory.Controllers
             pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
             pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
             pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
-            filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
-            rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
-            foreach(Contact contact in filteredContactsBySharedActivities)
-            {
-
-            }
+            //filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
+            //rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
 
             pushedContacts.Add(pushedContactsByBirthDate.SingleOrDefault());
             pushedContacts.Add(pushedContactsByAnniversaryDate.SingleOrDefault());
@@ -91,6 +93,14 @@ namespace Rolory.Controllers
                     string timeNow = DateTime.Now.ToString();
                     DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
                     contact.CoolDownTime = nullableTimeNow;
+                    if(contact.Description != null)
+                    {
+                        contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
+                        var descriptionId = db.Contacts.Where(c => c.DescriptionId == contact.Description.Id).Select(c => c.DescriptionId).SingleOrDefault();
+                        contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).Single();
+                        contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).Single();
+                    }
+                    db.Contacts.Where(c => c.Id == contact.Id).Single();
                     db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();
                     return View(contact);

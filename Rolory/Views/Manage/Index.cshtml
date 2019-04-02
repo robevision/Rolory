@@ -3,16 +3,30 @@
     ViewBag.Title = "Manage";
 }
 
-<h2>@ViewBag.Title.</h2>
+<br />
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>@ViewBag.Title</h2>
+        </div>
+    </div>
+</div>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Change your account settings</h4>
-    <hr />
+    
+    
     <dl class="dl-horizontal">
+        <hr />
+        <div class="col-md-offset-3"><div class="col-md-1"></div></div>
+        
+        <h3 style="align-content:space-around">Change your Account Settings</h3>
+        <hr />
+        <div class="col-md-5"></div>
         <dd>
-            @Html.ActionLink("Profile", "Manage", "User")
+            <p style="align-content:center"><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Profile","Manage","User")</a></p>
         </dd>
+
         <dt>Password:</dt>
         <dd>
             [

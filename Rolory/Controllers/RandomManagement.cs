@@ -10,9 +10,11 @@ namespace Rolory.Controllers
     public class RandomManagement
     {
         ApplicationDbContext db;
+        WeatherManagement weath;
         public RandomManagement()
         {
             db = new ApplicationDbContext();
+            weath = new WeatherManagement();
         }
         public List<Contact> GetContactsByBirthDate(List<Contact> filteredContactList)
         {
@@ -22,6 +24,7 @@ namespace Rolory.Controllers
             foreach (Contact contact in filteredContactList)
             {
                 contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                contact.Description.Id = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId.Value).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 DateTime? birthDateNullTest = contact.Description.BirthDate;
                 if (birthDateNullTest == null)
                 {
@@ -47,7 +50,7 @@ namespace Rolory.Controllers
             foreach(Contact contact in filteredContactList)
             {
                 contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
-
+                contact.Description.Id = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId.Value).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
 
                 if (anniversaryDateNullTest == null)
@@ -70,12 +73,12 @@ namespace Rolory.Controllers
         public List<Contact> GetContactsByWorkTitle(List<Contact> filteredContactList)
         {
             List<Contact> pushedContactsByProfession = new List<Contact>();
-            int networkerId = filteredContactList.Select(f => f.NetworkerId).SingleOrDefault();
+            int networkerId = filteredContactList.Select(f => f.NetworkerId).FirstOrDefault();
             var networker = db.Networkers.Where(n => n.Id == networkerId).SingleOrDefault();
             foreach (Contact contact in filteredContactList)
             {
                 contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
-
+                contact.Description.Id = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId.Value).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 var contactWorkTitle = contact.WorkTitle;
 
                 if (contactWorkTitle != null && networker.WorkTitle != null)
@@ -96,6 +99,7 @@ namespace Rolory.Controllers
             foreach (Contact contact in filteredContactList)
             {
                 contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                contact.Description.Id = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId.Value).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 string contactRelation = contact.Description.Relationship;
                 if (contactRelation != null)
                 {
@@ -131,6 +135,7 @@ namespace Rolory.Controllers
         {
             List<Contact> pushedContactsBySharedActivities = new List<Contact>();
             List<SharedActivity> sharedActivities = new List<SharedActivity>();
+            List<string> activeActivities = new List<string>();
             //List<string> winterActivities = new List<string>() { "snowboarding", "down hill", "ice skating", "sledding","snowmobiling","cross country" };
             //List<string> allAroundActivities = new List<string>() { "hiking","basketball"};
             List<int?> descriptionIds = filteredContactList.Select(f => f.DescriptionId).ToList();
@@ -140,9 +145,17 @@ namespace Rolory.Controllers
             {
                sharedActivities.Add(db.SharedActivities.Where(s => s.DescriptionId == descriptId).SingleOrDefault());
             }
-            if(sharedActivities != null)
+            var allSeasons = sharedActivities.Select(s => s.Season).ToList();
+            if (sharedActivities != null)
             {
-                //if(sharedActivities.Where(s=>s.Season))
+                foreach(SharedActivity activity in sharedActivities)
+                {
+                    if (activity.Season == 0)
+                    {
+                        activeActivities.Add(activity.Activity);
+                    }
+                }
+                
             }
             return pushedContactsBySharedActivities;
         }

@@ -125,11 +125,18 @@ namespace Rolory.Controllers
             {
                 return RedirectToAction("CreateAccount", "User");
             }
-            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
-            if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
+            List<Contact> contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
+            try
             {
-                //Add a page to send the logged in user to a message that says they have no contacts logged
-                return RedirectToAction("Create", "Contacts");
+                if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
+                {
+                    //Add a page to send the logged in user to a message that says they have no contacts logged
+                    return RedirectToAction("Null", "Contacts");
+                }
+            }
+            catch
+            {
+                return RedirectToAction("Null", "Contacts");
             }
             var contacts = db.Contacts.Where(c=>c.NetworkerId == networker.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
             
@@ -376,6 +383,10 @@ namespace Rolory.Controllers
             db.Entry(contact).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Details","Contacts", new { id = contactDescription.Contact.Id });
+        }
+        public ActionResult Null()
+        {
+            return View();
         }
         // GET: Contacts/Delete/5
         public ActionResult Delete(int? id)
