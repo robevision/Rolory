@@ -7,13 +7,13 @@ namespace Rolory.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class NetworkerModel : IMigrationMetadata
+    public sealed partial class ReBuildingDatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(NetworkerModel));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ReBuildingDatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903231424422_NetworkerModel"; }
+            get { return "201904031044023_ReBuildingDatabase"; }
         }
         
         string IMigrationMetadata.Source

@@ -390,6 +390,7 @@ namespace Rolory.Controllers
         {
             var contact = contactDescription.Contact;
             var description = contactDescription.Contact.Description;
+            contactDescription.Description = description;
             db.Entry(description).State = EntityState.Modified;
             db.SaveChanges();
             db.Entry(contact).State = EntityState.Modified;
