@@ -66,10 +66,11 @@ namespace Rolory.Controllers
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
 
-            pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
-            pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
-            pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
-            pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
+            //pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
+            //pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
+            //pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
+            //pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
+
             //filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
             //rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
 
@@ -157,14 +158,14 @@ namespace Rolory.Controllers
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
            
 
-            if(contact.WorkTitle != null)
+            if(contact.WorkTitle != null && networker.WorkTitle != null)
             {
                 if (contact.WorkTitle == networker.WorkTitle || contact.WorkTitle.Contains(networker.WorkTitle))
                 {
                     ViewBag.Message = $"You and {contact.GivenName} may have a similar occupation. Why not set up a coffee to share your experiences?";
                 }
             }
-            if(contact.Description.Relationship != null)
+            if(contact.Description != null && contact.Description.Relationship != null)
             {
                 if (contact.Description.Relationship == "Friend")
                 {
@@ -179,7 +180,7 @@ namespace Rolory.Controllers
 
                 }
             }
-            if (contact.Description.Anniversary.Value != null)
+            if (contact.Description != null && contact.Description.Anniversary.Value != null)
             {
                 if (contact.Description.Anniversary.Value.Month == DateTime.Now.Month)
                 {
@@ -197,7 +198,7 @@ namespace Rolory.Controllers
                     }
                 }
             }
-            if (contact.Description.BirthDate.Value != null)
+            if (contact.Description != null && contact.Description.BirthDate.Value != null)
             {
                 if (contact.Description.BirthDate.Value.Month == DateTime.Now.Month)
                 {
@@ -214,6 +215,30 @@ namespace Rolory.Controllers
                         ViewBag.Message = $"{contact.GivenName}'s Birthday is coming up! It's on {contact.Description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Birthday' shows you're thinking of them.";
                     }
                 }
+            }
+            else if(contact.Description == null)
+            {
+                WeatherManagement weath = new WeatherManagement();
+                var season = weath.GetCurrentSeason();
+                string[] dateRelevantMessages = new string[]
+                {
+
+                };
+                string[] genericMessages = new string[]
+                {
+                    $"How about, 'Hey {contact.GivenName}, I saw something the other day that made me think of you...'",
+                    "'What have you been up to lately?'", $"'Hi {contact.GivenName}, how has it been since...'",
+                    "'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
+                    "'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
+                    $"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
+                    "'What are you up to these days? We should grab coffee to catch up!'"
+                };
+                random = new Random();
+                var newRandom = random.Next(8);
+                ViewBag.Message = genericMessages[newRandom];
+
+              
+
             }
             return View(contact);
         }

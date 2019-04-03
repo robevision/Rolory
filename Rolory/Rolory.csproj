@@ -417,6 +417,7 @@
     <Content Include="Views\Random\Interact.cshtml" />
     <Content Include="Views\Random\ProvideContext.cshtml" />
     <Content Include="Views\Contacts\Null.cshtml" />
+    <Content Include="Views\Random\GetInTouch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

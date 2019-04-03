@@ -53,10 +53,16 @@
 </div>
 
 <br />
-<img src="@Html.DisplayFor(model => model.Image)" width: 150px lengh: 150px />
-<h3> @Html.DisplayFor(model => model.Prefix) @Html.DisplayFor(model => model.GivenName)  @Html.DisplayFor(model => model.FamilyName)</h3>
+
+    <img class="text-center" src="@Html.DisplayFor(model => model.Image)" width: 150px lengh: 150px />
+    <h3 class="text-center" style="align-content:center"> @Html.DisplayFor(model => model.Prefix) @Html.DisplayFor(model => model.GivenName)  @Html.DisplayFor(model => model.FamilyName)</h3>
+
+
 <br />
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("Ice-Breaker", "GetInTouch", "Interactions", new { id = Model.Id }, null)</button>
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button>
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = Model.Id }, null)</button>
+
+<div class="col-md-4"><button class="w3-button w3-round-xlarge">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button></div>
+<div class="col-md-4"><p><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Ice-Breaker","GetInTouch", "Random", new { id = Model.Id }, null)</a></p></div>
+<div class="col-md-4"><button class="w3-button w3-round-xlarge">@Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = Model.Id }, null)</button></div>
+@*<button class="w3-button w3-round-xlarge">@Html.ActionLink("Ice-Breaker", "GetInTouch", "Random", new { id = Model.Id }, null)</button>*@
+
 

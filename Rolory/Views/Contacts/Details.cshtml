@@ -16,132 +16,273 @@
 <div>
     <h4>Contact</h4>
     <hr />
-    <dl class="dl-horizontal">
+    <div class="container">
+        <div class="col-md-10">
+            <dl class="dl-horizontal" style="align-content:center">
 
 
 
-        @if (@Html.DisplayFor(model => model.Prefix) != null)
-        {
-            <dt>@Html.DisplayNameFor(model => model.Prefix) </dt>}
+                @if (Model.Prefix != null)
+                {
+                    <dt>@Html.DisplayNameFor(model => model.Prefix) </dt>
 
 
-        <dd>
-            @Html.DisplayFor(model => model.Prefix)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.GivenName)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Prefix)
+                    </dd>
+                }
+                <dt>
+                    @Html.DisplayNameFor(model => model.GivenName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.GivenName)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.GivenName)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FamilyName)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FamilyName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FamilyName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FamilyName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Address.AddressType)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Address.AddressType)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                @if (Model.Description != null && Model.Description.Gender != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description.Gender);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Description.Gender)
+                    </dd>
+                }
+                @if (Model.PhoneType != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PhoneType)
+                    </dt>
 
-        @if (Model.AlternateAddress != null && Model.AlternateAddress.AddressType != null)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.AlternateAddress.AddressType);
-            </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhoneType)
+                    </dd>
+                }
+
+                @if (Model.PhoneNumber != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PhoneNumber)
+                    </dd>
+                }
+                @if (Model.Address != null && Model.Address.AddressType != null)
+                {
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.AddressType)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.AddressType)
+                    </dd>
+                }
+                @if (Model.Address != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.StreetAddress)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.StreetAddress)
+                    </dd>
+                }
+                @if (Model.Address != null && Model.Address.Unit != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.Unit)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.Unit)
+                    </dd>
+                }
+                @if (Model.Address != null && Model.Address.Locality != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.Locality)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.Locality)
+                    </dd>
+                }
+                @if (Model.Address != null && Model.Address.Region != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.Region)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.Region)
+                    </dd>
+                }
+
+                @if (Model.Address != null && Model.Address.CountryName != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.CountryName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.CountryName)
+                    </dd>
+                }
+                @if (Model.Address != null && Model.Address.ZipCode != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Address.ZipCode)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address.ZipCode)
+                    </dd>
+                }
+
+                @if (Model.Organization != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Organization)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Organization)
+                    </dd>
+                }
+
+                @if (Model.WorkTitle != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.WorkTitle)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.WorkTitle)
+                    </dd>
+                }
+
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.AddressType != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.AddressType);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.AddressType)
+                    </dd>
+                }
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.StreetAddress != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.StreetAddress);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.StreetAddress)
+                    </dd>
+                }
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.Unit != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.Unit);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.Unit)
+                    </dd>
+                }
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.Locality != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.Locality);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.Locality)
+                    </dd>
+                }
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.Region != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.Region);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.Region)
+                    </dd>
+                }
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.CountryName != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.CountryName);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.CountryName)
+                    </dd>
+                }
+                @if (Model.AlternateAddress != null && Model.AlternateAddress.ZipCode != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AlternateAddress.ZipCode);
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AlternateAddress.ZipCode)
+                    </dd>
+                }
 
 
+                @if (Model.AltPhoneNumberType != null && Model.AltPhoneNumber != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AltPhoneNumberType)
+                    </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.AlternateAddress.AddressType)
-            </dd>
-        }
-        @if (Model.Description != null && Model.Description.Gender != null)
-        {
-        <dt>
-         @Html.DisplayNameFor(model => model.Description.Gender); 
-        </dt>
-        }
-        <dd>
-            @Html.DisplayFor(model => model.Description.Gender)
-        </dd>
-        <dt>
-            @if (Html.DisplayFor(model => model.PhoneType) != null) { Html.DisplayNameFor(model => model.PhoneType); }
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AltPhoneNumberType)
+                    </dd>
+                }
 
-        <dd>
-            @Html.DisplayFor(model => model.PhoneType)
-        </dd>
+                @if (Model.AltPhoneNumber != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AltPhoneNumber)
+                    </dt>
 
-        <dt>
-            @if (Html.DisplayFor(model => model.PhoneNumber) != null) { Html.DisplayNameFor(model => model.PhoneNumber); }
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AltPhoneNumber)
+                    </dd>
+                }
 
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
+                @if (Model.LastUpdated != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.LastUpdated)
+                    </dt>
 
-        <dt>
-            @if (Html.DisplayFor(model => model.Organization) != null) { Html.DisplayNameFor(model => model.Organization); }
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.LastUpdated)
+                    </dd>
+                }
 
-        <dd>
-            @Html.DisplayFor(model => model.Organization)
-        </dd>
+                @if (Model.InContact != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.InContact)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.WorkTitle)
-        </dt>
+                    <dd>
+                        @inTouch
+                    </dd>
+                }
 
-        <dd>
-            @Html.DisplayFor(model => model.WorkTitle)
-        </dd>
-
-        <dt>
-            @if (Html.DisplayFor(model => model.AltPhoneNumberType) != null) { Html.DisplayNameFor(model => model.AltPhoneNumberType); }
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AltPhoneNumberType)
-        </dd>
-
-        <dt>
-            @if (Html.DisplayFor(model => model.AltPhoneNumber) != null) { Html.DisplayNameFor(model => model.AltPhoneNumber); }
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AltPhoneNumber)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastUpdated)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastUpdated)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.InContact)
-        </dt>
-
-        <dd>
-            @inTouch
-        </dd>
-    </dl>
+            </dl>
+        </div>
+</div>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { Id = Model.Id }) |

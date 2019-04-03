@@ -1,0 +1,19 @@
+﻿@model Rolory.Models.Contact
+@{
+    ViewBag.Title = "GetInTouch";
+}
+
+<br />
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>Get In Touch!</h2>
+        </div>
+    </div>
+</div>
+<div class="col-md-11"><h1 class="text-center">@ViewBag.Message</h1></div>
+
+<button class="w3-button w3-round-xlarge">@Html.ActionLink("View Another", "GetInTouch", "Random", new { id = Model.Id }, null)</button>
+<hr/>
+<h4 class="text-left">Add More Information To Better Results</h4>
+<button class="w3-button w3-round-xlarge text-center">@Html.ActionLink("Update Info", "UpdateInfo", "Interactions", new { id = Model.Id }, null)</button>
