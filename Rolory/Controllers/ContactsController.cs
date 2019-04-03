@@ -363,17 +363,27 @@ namespace Rolory.Controllers
         [HttpGet]
         public ActionResult Expand(int? passedId)
         {
-            ViewBag.Gender = genderList;
-            ViewBag.Category = categoryList;
-            ViewBag.Relationship = relationshipList;
-            ViewBag.States = stateList;
-            ViewBag.Types = typeList;
-            var contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
-            var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
-            ContactDescriptionViewModel contactDescriptionViewModel = new ContactDescriptionViewModel();
-            contactDescriptionViewModel.Contact = contact;
-            contactDescriptionViewModel.Description = description;
-            return View(contactDescriptionViewModel);
+            if (passedId != null)
+            {
+
+                Contact contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
+                if (contact.DescriptionId != null)
+                {
+                    ViewBag.Gender = genderList;
+                    ViewBag.Category = categoryList;
+                    ViewBag.Relationship = relationshipList;
+                    ViewBag.States = stateList;
+                    ViewBag.Types = typeList;
+                    var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
+                    ContactDescriptionViewModel contactDescriptionViewModel = new ContactDescriptionViewModel();
+                    contactDescriptionViewModel.Contact = contact;
+                    contactDescriptionViewModel.Description = description;
+                    return View(contactDescriptionViewModel);
+                }
+                return RedirectToAction("Build", "Contact", new { id = passedId });
+            }
+
+            return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         public ActionResult Expand(ContactDescriptionViewModel contactDescription)
