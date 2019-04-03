@@ -66,10 +66,10 @@ namespace Rolory.Controllers
             var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
             var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
 
-            //pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
-            //pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
-            //pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
-            //pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
+            pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
+            pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
+            pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
+            pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
 
             //filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
             //rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
@@ -94,13 +94,13 @@ namespace Rolory.Controllers
                     string timeNow = DateTime.Now.ToString();
                     DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
                     contact.CoolDownTime = nullableTimeNow;
-                    if(contact.Description != null)
-                    {
-                        contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
-                        var descriptionId = db.Contacts.Where(c => c.DescriptionId == contact.Description.Id).Select(c => c.DescriptionId).SingleOrDefault();
-                        contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).Single();
-                        contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).Single();
-                    }
+                    //if(contact.Description != null)
+                    //{
+                    //    contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
+                    //    var descriptionId = db.Contacts.Where(c => c.DescriptionId == contact.Description.Id).Select(c => c.DescriptionId).SingleOrDefault();
+                    //    contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).Single();
+                    //    contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).Single();
+                    //}
                     db.Contacts.Where(c => c.Id == contact.Id).Single();
                     db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();

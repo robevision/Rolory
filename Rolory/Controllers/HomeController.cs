@@ -15,12 +15,11 @@ namespace Rolory.Controllers
         {
             ViewBag.Alert = null;
             msg = new MessageManagement();
-            msg.CycleMessages();
+            msg.GenerateAllUserEmails();
             if (msg.CycleMessages() == true)
             {
                 ViewBag.Alert = "You have a new message!";
             }
-            msg.GenerateAllUserEmails();
             return View();
         }
 
