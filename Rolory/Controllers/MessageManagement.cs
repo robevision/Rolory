@@ -32,7 +32,7 @@ namespace Rolory.Controllers
                 postmark = DateTime.Now;
             }
             message.Postmark = postmark.Value;
-            if(message.Postmark <= DateTime.Now && message.Postmark.TimeOfDay <= DateTime.Now.TimeOfDay)
+            if(message.Postmark <= DateTime.Today && message.Postmark.TimeOfDay <= DateTime.Now.TimeOfDay)
             {
                 message.IsActive = true;
                 SendMessage(message);
@@ -129,8 +129,8 @@ namespace Rolory.Controllers
         public bool CycleMessages()
         {
             bool activeMessageFound = false;
-            var messageList = db.Messages.Where(m=>m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m=>m.Postmark >= DateTime.Today).Where(m => m.IsActive == null).Select(m => m).ToList();
-            var isActiveList = db.Messages.Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark >= DateTime.Today).Where(m => m.Postmark.Hour >= DateTime.Today.Hour).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+            var messageList = db.Messages.Where(m=>m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m=>m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m).ToList();
+            var isActiveList = db.Messages.Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
             if(isActiveList.Contains(null))
             {
                 activeMessageFound = true;

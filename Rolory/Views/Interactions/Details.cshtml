@@ -3,20 +3,30 @@
 @{
     ViewBag.Title = "Details";
 }
-<br/>
-<h2>Details</h2>
+<br />
+<br />
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>Interaction Details</h2>
+        </div>
+    </div>
+</div>
 
 <div>
-    <h4>Interaction</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayFor(model => model.Contact.Image)
-        </dt>
+        @if (Model.Contact != null && Model.Contact.Image != null)
+        {
+            <dt>
+                @Html.DisplayFor(model => model.Contact.Image)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Contact.Image)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Contact.Image)
+            </dd>
+        }
+
 
         <dt>
             @Html.DisplayNameFor(model => model.Message.Subject)
