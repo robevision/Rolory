@@ -172,54 +172,59 @@ namespace Rolory.Controllers
             var contactsList = db.Contacts.Where(c => c.NetworkerId == id).Where(c => c.InContact == false).Where(c => c.Description.DeathDate == null).Select(c => c).ToList();
             Contact filteredContact = null;
             var filteredContactList = contactsList.Where(c => c.Perpetual == false).ToList();
+           
             foreach (Contact contact in filteredContactList)
             {
-                contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
-                DateTime? birthDateNullTest = contact.Description.BirthDate;
-                DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
-                if (birthDateNullTest == null)
+                if (contact.Description != null)
                 {
-                    contact.Description.BirthDate = new DateTime(1801, 12, 25);
-                }
-                DateTime contactBirthDate = contact.Description.BirthDate.Value;
-                int contactBirthMonth = contactBirthDate.Month;
-                var contactWorkTitle = contact.WorkTitle;
-                if (anniversaryDateNullTest == null)
-                {
-                    contact.Description.Anniversary = new DateTime(1801, 12, 25);
-                }
-                DateTime contactAnniversary = contact.Description.Anniversary.Value;
-                int contactAnniversaryMonth = contactAnniversary.Month;
-                var contactRelation = contact.Description.Relationship;
-                if (!contactBirthDate.ToString().Contains("12/25/1801"))
-                {
-                    if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
+                    contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                    DateTime? birthDateNullTest = contact.Description.BirthDate;
+                    DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
+                    if (birthDateNullTest == null)
                     {
-                        pushedContactsByBirthDate.Add(contact);
+                        contact.Description.BirthDate = new DateTime(1801, 12, 25);
                     }
-                }
-                if (contactWorkTitle != null && networker.WorkTitle != null)
-                {
-                    if (contactWorkTitle.Contains(networker.WorkTitle))
+                    DateTime contactBirthDate = contact.Description.BirthDate.Value;
+                    int contactBirthMonth = contactBirthDate.Month;
+                    var contactWorkTitle = contact.WorkTitle;
+                    if (anniversaryDateNullTest == null)
                     {
-                        pushedContactsByProfession.Add(contact);
+                        contact.Description.Anniversary = new DateTime(1801, 12, 25);
                     }
-                }
-                if (!contactAnniversary.ToString().Contains("12/25/1801"))
-                {
-                    if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
+                    DateTime contactAnniversary = contact.Description.Anniversary.Value;
+                    int contactAnniversaryMonth = contactAnniversary.Month;
+                    var contactRelation = contact.Description.Relationship;
+                    if (!contactBirthDate.ToString().Contains("12/25/1801"))
                     {
-                        pushedContactsByAnniversaryDate.Add(contact);
+                        if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
+                        {
+                            pushedContactsByBirthDate.Add(contact);
+                        }
                     }
-                }
-                if (contactRelation != null)
-                {
-                    if (contactRelation == "Friend" || contactRelation == "Family")
+                    if (contactWorkTitle != null && networker.WorkTitle != null)
                     {
-                        pushedContactsByRelationship.Add(contact);
+                        if (contactWorkTitle.Contains(networker.WorkTitle))
+                        {
+                            pushedContactsByProfession.Add(contact);
+                        }
+                    }
+                    if (!contactAnniversary.ToString().Contains("12/25/1801"))
+                    {
+                        if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
+                        {
+                            pushedContactsByAnniversaryDate.Add(contact);
+                        }
+                    }
+                    if (contactRelation != null)
+                    {
+                        if (contactRelation == "Friend" || contactRelation == "Family")
+                        {
+                            pushedContactsByRelationship.Add(contact);
+                        }
                     }
                 }
             }
+               
             pushedContacts.Add(pushedContactsByBirthDate.SingleOrDefault());
             pushedContacts.Add(pushedContactsByAnniversaryDate.SingleOrDefault());
             pushedContacts.Add(pushedContactsByProfession.SingleOrDefault());

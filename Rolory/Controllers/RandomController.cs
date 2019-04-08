@@ -12,7 +12,7 @@ namespace Rolory.Controllers
     public class RandomController : Controller
     {
         private ApplicationDbContext db;
-        private MessageManagement msg;
+        private readonly MessageManagement msg;
         private RandomManagement rndmngmnt;
         Random random;
         public RandomController()

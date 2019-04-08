@@ -86,6 +86,7 @@ namespace Rolory.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             string userId = User.Identity.GetUserId();
             networker.UserId = userId;
+            networker.GoalCoolDown = new DateTime(1801, 12, 25);
             db.Networkers.Add(networker);
             db.SaveChanges();
             return RedirectToAction("Index","Home");

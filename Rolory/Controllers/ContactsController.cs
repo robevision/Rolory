@@ -282,8 +282,9 @@ namespace Rolory.Controllers
                 phoneType = contact.PhoneType;
                 var altPhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AltPhoneNumberType).SingleOrDefault();
                 altPhoneType = contact.AltPhoneNumberType;
-                contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).SingleOrDefault();
-                contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).SingleOrDefault();
+                contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
+                db.Entry(contact.Description).State = EntityState.Modified;
+                //contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -361,41 +362,87 @@ namespace Rolory.Controllers
             return View();
         }
         [HttpGet]
+        public ActionResult BuildAddress(int? id)
+        {
+            ViewBag.Gender = genderList;
+            ViewBag.Category = categoryList;
+            ViewBag.Relationship = relationshipList;
+            ViewBag.States = stateList;
+            ViewBag.Types = typeList;
+
+            var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            return View(contact);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BuildAddress([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                string userId = User.Identity.GetUserId();
+                var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+                contact.NetworkerId = networker.Id;
+                contact.LastUpdated = DateTime.Now;
+                db.Addresses.Add(contact.Address);
+                db.SaveChanges();
+                db.Entry(contact).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index", "Home");
+
+        }
+        [HttpGet]
         public ActionResult Expand(int? passedId)
         {
             if (passedId != null)
             {
 
                 Contact contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
-                if (contact.DescriptionId != null)
+                if(contact.AddressId != null)
                 {
-                    ViewBag.Gender = genderList;
-                    ViewBag.Category = categoryList;
-                    ViewBag.Relationship = relationshipList;
-                    ViewBag.States = stateList;
-                    ViewBag.Types = typeList;
-                    var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
-                    ContactDescriptionViewModel contactDescriptionViewModel = new ContactDescriptionViewModel();
-                    contactDescriptionViewModel.Contact = contact;
-                    contactDescriptionViewModel.Description = description;
-                    return View(contactDescriptionViewModel);
+                    if (contact.DescriptionId != null)
+                    {
+                        ViewBag.Gender = genderList;
+                        ViewBag.Category = categoryList;
+                        ViewBag.Relationship = relationshipList;
+                        ViewBag.States = stateList;
+                        ViewBag.Types = typeList;
+                        contact.Description = db.Contacts.Where(c => c.Id == passedId).Select(c => c.Description).SingleOrDefault();
+                        contact.Address = db.Contacts.Where(c => c.Id == passedId).Select(c => c.Address).SingleOrDefault();
+                        return View(contact);
+                    }
+                    return RedirectToAction("Build", "Contacts", new { id = passedId });
                 }
-                return RedirectToAction("Build", "Contact", new { id = passedId });
+                Address address = new Address();
+                db.Addresses.Add(address);
+                db.SaveChanges();
+                contact.AddressId = address.Id;
+                db.Entry(contact).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Contacts", new { id = passedId });
             }
 
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
-        public ActionResult Expand(ContactDescriptionViewModel contactDescription)
+        public ActionResult Expand(Contact contact)
         {
-            var contact = contactDescription.Contact;
-            var description = contactDescription.Contact.Description;
-            contactDescription.Description = description;
-            db.Entry(description).State = EntityState.Modified;
+            //    var description = contact.Description;
+            //    db.Entry(description).State = EntityState.Modified;
+            //db.SaveChanges();
+            Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
+            WeatherManagement weath = new WeatherManagement();
+            weath.SetLatLong(contact.Address);  
+            //contactInDB.DescriptionId = contact.DescriptionId.Value;
+            contactInDB.Description = contact.Description;
+            //contactInDB.AddressId = contact.AddressId.Value;
+            contactInDB.Address = contact.Address;
+
+            //contactInDB.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c=>c.DescriptionId).SingleOrDefault();
+            //contactInDB.AddressId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AddressId).SingleOrDefault();
+            db.Entry(contactInDB).State = EntityState.Modified;
             db.SaveChanges();
-            db.Entry(contact).State = EntityState.Modified;
-            db.SaveChanges();
-            return RedirectToAction("Details","Contacts", new { id = contactDescription.Contact.Id });
+            return RedirectToAction("Details","Contacts", new { id = contact.Id });
         }
         public ActionResult Null()
         {

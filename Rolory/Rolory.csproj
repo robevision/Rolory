@@ -235,6 +235,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="UserImages\paulbunyan.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -302,11 +303,11 @@
     <Content Include="Views\Random\ProvideContext.cshtml" />
     <Content Include="Views\Contacts\Null.cshtml" />
     <Content Include="Views\Random\GetInTouch.cshtml" />
+    <Content Include="Views\Contacts\BuildAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
-    <Folder Include="UserImages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
