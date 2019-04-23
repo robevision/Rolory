@@ -23,6 +23,10 @@ namespace Rolory.Controllers
 
             foreach (Contact contact in filteredContactList)
             {
+                if(contact.DescriptionId != null)
+                {
+                    contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();            
+                }
                 //contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
                 //contact.Description.Id = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId.Value).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 if (contact.Description != null)
@@ -153,7 +157,7 @@ namespace Rolory.Controllers
             List<string> activeActivities = new List<string>();
             //List<string> winterActivities = new List<string>() { "snowboarding", "down hill", "ice skating", "sledding","snowmobiling","cross country" };
             //List<string> allAroundActivities = new List<string>() { "hiking","basketball"};
-            List<int?> descriptionIds = filteredContactList.Select(f => f.DescriptionId).ToList();
+            List<int> descriptionIds = filteredContactList.Select(f => f.DescriptionId).ToList();
             List<int> sharedActivitiesDescriptionIds = db.SharedActivities.Select(s => s.DescriptionId).ToList();
            
             foreach (int descriptId in descriptionIds)

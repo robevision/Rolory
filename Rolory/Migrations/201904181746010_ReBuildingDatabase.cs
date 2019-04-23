@@ -49,13 +49,13 @@ namespace Rolory.Migrations
                         Reminder = c.DateTime(),
                         AddressId = c.Int(),
                         AltAddressId = c.Int(),
-                        DescriptionId = c.Int(),
+                        DescriptionId = c.Int(nullable: false),
                         NetworkerId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Addresses", t => t.AddressId)
                 .ForeignKey("dbo.Addresses", t => t.AltAddressId)
-                .ForeignKey("dbo.Descriptions", t => t.DescriptionId)
+                .ForeignKey("dbo.Descriptions", t => t.DescriptionId, cascadeDelete: true)
                 .ForeignKey("dbo.Networkers", t => t.NetworkerId, cascadeDelete: true)
                 .Index(t => t.AddressId)
                 .Index(t => t.AltAddressId)

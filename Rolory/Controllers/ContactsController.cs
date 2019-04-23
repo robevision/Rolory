@@ -181,6 +181,18 @@ namespace Rolory.Controllers
                 {
                     return RedirectToAction("Create", "Contacts");
                 }
+                if(contact.DescriptionId != null)
+                {
+                    contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                }
+                if(contact.AddressId != null)
+                {
+                    contact.Address = db.Contacts.Where(c => c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
+                }
+                if(contact.AltAddressId != null)
+                {
+                    contact.AlternateAddress = db.Contacts.Where(c => c.AltAddressId == contact.AltAddressId).Select(c => c.AlternateAddress).SingleOrDefault();
+                }
                 string inTouch = Convert.ToString(contact.InContact).ToLower();
                 switch (inTouch)
                 {
@@ -331,13 +343,11 @@ namespace Rolory.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            ContactDescriptionViewModel contactDescription = new ContactDescriptionViewModel();
-            contactDescription.Contact = contact;
-            if(contact.DescriptionId != null)
+            if(contact.Description != null)
             {
                 return RedirectToAction("Expand", "Contacts", new { passedId = id });
             }
-            return View(contactDescription);
+            return View(contact);
         }
         [HttpPost]
         public ActionResult Build(Contact contact, Description description)
@@ -352,8 +362,8 @@ namespace Rolory.Controllers
                 category = description.Category;
                 var relationship = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Relationship).SingleOrDefault();
                 relationship = description.Relationship;
-                db.Descriptions.Add(description);
-                db.SaveChanges();
+                //db.Descriptions.Add(description);
+                //db.SaveChanges();
                 db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
@@ -400,18 +410,25 @@ namespace Rolory.Controllers
                 Contact contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
                 if(contact.AddressId != null)
                 {
-                    if (contact.DescriptionId != null)
-                    {
+                    //if (contact.DescriptionId != null)
+                    //{
                         ViewBag.Gender = genderList;
                         ViewBag.Category = categoryList;
                         ViewBag.Relationship = relationshipList;
                         ViewBag.States = stateList;
                         ViewBag.Types = typeList;
-                        contact.Description = db.Contacts.Where(c => c.Id == passedId).Select(c => c.Description).SingleOrDefault();
-                        contact.Address = db.Contacts.Where(c => c.Id == passedId).Select(c => c.Address).SingleOrDefault();
+                        contact.Description = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                        contact.Address = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
+                        
                         return View(contact);
-                    }
-                    return RedirectToAction("Build", "Contacts", new { id = passedId });
+                    //}
+                    //Description description = new Description();
+                    //db.Descriptions.Add(description);
+                    //db.SaveChanges();
+                    //contact.DescriptionId = description.Id;
+                    //db.Entry(contact).State = EntityState.Modified;
+                    //db.SaveChanges();
+                    //return RedirectToAction("Expand", "Contacts", new { id = passedId });
                 }
                 Address address = new Address();
                 db.Addresses.Add(address);
@@ -419,7 +436,7 @@ namespace Rolory.Controllers
                 contact.AddressId = address.Id;
                 db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", "Contacts", new { id = passedId });
+                return RedirectToAction("Expand", "Contacts", new { id = passedId });
             }
 
             return RedirectToAction("Index", "Home");
@@ -431,8 +448,8 @@ namespace Rolory.Controllers
             //    db.Entry(description).State = EntityState.Modified;
             //db.SaveChanges();
             Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
-            WeatherManagement weath = new WeatherManagement();
-            weath.SetLatLong(contact.Address);  
+            //WeatherManagement weath = new WeatherManagement();
+            //weath.SetLatLong(contact.Address);  
             //contactInDB.DescriptionId = contact.DescriptionId.Value;
             contactInDB.Description = contact.Description;
             //contactInDB.AddressId = contact.AddressId.Value;

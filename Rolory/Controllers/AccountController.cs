@@ -147,7 +147,7 @@ namespace Rolory.Controllers
             //    return View();
             //}
             //ViewBag.Name = db.Roles.Where(u => !u.Name.Contains("Admin")).Single();
-            ViewBag.Name = new SelectList(db.Roles.Where(u => !u.Name.Contains("Admin")).ToList(), "Name");
+            ViewBag.Name = new SelectList(db.Roles.Where(u => !u.Name.Contains("Admin")).ToList(), "Name", "Name");
             //ViewBag.Name = "Admin";
             return View();
         }

@@ -56,12 +56,31 @@
                 @if (Model.Description != null && Model.Description.Gender != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.Description.Gender);
+                        @Html.DisplayNameFor(model => model.Description.Gender)
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.Description.Gender)
                     </dd>
                 }
+                @if (Model.Description != null && Model.Description.BirthDate != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description.BirthDate)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Description.BirthDate)
+                    </dd>
+                }
+                @if (Model.Description != null && Model.Description.Anniversary != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description.Anniversary)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Description.Anniversary)
+                    </dd>
+                }
+
                 @if (Model.PhoneType != null)
                 {
                     <dt>
@@ -174,7 +193,7 @@
                 @if (Model.AlternateAddress != null && Model.AlternateAddress.AddressType != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.AlternateAddress.AddressType);
+                        @Html.DisplayNameFor(model => model.AlternateAddress.AddressType)
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.AlternateAddress.AddressType)
@@ -183,7 +202,7 @@
                 @if (Model.AlternateAddress != null && Model.AlternateAddress.StreetAddress != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.AlternateAddress.StreetAddress);
+                        @Html.DisplayNameFor(model => model.AlternateAddress.StreetAddress)
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.AlternateAddress.StreetAddress)
@@ -201,7 +220,7 @@
                 @if (Model.AlternateAddress != null && Model.AlternateAddress.Locality != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.AlternateAddress.Locality);
+                        @Html.DisplayNameFor(model => model.AlternateAddress.Locality)
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.AlternateAddress.Locality)
@@ -219,7 +238,7 @@
                 @if (Model.AlternateAddress != null && Model.AlternateAddress.CountryName != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.AlternateAddress.CountryName);
+                        @Html.DisplayNameFor(model => model.AlternateAddress.CountryName)
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.AlternateAddress.CountryName)
@@ -228,7 +247,7 @@
                 @if (Model.AlternateAddress != null && Model.AlternateAddress.ZipCode != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.AlternateAddress.ZipCode);
+                        @Html.DisplayNameFor(model => model.AlternateAddress.ZipCode)
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.AlternateAddress.ZipCode)

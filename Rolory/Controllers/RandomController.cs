@@ -30,6 +30,7 @@ namespace Rolory.Controllers
             var nextWeek = DateTime.Today.AddDays(6);
             //instantiated lists
             List<Contact> pushedContacts = new List<Contact>();
+            List<Contact> newPushedContacts = new List<Contact>();
             List<Contact> pushedContactsByBirthDate = new List<Contact>();
             List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
             List<Contact> pushedContactsByProfession = new List<Contact>();
@@ -73,13 +74,43 @@ namespace Rolory.Controllers
 
             //filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
             //rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
-
-            pushedContacts.Add(pushedContactsByBirthDate.SingleOrDefault());
-            pushedContacts.Add(pushedContactsByAnniversaryDate.SingleOrDefault());
-            pushedContacts.Add(pushedContactsByProfession.SingleOrDefault());
-            pushedContacts.Add(pushedContactsByRelationship.SingleOrDefault());
+            if(pushedContactsByBirthDate != null)
+            {
+                foreach(Contact contact in pushedContactsByBirthDate)
+                {
+                    pushedContacts.Add(contact);
+                }
+            }
+            if(pushedContactsByAnniversaryDate != null)
+            {
+                foreach(Contact contact in pushedContactsByAnniversaryDate)
+                {
+                    pushedContacts.Add(contact);
+                }
+            }
+            if(pushedContactsByProfession != null)
+            {
+                foreach(Contact contact in pushedContactsByProfession)
+                {
+                    pushedContacts.Add(contact);
+                }
+            }
+            if(pushedContactsByRelationship != null)
+            {
+                foreach(Contact contact in pushedContactsByRelationship)
+                {
+                    pushedContacts.Add(contact);
+                }
+            }
             pushedContacts.Add(pushedContactsBySharedActivities.SingleOrDefault());
-            if (pushedContacts.Count == 5 && pushedContacts.Contains(null))
+            foreach(Contact contact in pushedContacts)
+            {
+                if(contact != null)
+                {
+                    newPushedContacts.Add(contact);
+                }
+            }
+            if (newPushedContacts.Count == 0)
             {
                 if(filteredContactList.Count != 0)
                 {
@@ -94,13 +125,13 @@ namespace Rolory.Controllers
                     string timeNow = DateTime.Now.ToString();
                     DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
                     contact.CoolDownTime = nullableTimeNow;
-                    //if(contact.Description != null)
-                    //{
-                    //    contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
-                    //    var descriptionId = db.Contacts.Where(c => c.DescriptionId == contact.Description.Id).Select(c => c.DescriptionId).SingleOrDefault();
-                    //    contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).Single();
-                    //    contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).Single();
-                    //}
+                    if (contact.Description != null)
+                    {
+                        contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
+                        var descriptionId = db.Contacts.Where(c => c.DescriptionId == contact.Description.Id).Select(c => c.DescriptionId).SingleOrDefault();
+                        contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).Single();
+                        contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).Single();
+                    }
                     db.Contacts.Where(c => c.Id == contact.Id).Single();
                     db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();
@@ -110,29 +141,49 @@ namespace Rolory.Controllers
               
             }
             Contact filteredContact = null;
-            do
+            if(pushedContacts.Count != 0)
             {
-                int r = random.Next(pushedContacts.Count);
-                filteredContact = pushedContacts[r];
+                do
+                {
+                    int r = random.Next(pushedContacts.Count);
+                    if (pushedContacts.Count == 1)
+                    {
+                        filteredContact = pushedContacts.SingleOrDefault();
+                        if(filteredContact == null)
+                        {
+                            break;
+                        }
+                    }
+                    filteredContact = pushedContacts[r];
+                }
+                while (filteredContact == null);
             }
-            while (filteredContact == null);
-            if(filteredContact.Id == pushedContactsByBirthDate.Select(p => p.Id).SingleOrDefault())
+           
+            if(pushedContactsByBirthDate.Select(p => p.Id).Contains(filteredContact.Id))
             {
                 ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
             }
-            else if (filteredContact.Id == pushedContactsByAnniversaryDate.Select(p => p.Id).SingleOrDefault())
+            else if (pushedContactsByAnniversaryDate.Select(p => p.Id).Contains(filteredContact.Id))
             {
                 ViewBag.Message = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?";
             }
-            else if (filteredContact.Id == pushedContactsByProfession.Select(p => p.Id).SingleOrDefault())
+            else if (pushedContactsByProfession.Select(p => p.Id).Contains(filteredContact.Id))
             {
                 ViewBag.Message = $"{filteredContact.GivenName} and you share a career. Why not reach out?";
             }
-            else if (filteredContact.Id == pushedContactsByRelationship.Select(p => p.Id).SingleOrDefault())
+            else if (pushedContactsByRelationship.Select(p => p.Id).Contains(filteredContact.Id))
             {
                 ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
             }
-            
+            if(filteredContact.DescriptionId != null)
+            {
+                filteredContact.DescriptionId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.DescriptionId).SingleOrDefault();
+                filteredContact.Description.Id = Convert.ToInt32(filteredContact.DescriptionId);
+            }
+            if(filteredContact.AddressId != null)
+            {
+                filteredContact.AddressId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.AddressId).SingleOrDefault();
+            }
             filteredContact.CoolDown = true;
             filteredContact.CoolDownTime = DateTime.Now;
             db.Entry(filteredContact).State = EntityState.Modified;

@@ -21,7 +21,7 @@ namespace Rolory
             var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
             if (!roleManager.RoleExists("Admin"))
             {
-                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                var role = new IdentityRole();
                 role.Name = "Admin";
                 roleManager.Create(role);
                 var user = new ApplicationUser();
@@ -37,7 +37,7 @@ namespace Rolory
             }
             if (!roleManager.RoleExists("Networker"))
             {
-                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                var role = new IdentityRole();
                 role.Name = "Networker";
                 roleManager.Create(role);
                 var user = new ApplicationUser();

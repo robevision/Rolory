@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -55,7 +56,7 @@ namespace Rolory.Models
         public int? AltAddressId { get; set; }
         public Address AlternateAddress { get; set; }
         [ForeignKey("Description")]
-        public int? DescriptionId { get; set; }
+        public int DescriptionId { get; set; }
         public Description Description { get; set; }
         [ForeignKey("Networker")]
         public int NetworkerId { get; set; }
