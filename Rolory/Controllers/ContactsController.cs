@@ -339,7 +339,9 @@ namespace Rolory.Controllers
             ViewBag.Category = categoryList;
             ViewBag.Relationship = relationshipList;
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
-            if(contact == null)
+            contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+            contact.Description.Id = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d=>d.Id).SingleOrDefault();
+            if (contact == null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -350,26 +352,27 @@ namespace Rolory.Controllers
             return View(contact);
         }
         [HttpPost]
-        public ActionResult Build(Contact contact, Description description)
+        public ActionResult Build(Contact contact)
         {
+            contact.Description.Id = contact.DescriptionId;
+            db.SaveChanges();
             if (ModelState.IsValid)
             {
-                contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
-                contact.DescriptionId = description.Id;
+                contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).SingleOrDefault();
                 var gender = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Gender).SingleOrDefault();
-                gender = description.Gender;
                 var category = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Category).SingleOrDefault();
-                category = description.Category;
                 var relationship = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Relationship).SingleOrDefault();
-                relationship = description.Relationship;
+                gender = contact.Description.Gender;
+                relationship = contact.Description.Relationship;
+                category = contact.Description.Category;
                 //db.Descriptions.Add(description);
                 //db.SaveChanges();
-                db.Entry(contact).State = EntityState.Modified;
+                //db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return RedirectToAction("Error", "Contacts");
         }
         [HttpGet]
         public ActionResult BuildAddress(int? id)

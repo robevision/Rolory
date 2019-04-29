@@ -201,6 +201,7 @@ namespace Rolory.Controllers
             {
                 foreach (bool coolDownBool in coolDownProperty)
                 {
+                    contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
                     contact.CoolDown = coolDownBool;
                     db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();

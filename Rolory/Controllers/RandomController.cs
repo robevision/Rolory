@@ -175,11 +175,11 @@ namespace Rolory.Controllers
             {
                 ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
             }
-            if(filteredContact.DescriptionId != null)
-            {
-                filteredContact.DescriptionId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.DescriptionId).SingleOrDefault();
-                filteredContact.Description.Id = Convert.ToInt32(filteredContact.DescriptionId);
-            }
+            //if(filteredContact.DescriptionId != null)
+            //{
+            //    filteredContact.DescriptionId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.DescriptionId).SingleOrDefault();
+            //    filteredContact.Description.Id = Convert.ToInt32(filteredContact.DescriptionId);
+            //}
             if(filteredContact.AddressId != null)
             {
                 filteredContact.AddressId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.AddressId).SingleOrDefault();

@@ -304,6 +304,7 @@
     <Content Include="Views\Contacts\Null.cshtml" />
     <Content Include="Views\Random\GetInTouch.cshtml" />
     <Content Include="Views\Contacts\BuildAddress.cshtml" />
+    <Content Include="Views\Contacts\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
