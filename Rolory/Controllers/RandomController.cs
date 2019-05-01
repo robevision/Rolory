@@ -125,15 +125,17 @@ namespace Rolory.Controllers
                     string timeNow = DateTime.Now.ToString();
                     DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
                     contact.CoolDownTime = nullableTimeNow;
-                    if (contact.Description != null)
-                    {
-                        contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
-                        var descriptionId = db.Contacts.Where(c => c.DescriptionId == contact.Description.Id).Select(c => c.DescriptionId).SingleOrDefault();
-                        contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId).Single();
-                        contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).Single();
-                    }
-                    db.Contacts.Where(c => c.Id == contact.Id).Single();
-                    db.Entry(contact).State = EntityState.Modified;
+                    //Contact contactStored = contact;
+                    contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                    var thisCoolDownTime = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
+                    thisCoolDownTime = contact.CoolDownTime;
+                    var thisCoolDown = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDown).SingleOrDefault();
+                    thisCoolDown = contact.CoolDown;
+                    var thisDescriptionId = db.Contacts.Where(c => c.Description.Id == contact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
+                    thisDescriptionId = contact.Description.Id;
+                    var thisContactDescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
+                    thisContactDescriptionId = contact.DescriptionId;
+                    //db.Entry(contactStored).State = EntityState.Modified;
                     db.SaveChanges();
                     return View(contact);
                 }
@@ -184,9 +186,27 @@ namespace Rolory.Controllers
             {
                 filteredContact.AddressId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.AddressId).SingleOrDefault();
             }
+            if (filteredContact.Description.BirthDate.ToString().Contains("12/25/1801"))
+            {
+                filteredContact.Description.BirthDate = null;
+            }
+            if (filteredContact.Description.Anniversary.ToString().Contains("12/25/1801"))
+            {
+                filteredContact.Description.Anniversary = null;
+            }
             filteredContact.CoolDown = true;
             filteredContact.CoolDownTime = DateTime.Now;
-            db.Entry(filteredContact).State = EntityState.Modified;
+            //Contact filteredContactStored = filteredContact;
+            filteredContact.Description = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d).SingleOrDefault();
+            var descriptionId = db.Contacts.Where(c => c.Description.Id == filteredContact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
+            descriptionId = filteredContact.Description.Id;
+            var contactDescriptionId = db.Contacts.Where(c => c.DescriptionId == filteredContact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
+            contactDescriptionId = filteredContact.DescriptionId;
+            var coolDownTime = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
+            coolDownTime = filteredContact.CoolDownTime;
+            var coolDown = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDown).SingleOrDefault();
+            coolDown = filteredContact.CoolDown;
+            //db.Entry(filteredContactStored).State = EntityState.Modified;
             db.SaveChanges();
             return View(filteredContact);
         }

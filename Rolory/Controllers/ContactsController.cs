@@ -32,18 +32,22 @@ namespace Rolory.Controllers
         }
         private void GetRelationshipSelection()
         {
-            relationshipList.Add(new SelectListItem() { Text = "Acquaintance", Value = "Acquaintance" });
-            relationshipList.Add(new SelectListItem() { Text = "Manager", Value = "Manager" });
-            relationshipList.Add(new SelectListItem() { Text = "Co-Worker", Value = "Co-Worker" });
-            relationshipList.Add(new SelectListItem() { Text = "Classmate", Value = "Classmate" });
+            relationshipList.Add(new SelectListItem() { Text = "Distant", Value = "Distant" });
+            relationshipList.Add(new SelectListItem() { Text = "Familiar", Value = "Familiar" });
             relationshipList.Add(new SelectListItem() { Text = "Friend", Value = "Friend" });
-            relationshipList.Add(new SelectListItem() { Text = "Family", Value = "Family" });
+            relationshipList.Add(new SelectListItem() { Text = "Close", Value = "Close" });
+            relationshipList.Add(new SelectListItem() { Text = "Business Superior", Value = "Business Superior" });
+            relationshipList.Add(new SelectListItem() { Text = "Business Equal", Value = "Business Equal" });
+            relationshipList.Add(new SelectListItem() { Text = "Teacher", Value = "Teacher" });
+            relationshipList.Add(new SelectListItem() { Text = "Classmate", Value = "Classmate" });
+            
+            
         }
         private void GetCategorySelection()
         {
             categoryList.Add(new SelectListItem() { Text = "School", Value = "School" });
             categoryList.Add(new SelectListItem() { Text = "Family", Value = "Family" });
-            categoryList.Add(new SelectListItem() { Text = "Event", Value = "Event" });
+            categoryList.Add(new SelectListItem() { Text = "Social", Value = "Social" });
             categoryList.Add(new SelectListItem() { Text = "Work", Value = "Work" });
             //Be able to add custom category in the future
             categoryList.Add(new SelectListItem() { Text = "Other", Value = "Other" });
@@ -181,10 +185,7 @@ namespace Rolory.Controllers
                 {
                     return RedirectToAction("Create", "Contacts");
                 }
-                if(contact.DescriptionId != null)
-                {
-                    contact.Description = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
-                }
+                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
                 if(contact.AddressId != null)
                 {
                     contact.Address = db.Contacts.Where(c => c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
@@ -345,7 +346,7 @@ namespace Rolory.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if(contact.Description != null)
+            if(contact.Description.Gender != null && contact.Description.Category != null && contact.Description.Relationship != null && contact.Description.BirthDate != null)
             {
                 return RedirectToAction("Expand", "Contacts", new { passedId = id });
             }
@@ -359,17 +360,16 @@ namespace Rolory.Controllers
             if (ModelState.IsValid)
             {
                 contact.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Id).SingleOrDefault();
-                var gender = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Gender).SingleOrDefault();
-                var category = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Category).SingleOrDefault();
-                var relationship = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description.Relationship).SingleOrDefault();
-                gender = contact.Description.Gender;
-                relationship = contact.Description.Relationship;
-                category = contact.Description.Category;
-                //db.Descriptions.Add(description);
-                //db.SaveChanges();
-                //db.Entry(contact).State = EntityState.Modified;
+                Contact contactReference = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
+                contactReference.Description = db.Descriptions.Where(d => d.Id == contact.Description.Id).Select(d => d).SingleOrDefault();
+                contactReference.Description.Gender = contact.Description.Gender;
+                contactReference.Description.Relationship = contact.Description.Relationship;
+                contactReference.Description.Category = contact.Description.Category;
+                contactReference.Description.BirthDate = contact.Description.BirthDate;
+                //if this doesn't work, make description be declared as a variable and write an entityState.modified for that table as well.
+                db.Entry(contactReference).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Contacts", new { id = contact.Id });
             }
 
             return RedirectToAction("Error", "Contacts");
