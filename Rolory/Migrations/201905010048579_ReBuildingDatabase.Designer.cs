@@ -13,7 +13,7 @@ namespace Rolory.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201904181746010_ReBuildingDatabase"; }
+            get { return "201905010048579_ReBuildingDatabase"; }
         }
         
         string IMigrationMetadata.Source

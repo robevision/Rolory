@@ -23,30 +23,44 @@ namespace Rolory.Controllers
 
             foreach (Contact contact in filteredContactList)
             {
-                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
-              
-                if (contact.Description != null)
-                {
-                    DateTime? birthDateNullTest = contact.Description.BirthDate;
-                    if (birthDateNullTest == null)
-                    {
-                        contact.Description.BirthDate = new DateTime(1801, 12, 25);
-                    }
-                    DateTime contactBirthDate = contact.Description.BirthDate.Value;
-                    int contactBirthMonth = contactBirthDate.Month;
+                
+                //contact.DescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
+                //contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                //contact.Description.Id = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.Id).SingleOrDefault();
+           
 
-                    if (!contactBirthDate.ToString().Contains("12/25/1801"))
+                //if (contact.Description != null)
+                //{
+                    //DateTime? birthDateNullTest = contact.Description.BirthDate;
+                    //if (birthDateNullTest == null)
+                    //{
+                    //    contact.Description.BirthDate = new DateTime(1801, 12, 25);
+                    //}
+                    //if(contact.Description.BirthDate != null)
+                    //{
+                        //DateTime contactBirthDate = contact.Description.BirthDate.Value;
+                        var contactBirthDate = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.BirthDate).SingleOrDefault();
+                if(contactBirthDate != null)
+                {
+                    int contactBirthMonth = contactBirthDate.Value.Month;
+
+                    //if (!contactBirthDate.ToString().Contains("12/25/1801"))
+                    //{
+                    if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
                     {
-                        if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
-                        {
-                            pushedContactsByBirthDate.Add(contact);
-                        }
+                        pushedContactsByBirthDate.Add(contact);
                     }
-                    if (contactBirthDate.ToString().Contains("12/25/1801"))
-                    {
-                        contact.Description.BirthDate = null;
-                    }
+                    //}
+                    //}
                 }
+
+
+
+                //if (contactBirthDate.ToString().Contains("12/25/1801"))
+                //{
+                //    contact.Description.BirthDate = null;
+                //}
+                //}
 
                 //db.Entry(contact).State = EntityState.Unchanged;
                 //db.SaveChanges();
@@ -59,30 +73,42 @@ namespace Rolory.Controllers
             List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
             foreach(Contact contact in filteredContactList)
             {
-                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
-                if (contact.Description != null)
+
+                //contact.DescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
+                //contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                //contact.Description.Id = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.Id).SingleOrDefault();
+
+                //if (contact.Description != null)
+                //{
+                //DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
+
+                //if (anniversaryDateNullTest == null)
+                //{
+                //    contact.Description.Anniversary = new DateTime(1801, 12, 25);
+                //}
+                //if (contact.Description.Anniversary != null)
+                //{
+                //DateTime contactAnniversary = contact.Description.Anniversary.Value;
+                var contactAnniversary = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.Anniversary).SingleOrDefault();
+                if (contactAnniversary != null)
                 {
-                    DateTime? anniversaryDateNullTest = contact.Description.Anniversary;
-
-                    if (anniversaryDateNullTest == null)
+                    int contactAnniversaryMonth = contactAnniversary.Value.Month;
+                    //if (!contactAnniversary.ToString().Contains("12/25/1801"))
+                    //{
+                    if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
                     {
-                        contact.Description.Anniversary = new DateTime(1801, 12, 25);
+                        pushedContactsByAnniversaryDate.Add(contact);
                     }
-
-                    DateTime contactAnniversary = contact.Description.Anniversary.Value;
-                    int contactAnniversaryMonth = contactAnniversary.Month;
-                    if (!contactAnniversary.ToString().Contains("12/25/1801"))
-                    {
-                        if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
-                        {
-                            pushedContactsByAnniversaryDate.Add(contact);
-                        }
-                    }
-                    if (contactAnniversary.ToString().Contains("12/25/1801"))
-                    {
-                        contact.Description.Anniversary = null;
-                    }
+                    //}
+                    //}
                 }
+
+
+                //if (contactAnniversary.ToString().Contains("12/25/1801"))
+                //{
+                //    contact.Description.Anniversary = null;
+                //}
+                //}
 
                 //db.Entry(contact).State = EntityState.Unchanged;
                 //db.SaveChanges();
@@ -96,7 +122,7 @@ namespace Rolory.Controllers
             var networker = db.Networkers.Where(n => n.Id == networkerId).SingleOrDefault();
             foreach (Contact contact in filteredContactList)
             {
-                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                //contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
                 var contactWorkTitle = contact.WorkTitle;
 
                 if (contactWorkTitle != null && networker.WorkTitle != null)
@@ -118,7 +144,7 @@ namespace Rolory.Controllers
 
             foreach (Contact contact in filteredContactList)
             {
-                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                //contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
                 if (contact.Description != null)
                 {
                     string contactRelation = contact.Description.Relationship;
@@ -205,7 +231,7 @@ namespace Rolory.Controllers
             {
                 foreach (bool coolDownBool in coolDownProperty)
                 {
-                    contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
+                    //contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
                     contact.CoolDown = coolDownBool;
                     db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();

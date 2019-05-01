@@ -447,22 +447,30 @@ namespace Rolory.Controllers
         [HttpPost]
         public ActionResult Expand(Contact contact)
         {
-            //    var description = contact.Description;
-            //    db.Entry(description).State = EntityState.Modified;
-            //db.SaveChanges();
-            Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
-            //WeatherManagement weath = new WeatherManagement();
-            //weath.SetLatLong(contact.Address);  
-            //contactInDB.DescriptionId = contact.DescriptionId.Value;
-            contactInDB.Description = contact.Description;
-            //contactInDB.AddressId = contact.AddressId.Value;
-            contactInDB.Address = contact.Address;
-
-            //contactInDB.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c=>c.DescriptionId).SingleOrDefault();
-            //contactInDB.AddressId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AddressId).SingleOrDefault();
-            db.Entry(contactInDB).State = EntityState.Modified;
+            contact.Description.Id = contact.DescriptionId;
+            contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
             db.SaveChanges();
-            return RedirectToAction("Details","Contacts", new { id = contact.Id });
+            if (ModelState.IsValid)
+            {
+                //    var description = contact.Description;
+                //    db.Entry(description).State = EntityState.Modified;
+                //db.SaveChanges();
+                Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
+                //WeatherManagement weath = new WeatherManagement();
+                //weath.SetLatLong(contact.Address);  
+                contactInDB.DescriptionId = contact.DescriptionId;
+                contactInDB.Description = contact.Description;
+                contactInDB.Description.Id = contact.Description.Id;
+                //contactInDB.AddressId = contact.AddressId.Value;
+                contactInDB.Address = contact.Address;
+
+                //contactInDB.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c=>c.DescriptionId).SingleOrDefault();
+                //contactInDB.AddressId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AddressId).SingleOrDefault();
+                db.Entry(contactInDB).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Details", "Contacts", new { id = contact.Id });
+            }
+            return RedirectToAction("Error", "Contacts");
         }
         public ActionResult Null()
         {

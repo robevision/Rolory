@@ -121,11 +121,10 @@ namespace Rolory.Controllers
                         contact = filteredContactList[r];
                     }
                     while (contact == null);
+                    contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
                     contact.CoolDown = true;
                     string timeNow = DateTime.Now.ToString();
                     DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
-                    contact.CoolDownTime = nullableTimeNow;
-                    //Contact contactStored = contact;
                     contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
                     var thisCoolDownTime = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
                     thisCoolDownTime = contact.CoolDownTime;
@@ -135,7 +134,7 @@ namespace Rolory.Controllers
                     thisDescriptionId = contact.Description.Id;
                     var thisContactDescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
                     thisContactDescriptionId = contact.DescriptionId;
-                    //db.Entry(contactStored).State = EntityState.Modified;
+                    db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();
                     return View(contact);
                 }
@@ -177,26 +176,13 @@ namespace Rolory.Controllers
             {
                 ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
             }
-            //if(filteredContact.DescriptionId != null)
-            //{
-            //    filteredContact.DescriptionId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.DescriptionId).SingleOrDefault();
-            //    filteredContact.Description.Id = Convert.ToInt32(filteredContact.DescriptionId);
-            //}
             if(filteredContact.AddressId != null)
             {
                 filteredContact.AddressId = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.AddressId).SingleOrDefault();
             }
-            if (filteredContact.Description.BirthDate.ToString().Contains("12/25/1801"))
-            {
-                filteredContact.Description.BirthDate = null;
-            }
-            if (filteredContact.Description.Anniversary.ToString().Contains("12/25/1801"))
-            {
-                filteredContact.Description.Anniversary = null;
-            }
+            filteredContact = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c).SingleOrDefault();
             filteredContact.CoolDown = true;
             filteredContact.CoolDownTime = DateTime.Now;
-            //Contact filteredContactStored = filteredContact;
             filteredContact.Description = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d).SingleOrDefault();
             var descriptionId = db.Contacts.Where(c => c.Description.Id == filteredContact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
             descriptionId = filteredContact.Description.Id;
@@ -206,7 +192,7 @@ namespace Rolory.Controllers
             coolDownTime = filteredContact.CoolDownTime;
             var coolDown = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDown).SingleOrDefault();
             coolDown = filteredContact.CoolDown;
-            //db.Entry(filteredContactStored).State = EntityState.Modified;
+            db.Entry(filteredContact).State = EntityState.Modified;
             db.SaveChanges();
             return View(filteredContact);
         }

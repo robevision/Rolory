@@ -18,12 +18,15 @@ namespace Rolory.Models
         [Display(Name = "Category")]
         public string Category { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Birth Date")]
         public DateTime? BirthDate { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Death Date")]
         public DateTime? DeathDate { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Anniversary")]
         public DateTime? Anniversary { get; set; }
         [DataType(DataType.MultilineText)]
