@@ -14,45 +14,82 @@
 </div>
 
 <div>
-    <h4>Contact</h4>
+    <div class="col-lg-5">
+        <h1 class="text-center">@Model.GivenName @Model.FamilyName</h1>
+
+        @if (Model.InContact != null)
+        {
+            if (Model.InContact == true)
+            {
+                <dd class="text-center">
+                    You are in touch with @Model.GivenName.
+                </dd>
+            }
+            if (Model.InContact == false)
+            {
+                <dd class="text-center">
+                    You are not currently in touch with @Model.GivenName.
+                </dd>
+            }
+
+        }
+
+        <br/>
+
+        @if (Model.LastUpdated != null)
+        {
+            <dt class="text-center">
+                @Html.DisplayNameFor(model => model.LastUpdated)
+            </dt>
+
+            <dd class="text-center">
+                @Html.DisplayFor(model => model.LastUpdated)
+            </dd>
+        }
+    </div>
     <hr />
     <div class="container">
         <div class="col-md-10">
             <dl class="dl-horizontal" style="align-content:center">
+                <h4 class="text-justify">Basic Info</h4>
+
+                    @if (Model.Prefix != null)
+                    {
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Prefix)
+                        </dt>
 
 
-
-                @if (Model.Prefix != null)
-                {
-                    <dt>@Html.DisplayNameFor(model => model.Prefix) </dt>
-
+                        <dd>
+                            @Html.DisplayFor(model => model.Prefix)
+                        </dd>
+                    }
+                    <dt>
+                        @Html.DisplayNameFor(model => model.GivenName)
+                    </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.Prefix)
+                        @Html.DisplayFor(model => model.GivenName)
                     </dd>
-                }
-                <dt>
-                    @Html.DisplayNameFor(model => model.GivenName)
-                </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.GivenName)
-                </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FamilyName)
+                    </dt>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.FamilyName)
-                </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FamilyName)
+                    </dd>
+                    @if (Model.Email != null)
+                    {
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.FamilyName)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.Email)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Email)
-                </dd>
+                        <dd>
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>
+                    }
+                    <br/>
                 @if (Model.Description != null && Model.Description.Gender != null)
                 {
                     <dt>
@@ -81,12 +118,11 @@
                     </dd>
                 }
 
-                @if (Model.PhoneType != null)
+                @if (String.IsNullOrEmpty(Model.PhoneType) == false)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.PhoneType)
                     </dt>
-
                     <dd>
                         @Html.DisplayFor(model => model.PhoneType)
                     </dd>
@@ -274,28 +310,6 @@
 
                     <dd>
                         @Html.DisplayFor(model => model.AltPhoneNumber)
-                    </dd>
-                }
-
-                @if (Model.LastUpdated != null)
-                {
-                    <dt>
-                        @Html.DisplayNameFor(model => model.LastUpdated)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.LastUpdated)
-                    </dd>
-                }
-
-                @if (Model.InContact != null)
-                {
-                    <dt>
-                        @Html.DisplayNameFor(model => model.InContact)
-                    </dt>
-
-                    <dd>
-                        @inTouch
                     </dd>
                 }
 

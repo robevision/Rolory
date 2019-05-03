@@ -173,13 +173,16 @@ namespace Rolory.Controllers
         // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
-
+            var inWeek = DateTime.Today(6);
             if (ModelState.IsValid)
             {
                 if (id == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
+                var interactions = db.Interactions.Where(i => i.ContactId == id).Select(i => i);
+                var interactionRecentMoments = interactions.Where(i=>i.Moment <= DateTime.Today)
+                if(interactions.Any)
                 Contact contact = db.Contacts.Find(id);
                 if (contact == null)
                 {
@@ -295,7 +298,7 @@ namespace Rolory.Controllers
                 phoneType = contact.PhoneType;
                 var altPhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AltPhoneNumberType).SingleOrDefault();
                 altPhoneType = contact.AltPhoneNumberType;
-                contact.Description = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.Description).SingleOrDefault();
+                contact.Description = db.Descriptions.Where(d => d.Id == contact.Id).Select(d => d).SingleOrDefault();
                 db.Entry(contact.Description).State = EntityState.Modified;
                 //contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 db.Entry(contact).State = EntityState.Modified;
@@ -413,8 +416,6 @@ namespace Rolory.Controllers
                 Contact contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
                 if(contact.AddressId != null)
                 {
-                    //if (contact.DescriptionId != null)
-                    //{
                         ViewBag.Gender = genderList;
                         ViewBag.Category = categoryList;
                         ViewBag.Relationship = relationshipList;
@@ -424,14 +425,6 @@ namespace Rolory.Controllers
                         contact.Address = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
                         
                         return View(contact);
-                    //}
-                    //Description description = new Description();
-                    //db.Descriptions.Add(description);
-                    //db.SaveChanges();
-                    //contact.DescriptionId = description.Id;
-                    //db.Entry(contact).State = EntityState.Modified;
-                    //db.SaveChanges();
-                    //return RedirectToAction("Expand", "Contacts", new { id = passedId });
                 }
                 Address address = new Address();
                 db.Addresses.Add(address);
