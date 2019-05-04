@@ -52,5 +52,5 @@
     </div>
 </div>
 
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("Update Info", "UpdateInfo", "Interactions", new { id = Model.Id }, null)</button>
+<button class="w3-button w3-round-xlarge">@Html.ActionLink("Update Info", "Expand", "Contacts", new { passedId = Model.Id }, null)</button>
 <button class="w3-button w3-round-xlarge">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button>

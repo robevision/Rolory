@@ -533,26 +533,28 @@ namespace Rolory.Controllers
             {
 
                 Contact contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
-                if(contact.AddressId != null)
+                ViewBag.Gender = genderList;
+                ViewBag.Category = categoryList;
+                ViewBag.Relationship = relationshipList;
+                ViewBag.States = stateList;
+                ViewBag.Types = typeList;
+                ViewBag.Prefix = prefixList;
+                if (contact.AddressId != null)
                 {
-                        ViewBag.Gender = genderList;
-                        ViewBag.Category = categoryList;
-                        ViewBag.Relationship = relationshipList;
-                        ViewBag.States = stateList;
-                        ViewBag.Types = typeList;
-                        ViewBag.Prefix = prefixList;
+                       
                     contact.Description = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
                         contact.Address = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
                         
                         return View(contact);
                 }
-                Address address = new Address();
-                db.Addresses.Add(address);
-                db.SaveChanges();
-                contact.AddressId = address.Id;
-                db.Entry(contact).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Expand", "Contacts", new { id = passedId });
+                //Address address = new Address();
+                //db.Addresses.Add(address);
+                //db.SaveChanges();
+                //contact.AddressId = address.Id;
+                //db.Entry(contact).State = EntityState.Modified;
+                //db.SaveChanges();
+                return View(contact);
+                //return RedirectToAction("Expand", "Contacts", new { id = passedId });
             }
 
             return RedirectToAction("Index", "Home");

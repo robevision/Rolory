@@ -151,10 +151,14 @@ namespace Rolory.Controllers
 
             foreach (Contact contact in contactsWithCoolDown)
             {
-                if (contact.CoolDownTime.Value.AddHours(1) <= endCoolDownTimer)
+                if(contact.CoolDownTime != null)
                 {
-                    contactsBackInPool.Add(contact);
+                    if (contact.CoolDownTime.Value.AddHours(1) <= endCoolDownTimer)
+                    {
+                        contactsBackInPool.Add(contact);
+                    }
                 }
+               
             }
 
             List<bool> coolDownProperty = contactsBackInPool.Where(c => c.CoolDown == true).Select(c => c.CoolDown).ToList();
