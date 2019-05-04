@@ -24,6 +24,20 @@
                 <dd class="text-center">
                     You are in touch with @Model.GivenName.
                 </dd>
+                if (String.IsNullOrEmpty(ViewBag.Moment) == true)
+                {
+                    <dd class="text-center">
+                        Log your recent interaction. @Html.ActionLink("Log A Moment", "Create", "Interactions", new { Id = Model.Id }, null).
+                    </dd>
+                }
+                else
+                {
+                    <dd class="text-center">
+                        Last connected @ViewBag.Moment days ago.
+                    </dd>
+                    <h6 class="text-center">@Html.ActionLink("Log A More Recent Moment", "Create", "Interactions", new { Id = Model.Id }, null)</h6>
+                }
+
             }
             if (Model.InContact == false)
             {
@@ -34,7 +48,7 @@
 
         }
 
-        <br/>
+        <br />
 
         @if (Model.LastUpdated != null)
         {

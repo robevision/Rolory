@@ -173,7 +173,7 @@ namespace Rolory.Controllers
         // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
-            var inWeek = DateTime.Today(6);
+            var lastWeek = DateTime.Today.AddDays(-6);
             if (ModelState.IsValid)
             {
                 if (id == null)
@@ -181,8 +181,13 @@ namespace Rolory.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
                 var interactions = db.Interactions.Where(i => i.ContactId == id).Select(i => i);
-                var interactionRecentMoments = interactions.Where(i=>i.Moment <= DateTime.Today)
-                if(interactions.Any)
+                var interactionMomentsBool = interactions.Select(i => i.Moment >= lastWeek).Any();
+                var interactionMoment = interactions.Where(i => i.Moment >= lastWeek).Select(i=>i.Moment).FirstOrDefault();
+                if (interactionMomentsBool == true)
+                {
+                    var dayAmount = DateTime.Today - interactionMoment.Date;
+                    ViewBag.Moment = dayAmount.Days;
+                }
                 Contact contact = db.Contacts.Find(id);
                 if (contact == null)
                 {
