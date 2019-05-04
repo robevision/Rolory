@@ -123,6 +123,7 @@ namespace Rolory.Controllers
                     while (contact == null);
                     contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
                     contact.CoolDown = true;
+                    contact.CoolDownTime = DateTime.Now;
                     string timeNow = DateTime.Now.ToString();
                     DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
                     contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
