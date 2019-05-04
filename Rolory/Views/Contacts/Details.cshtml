@@ -162,7 +162,7 @@
                         @Html.DisplayFor(model => model.Address.AddressType)
                     </dd>
                 }
-                @if (Model.Address != null)
+                @if (Model.Address != null && Model.Address.StreetAddress != null)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.Address.StreetAddress)

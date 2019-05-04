@@ -20,6 +20,7 @@ namespace Rolory.Controllers
         public List<SelectListItem> genderList = new List<SelectListItem>();
         public List<SelectListItem> relationshipList = new List<SelectListItem>();
         public List<SelectListItem> categoryList = new List<SelectListItem>();
+        public List<SelectListItem> prefixList = new List<SelectListItem>();
 
         public ContactsController()
         {
@@ -29,6 +30,7 @@ namespace Rolory.Controllers
             GetGenderSelection();
             GetRelationshipSelection();
             GetCategorySelection();
+            GetPrefixSelection();
         }
         private void GetRelationshipSelection()
         {
@@ -116,6 +118,15 @@ namespace Rolory.Controllers
             stateList.Add(new SelectListItem() { Text = "Wisconsin", Value = "WI" });
             stateList.Add(new SelectListItem() { Text = "Wyoming", Value = "WY" });
         }
+        private void GetPrefixSelection()
+        {
+            prefixList.Add(new SelectListItem() { Text = "Dr.", Value = "Dr." });
+            prefixList.Add(new SelectListItem() { Text = "Mr.", Value = "Mr." });
+            prefixList.Add(new SelectListItem() { Text = "Mrs.", Value = "Mrs." });
+            prefixList.Add(new SelectListItem() { Text = "Ms.", Value = "Ms." });
+            prefixList.Add(new SelectListItem() { Text = "Miss", Value = "Miss" });
+            prefixList.Add(new SelectListItem() { Text = "Master", Value = "Master" });
+        }
 
         // GET: Contacts
         public ActionResult Index(string sortOrder, string searchString)
@@ -186,7 +197,7 @@ namespace Rolory.Controllers
                 if (interactionMomentsBool == true)
                 {
                     var dayAmount = DateTime.Today - interactionMoment.Date;
-                    ViewBag.Moment = dayAmount.Days;
+                    ViewBag.Moment = dayAmount.Days.ToString();
                 }
                 Contact contact = db.Contacts.Find(id);
                 if (contact == null)
@@ -221,6 +232,7 @@ namespace Rolory.Controllers
         // GET: Contacts/Create
         public ActionResult Create()
         {
+            ViewBag.Prefix = prefixList;
             ViewBag.States = stateList;
             ViewBag.Types = typeList;
             ViewBag.AddressId = new SelectList(db.Addresses, "Id", "AddressType");
@@ -271,6 +283,7 @@ namespace Rolory.Controllers
         {
             ViewBag.States = stateList;
             ViewBag.Types = typeList;
+            ViewBag.Prefix = prefixList;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -347,6 +360,7 @@ namespace Rolory.Controllers
             ViewBag.Gender = genderList;
             ViewBag.Category = categoryList;
             ViewBag.Relationship = relationshipList;
+            ViewBag.Prefix = prefixList;
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
             contact.Description.Id = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d=>d.Id).SingleOrDefault();
@@ -426,7 +440,8 @@ namespace Rolory.Controllers
                         ViewBag.Relationship = relationshipList;
                         ViewBag.States = stateList;
                         ViewBag.Types = typeList;
-                        contact.Description = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
+                        ViewBag.Prefix = prefixList;
+                    contact.Description = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
                         contact.Address = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
                         
                         return View(contact);
@@ -456,11 +471,38 @@ namespace Rolory.Controllers
                 Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
                 //WeatherManagement weath = new WeatherManagement();
                 //weath.SetLatLong(contact.Address);  
+                if(String.IsNullOrEmpty(contact.Prefix) != true)
+                {
+                    contactInDB.Prefix = contact.Prefix;
+                }
+                if(String.IsNullOrEmpty(contact.GivenName) != true)
+                {
+                    contactInDB.GivenName = contact.GivenName;
+                }
+                if(String.IsNullOrEmpty(contact.FamilyName) != true)
+                {
+                    contactInDB.FamilyName = contact.FamilyName;
+                }
+                if(String.IsNullOrEmpty(contact.Email) != true)
+                {
+                    contactInDB.Email = contact.Email;
+                }
+                if(String.IsNullOrEmpty(contact.PhoneType) != true)
+                {
+                    contactInDB.PhoneType = contact.PhoneType;
+                }
+                if(String.IsNullOrEmpty(contact.PhoneNumber) != true)
+                {
+                    contactInDB.PhoneNumber = contact.PhoneNumber;
+                }
                 contactInDB.DescriptionId = contact.DescriptionId;
                 contactInDB.Description = contact.Description;
                 contactInDB.Description.Id = contact.Description.Id;
                 //contactInDB.AddressId = contact.AddressId.Value;
-                contactInDB.Address = contact.Address;
+                if(contact.Address != null)
+                {
+                    contactInDB.Address = contact.Address;
+                }
 
                 //contactInDB.DescriptionId = db.Contacts.Where(c => c.Id == contact.Id).Select(c=>c.DescriptionId).SingleOrDefault();
                 //contactInDB.AddressId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AddressId).SingleOrDefault();
