@@ -316,7 +316,7 @@ namespace Rolory.Controllers
                 phoneType = contact.PhoneType;
                 var altPhoneType = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AltPhoneNumberType).SingleOrDefault();
                 altPhoneType = contact.AltPhoneNumberType;
-                contact.Description = db.Descriptions.Where(d => d.Id == contact.Id).Select(d => d).SingleOrDefault();
+                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
                 db.Entry(contact.Description).State = EntityState.Modified;
                 //contact.Description.Id = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.DescriptionId.Value).SingleOrDefault();
                 db.Entry(contact).State = EntityState.Modified;
@@ -493,7 +493,53 @@ namespace Rolory.Controllers
                 }
                 if(String.IsNullOrEmpty(contact.PhoneNumber) != true)
                 {
-                    contactInDB.PhoneNumber = contact.PhoneNumber;
+                    List <string> phoneNumberResult = new List <string>();
+                    List <char> areaCode = new List<char>();
+                    List<char> body = new List<char>();
+                    var phoneNumber = contact.PhoneNumber;
+                    for (int i = 0; i < phoneNumber.Count(); i++)
+                    {
+                        if(Char.IsNumber(phoneNumber[i]) == true)
+                        {
+                            if (i == 0)
+                            {
+                                areaCode.Add(Convert.ToChar("("));
+                                areaCode.Add(phoneNumber[i]);
+                            }
+                            else if (i == 1)
+                            {
+                                areaCode.Add(phoneNumber[i]);
+                            }
+                            else if (i == 2)
+                            {
+                                areaCode.Add(phoneNumber[i]);
+                                areaCode.Add(Convert.ToChar(")"));
+                                areaCode.Add(Convert.ToChar(" "));
+                            }
+                            else if (i > 2)
+                            {
+                                if (body.LongCount() == 3)
+                                {
+                                    body.Add(Convert.ToChar("-"));
+                                }
+                                if (body.LongCount() < 8)
+                                {
+                                    body.Add(phoneNumber[i]);
+                                }
+
+                            }
+
+                        }
+                    }
+                foreach(char index in areaCode)
+                    {
+                        phoneNumberResult.Add(Convert.ToString(index));
+                    }
+                foreach(char index in body)
+                    {
+                        phoneNumberResult.Add(Convert.ToString(index));
+                    }
+              contactInDB.PhoneNumber = String.Join("", phoneNumberResult.ToArray());
                 }
                 contactInDB.DescriptionId = contact.DescriptionId;
                 contactInDB.Description = contact.Description;
