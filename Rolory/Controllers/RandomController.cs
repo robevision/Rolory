@@ -163,7 +163,25 @@ namespace Rolory.Controllers
            
             if(pushedContactsByBirthDate.Select(p => p.Id).Contains(filteredContact.Id))
             {
-                ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
+                DateTime thisBirthDate = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d.BirthDate).SingleOrDefault().Value;
+                int age = DateTime.Today.Year - thisBirthDate.Year;
+                if(thisBirthDate.Day < DateTime.Today.Day)
+                {
+                    ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
+                }
+                if(age/10 == Convert.ToInt32(age.ToString().IndexOf("0")))
+                {
+                    ViewBag.Message = $"{filteredContact.GivenName} is turning {age}. Why not reach out?";
+                }
+                if (thisBirthDate.Day == DateTime.Today.Day)
+                {
+                    ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday today!";
+                }
+                if(thisBirthDate.Day > DateTime.Today.Day)
+                {
+                    ViewBag.Message = $"{filteredContact.GivenName} had their birthday recently. You should check in.";
+                }
+                
             }
             else if (pushedContactsByAnniversaryDate.Select(p => p.Id).Contains(filteredContact.Id))
             {

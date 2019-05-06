@@ -185,6 +185,7 @@ namespace Rolory.Controllers
         public ActionResult Details(int? id)
         {
             var lastWeek = DateTime.Today.AddDays(-6);
+            var nullDateTime = new DateTime();
             if (ModelState.IsValid)
             {
                 if (id == null)
@@ -193,11 +194,19 @@ namespace Rolory.Controllers
                 }
                 var interactions = db.Interactions.Where(i => i.ContactId == id).Select(i => i);
                 var interactionMomentsBool = interactions.Select(i => i.Moment >= lastWeek).Any();
-                var interactionMoment = interactions.Where(i => i.Moment >= lastWeek).Select(i=>i.Moment).FirstOrDefault();
+                DateTime interactionMoment = interactionMoment = db.Interactions.Where(i => i.ContactId == id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
                 if (interactionMomentsBool == true)
                 {
-                    var dayAmount = DateTime.Today - interactionMoment.Date;
-                    ViewBag.Moment = dayAmount.Days.ToString();
+                    if(interactionMoment.Date == nullDateTime)
+                    {
+                        interactionMoment = db.Interactions.Where(i => i.ContactId == id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
+                    }
+                    else
+                    {
+                        var dayAmount = DateTime.Today - interactionMoment.Date;
+                        ViewBag.Moment = dayAmount.Days.ToString();
+                    }
+
                 }
                 Contact contact = db.Contacts.Find(id);
                 if (contact == null)
@@ -205,10 +214,8 @@ namespace Rolory.Controllers
                     return RedirectToAction("Create", "Contacts");
                 }
                 contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
-                if(contact.AddressId != null)
-                {
-                    contact.Address = db.Contacts.Where(c => c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
-                }
+                contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+
                 if(contact.AltAddressId != null)
                 {
                     contact.AlternateAddress = db.Contacts.Where(c => c.AltAddressId == contact.AltAddressId).Select(c => c.AlternateAddress).SingleOrDefault();
@@ -315,6 +322,10 @@ namespace Rolory.Controllers
                 contact.DescriptionId = description.Id;
                 contact.Description = description;
                 db.Descriptions.Add(description);
+                Address address = new Address();
+                contact.AddressId = address.Id;
+                contact.Address = address;
+                db.Addresses.Add(address);
                 db.SaveChanges();
                 db.Contacts.Add(contact);
                 db.SaveChanges();
@@ -539,22 +550,10 @@ namespace Rolory.Controllers
                 ViewBag.States = stateList;
                 ViewBag.Types = typeList;
                 ViewBag.Prefix = prefixList;
-                if (contact.AddressId != null)
-                {
-                       
-                    contact.Description = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.DescriptionId == contact.DescriptionId).Select(c => c.Description).SingleOrDefault();
-                        contact.Address = db.Contacts.Where(c => c.Id == passedId).Where(c=>c.AddressId == contact.AddressId).Select(c => c.Address).SingleOrDefault();
-                        
-                        return View(contact);
-                }
-                //Address address = new Address();
-                //db.Addresses.Add(address);
-                //db.SaveChanges();
-                //contact.AddressId = address.Id;
-                //db.Entry(contact).State = EntityState.Modified;
-                //db.SaveChanges();
+                contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
                 return View(contact);
-                //return RedirectToAction("Expand", "Contacts", new { id = passedId });
+               
             }
 
             return RedirectToAction("Index", "Home");
@@ -688,6 +687,11 @@ namespace Rolory.Controllers
             db.Contacts.Remove(contact);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public ActionResult Error()
+        {
+            return View();
         }
 
         protected override void Dispose(bool disposing)

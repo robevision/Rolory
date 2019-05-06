@@ -91,8 +91,47 @@ namespace Rolory.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ContactInteractionViewModel contactInteraction)
         {
+
             if (ModelState.IsValid)
             {
+                var recent = DateTime.Today.AddMonths(-3);
+                var contact = contactInteraction.Contact;
+                var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d=>d).SingleOrDefault();
+                if (description != null && description.Relationship != null)
+                {
+                    var relationship = description.Relationship;
+                    switch (relationship)
+                    {
+                        case "Distant":
+                            recent = DateTime.Today.AddMonths(-6);
+                            break;
+                        case "Familiar":
+                            recent = DateTime.Today.AddMonths(-3);
+                            break;
+                        case "Friend":
+                            recent = DateTime.Today.AddMonths(-1);
+                            break;
+                        case "Close":
+                            recent = DateTime.Today.AddDays(-6);
+                            break;
+                        case "Business Superior":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        case "Business Equal":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        case "Teacher":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        case "Classmate":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        default:
+                            recent = DateTime.Today.AddMonths(-3);
+                            break;
+                    }
+                }
+
                 string goalCode = "5C0R3";
                 var contactId = contactInteraction.Contact.Id;
                 contactInteraction.Contact = db.Contacts.Where(c => c.Id == contactId).SingleOrDefault();
@@ -111,19 +150,25 @@ namespace Rolory.Controllers
                 contactInteraction.Interaction.Message.IsInteraction = true;
                 db.Interactions.Add(contactInteraction.Interaction);
                 db.SaveChanges();
-                networker.RunningTally++;
-                db.Entry(networker).State = EntityState.Modified;
-                db.SaveChanges();
-                if (networker.Goal != null && networker.RunningTally >= networker.Goal && networker.GoalStatus == true)
+                var moment = contactInteraction.Interaction.Moment;
+                if(moment >= recent)
                 {
-                    networker.GoalCoolDown = DateTime.Now;
-                    networker.GoalStatus = false;
-                    networker.RunningTally = 0;
+                    contactInteraction.Contact.InContact = true;
+                    contactInteraction.Contact.InContactCountDown = moment;
+                    networker.RunningTally++;
                     db.Entry(networker).State = EntityState.Modified;
                     db.SaveChanges();
-                    return RedirectToAction("Goal", "Interactions", new { code = goalCode });
+                    if (networker.Goal != null && networker.RunningTally >= networker.Goal && networker.GoalStatus == true)
+                    {
+                        networker.GoalCoolDown = DateTime.Now;
+                        networker.GoalStatus = false;
+                        networker.RunningTally = 0;
+                        db.Entry(networker).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return RedirectToAction("Goal", "Interactions", new { code = goalCode });
+                    }
+                    return RedirectToAction("Index", new { id = contactInteraction.Contact.Id });
                 }
-                return RedirectToAction("Index", new {id = contactInteraction.Contact.Id});
             }
             return View(contactInteraction);
         }

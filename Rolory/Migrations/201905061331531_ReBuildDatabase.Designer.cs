@@ -7,13 +7,13 @@ namespace Rolory.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class ReBuildingDatabase : IMigrationMetadata
+    public sealed partial class ReBuildDatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ReBuildingDatabase));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ReBuildDatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "201905010048579_ReBuildingDatabase"; }
+            get { return "201905061331531_ReBuildDatabase"; }
         }
         
         string IMigrationMetadata.Source

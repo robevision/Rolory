@@ -3,7 +3,7 @@ namespace Rolory.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class ReBuildingDatabase : DbMigration
+    public partial class ReBuildDatabase : DbMigration
     {
         public override void Up()
         {
@@ -47,13 +47,13 @@ namespace Rolory.Migrations
                         CoolDown = c.Boolean(nullable: false),
                         CoolDownTime = c.DateTime(),
                         Reminder = c.DateTime(),
-                        AddressId = c.Int(),
+                        AddressId = c.Int(nullable: false),
                         AltAddressId = c.Int(),
                         DescriptionId = c.Int(nullable: false),
                         NetworkerId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Addresses", t => t.AddressId)
+                .ForeignKey("dbo.Addresses", t => t.AddressId, cascadeDelete: true)
                 .ForeignKey("dbo.Addresses", t => t.AltAddressId)
                 .ForeignKey("dbo.Descriptions", t => t.DescriptionId, cascadeDelete: true)
                 .ForeignKey("dbo.Networkers", t => t.NetworkerId, cascadeDelete: true)
