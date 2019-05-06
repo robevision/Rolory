@@ -453,7 +453,49 @@ namespace Rolory.Controllers
                 contactDescription.Contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
                 contactDescription.Description = db.Descriptions.Where(d => d.Id == contactDescription.Contact.DescriptionId).Select(d => d).SingleOrDefault();
                 var currentId = id;
-                if (contactDescription.Description == null)
+                var recent = DateTime.Today.AddMonths(-3);
+                var description = contactDescription.Description;
+                if (description.Relationship != null)
+                {
+                    var relationship = description.Relationship;
+                    switch (relationship)
+                    {
+                        case "Distant":
+                            recent = DateTime.Today.AddMonths(-6);
+                            break;
+                        case "Familiar":
+                            recent = DateTime.Today.AddMonths(-3);
+                            break;
+                        case "Friend":
+                            recent = DateTime.Today.AddMonths(-1);
+                            break;
+                        case "Close":
+                            recent = DateTime.Today.AddDays(-6);
+                            break;
+                        case "Business Superior":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        case "Business Equal":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        case "Teacher":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        case "Classmate":
+                            recent = DateTime.Today.AddMonths(-8);
+                            break;
+                        default:
+                            recent = DateTime.Today.AddMonths(-3);
+                            break;
+                    }
+                }
+                var moment = db.Interactions.Where(i => i.ContactId == contactDescription.Contact.Id).OrderByDescending(i=>i.Moment).Select(i=>i.Moment).FirstOrDefault();
+                if (moment <= recent)
+                {
+                    contactDescription.Contact.InContact = false;
+                    contactDescription.Contact.InContactCountDown = moment;
+                }
+                    if (contactDescription.Description == null)
                 {
                     return RedirectToAction("Details", "Contacts", new { id = currentId });
                 }
