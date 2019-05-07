@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -254,10 +255,23 @@ namespace Rolory.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
+        public ActionResult Create([Bind(Include = "Id,ImagePath,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
         {
             if (ModelState.IsValid)
             {
+              
+                var image = new Image();
+                image.ImageFile = Request.Files["ImageFile"];
+                if (image.ImageFile != null)
+                {
+
+                    string fileName = Path.GetFileNameWithoutExtension(image.ImageFile.FileName);
+                    string extension = Path.GetExtension(image.ImageFile.FileName);
+                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    contact.ImagePath = "~/UserImages/" + fileName;
+                    fileName = Path.Combine(Server.MapPath("~/UserImages/"), fileName);
+                    image.ImageFile.SaveAs(fileName);
+                }
                 string userId = User.Identity.GetUserId();
                 var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
                 contact.NetworkerId = networker.Id;
@@ -494,6 +508,7 @@ namespace Rolory.Controllers
                 {
                     contactDescription.Contact.InContact = false;
                     contactDescription.Contact.InContactCountDown = moment;
+                    db.SaveChanges();
                 }
                     if (contactDescription.Description == null)
                 {

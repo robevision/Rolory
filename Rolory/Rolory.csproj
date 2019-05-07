@@ -191,6 +191,14 @@
     <Compile Include="Migrations\201905061331531_ReBuildDatabase.Designer.cs">
       <DependentUpon>201905061331531_ReBuildDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905061732141_Revert.cs" />
+    <Compile Include="Migrations\201905061732141_Revert.Designer.cs">
+      <DependentUpon>201905061732141_Revert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905062055493_NewImageProps.cs" />
+    <Compile Include="Migrations\201905062055493_NewImageProps.Designer.cs">
+      <DependentUpon>201905062055493_NewImageProps.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -201,6 +209,7 @@
     <Compile Include="Models\Geography.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Controllers\ImageController.cs" />
+    <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Interaction.cs" />
     <Compile Include="Models\Access.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -326,6 +335,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201905061331531_ReBuildDatabase.resx">
       <DependentUpon>201905061331531_ReBuildDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905061732141_Revert.resx">
+      <DependentUpon>201905061732141_Revert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905062055493_NewImageProps.resx">
+      <DependentUpon>201905062055493_NewImageProps.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

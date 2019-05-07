@@ -67,43 +67,43 @@
             <dl class="dl-horizontal" style="align-content:center">
                 <h4 class="text-justify">Basic Info</h4>
 
-                    @if (Model.Prefix != null)
-                    {
-                        <dt>
-                            @Html.DisplayNameFor(model => model.Prefix)
-                        </dt>
-
-
-                        <dd>
-                            @Html.DisplayFor(model => model.Prefix)
-                        </dd>
-                    }
+                @if (Model.Prefix != null)
+                {
                     <dt>
-                        @Html.DisplayNameFor(model => model.GivenName)
+                        @Html.DisplayNameFor(model => model.Prefix)
+                    </dt>
+
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Prefix)
+                    </dd>
+                }
+                <dt>
+                    @Html.DisplayNameFor(model => model.GivenName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.GivenName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FamilyName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.FamilyName)
+                </dd>
+                @if (Model.Email != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Email)
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.GivenName)
+                        @Html.DisplayFor(model => model.Email)
                     </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.FamilyName)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.FamilyName)
-                    </dd>
-                    @if (Model.Email != null)
-                    {
-                        <dt>
-                            @Html.DisplayNameFor(model => model.Email)
-                        </dt>
-
-                        <dd>
-                            @Html.DisplayFor(model => model.Email)
-                        </dd>
-                    }
-                    <br/>
+                }
+                <br />
                 @if (Model.Description != null && Model.Description.Gender != null)
                 {
                     <dt>
@@ -326,7 +326,26 @@
                         @Html.DisplayFor(model => model.AltPhoneNumber)
                     </dd>
                 }
+                @if (Model.Description != null && Model.Description.Category != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description.Category)
+                    </dt>
 
+                    <dd>
+                        @Html.DisplayFor(model => model.Description.Category)
+                    </dd>
+                }
+                @if (Model.Description != null && Model.Description.Relationship != null)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description.Relationship)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Description.Relationship)
+                    </dd>
+                }
             </dl>
         </div>
 </div>

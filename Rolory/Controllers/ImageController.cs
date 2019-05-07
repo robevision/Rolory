@@ -21,15 +21,16 @@ namespace Rolory.Models
         {
             if (ModelState.IsValid)
             {
-                //string fileName = FilePathResult.GetFileNameWithoutExtension(imageModel.ImageFile.FileName);
-                //string extension = FilePathResult.GetExtension(imageModel.ImageFile.FileName);
-                //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                //imageModel.image = "~/UserImages/" + fileName;
-                //fileName = Path.Combine(Server.MapPath("~/UserImages/"), fileName);
-                //imageModel.ImageFile.SaveAs(fileName);
-                //db.Contacts.Add(imageModel);
-                //db.SaveChanges();
-                //ModelState.Clear();
+                if (imageModel.ImagePath != null)
+                {
+                    var image = new Image();
+                    string fileName = Path.GetFileNameWithoutExtension(image.ImageFile.FileName);
+                    string extension = Path.GetExtension(image.ImageFile.FileName);
+                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    imageModel.ImagePath = "~/UserImages/" + fileName;
+                    fileName = Path.Combine(Server.MapPath("~/UserImages/"), fileName);
+                    image.ImageFile.SaveAs(fileName);
+                }
             }
            
             return View();
