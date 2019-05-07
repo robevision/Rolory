@@ -13,7 +13,6 @@ namespace Rolory.Models
         [Key]
         public int Id { get; set; }
         public string ImageTitle { get; set; }
-        [DataType(DataType.Upload)]
         [Display(Name = "Upload File")]
         public string ImagePath { get; set; }
         [DataType(DataType.EmailAddress)]

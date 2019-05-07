@@ -244,6 +244,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="UserImages\6bh2z.jpg" />
+    <Content Include="UserImages\avatar_user_31979_1499797631194517519.jpg" />
+    <Content Include="UserImages\avatar_user__1467161673193014420.jpg" />
     <Content Include="UserImages\paulbunyan.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
