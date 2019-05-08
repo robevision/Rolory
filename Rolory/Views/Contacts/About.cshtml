@@ -16,7 +16,12 @@
 
     </div>
     <br />
-    <img src="@Model.Contact.ImagePath" width="150px" height="200px" />
+    
+    @if(Model.Contact.ImagePath != null)
+    {
+    <img src="@Url.Content(Model.Contact.ImagePath)" width="150" height="200" />
+    }
+
 
 
     <div class="col-md-4"></div>
@@ -25,7 +30,7 @@
             @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
         </h3>
         <div class="col-lg-2">
-            <br/>
+            <br />
             <h4 style="text-align:center">
                 @Html.DisplayFor(model => model.Contact.Email)
             </h4>
@@ -34,8 +39,8 @@
             </h4>
         </div>
     </div>
-    
-    </div>
+
+</div>
 
 <div class="container">
     <div class="col-md-12"> <a class="btn btn-primary btn-xlg" src=@Html.ActionLink("Details", "Details", "Contacts", new { id = Model.Contact.Id }, null)</a></div>

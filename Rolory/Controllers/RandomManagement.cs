@@ -11,6 +11,8 @@ namespace Rolory.Controllers
     {
         ApplicationDbContext db;
         WeatherManagement weath;
+        DateTime nullDateTime = new DateTime();
+        DateTime nextWeek = DateTime.Today.AddDays(6);
         public RandomManagement()
         {
             db = new ApplicationDbContext();
@@ -18,38 +20,62 @@ namespace Rolory.Controllers
         }
         public List<Contact> GetContactsByBirthDate(List<Contact> filteredContactList)
         {
-            var nextWeek = DateTime.Today.AddDays(6);
             List<Contact> pushedContactsByBirthDate = new List<Contact>();
 
             foreach (Contact contact in filteredContactList)
             {
                 var contactBirthDate = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.BirthDate).SingleOrDefault();
-                if(contactBirthDate != null)
+
+                if(contactBirthDate != null && contactBirthDate != nullDateTime)
                 {
-                    int contactBirthMonth = contactBirthDate.Value.Month;
-                    if (contactBirthMonth == DateTime.Today.Month || contactBirthDate <= nextWeek)
+                    if(contactBirthDate != nullDateTime)
                     {
-                        pushedContactsByBirthDate.Add(contact);
+                        DateTime contactBirthDateValue = contactBirthDate.Value;
+                        if (contactBirthDateValue.Month == DateTime.Today.Month)
+                        {
+                            pushedContactsByBirthDate.Add(contact);
+                        }
+                        else if (contactBirthDateValue.Month - DateTime.Today.Month == 1 || contactBirthDateValue.Month - DateTime.Today.Month == -11 && contactBirthDateValue.Day - nextWeek.Day <= 7 && contactBirthDateValue.Day - nextWeek.Day >= -7)
+                        {
+                            pushedContactsByBirthDate.Add(contact);
+                        }
+                        else if (contactBirthDateValue.Month - DateTime.Today.Month == -1 || contactBirthDateValue.Month - DateTime.Today.Month == 11 && contactBirthDateValue.Day - nextWeek.Day <= 7 && contactBirthDateValue.Day - nextWeek.Day >= -7)
+                        {
+                            pushedContactsByBirthDate.Add(contact);
+                        }
                     }
+                   
                 }
             }
             return pushedContactsByBirthDate;
         }
         public List<Contact> GetContactsByAnniversary(List<Contact> filteredContactList)
         {
-            var nextWeek = DateTime.Today.AddDays(6);
             List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
             foreach(Contact contact in filteredContactList)
             {
                 var contactAnniversary = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.Anniversary).SingleOrDefault();
                 if (contactAnniversary != null)
                 {
-                    int contactAnniversaryMonth = contactAnniversary.Value.Month;
-                    if (contactAnniversaryMonth == DateTime.Today.Month || contactAnniversary <= nextWeek)
+                    if(contactAnniversary != nullDateTime)
                     {
-                        pushedContactsByAnniversaryDate.Add(contact);
+                        DateTime contactAnniversaryValue = contactAnniversary.Value;
+                        if (contactAnniversaryValue.Month == DateTime.Today.Month)
+                        {
+                            pushedContactsByAnniversaryDate.Add(contact);
+                        }
+                        else if (contactAnniversaryValue.Month - DateTime.Today.Month == 1 || contactAnniversaryValue.Month - DateTime.Today.Month == -11 && contactAnniversaryValue.Day - nextWeek.Day <= 7 && contactAnniversaryValue.Day - nextWeek.Day >= -7)
+                        {
+                            pushedContactsByAnniversaryDate.Add(contact);
+                        }
+                        else if (contactAnniversaryValue.Month - DateTime.Today.Month == -1 || contactAnniversaryValue.Month - DateTime.Today.Month == 11 && contactAnniversaryValue.Day - nextWeek.Day <= 7 && contactAnniversaryValue.Day - nextWeek.Day >= -7)
+                        {
+                            pushedContactsByAnniversaryDate.Add(contact);
+                        }
                     }
+                    
                 }
+            
             }
             return pushedContactsByAnniversaryDate;
         }
@@ -79,16 +105,17 @@ namespace Rolory.Controllers
 
             foreach (Contact contact in filteredContactList)
             {
-               
-                if (contact.Description != null)
+                var contactRelation = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.Relationship).SingleOrDefault();
+                var contactCategory = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d.Relationship).SingleOrDefault();
+                if (contactRelation != null)
                 {
-                    string contactRelation = contact.Description.Relationship;
-                    if (contactRelation != null)
+                    if (contactCategory == "Family")
                     {
-                        if (contactRelation == "Friend" || contactRelation == "Family")
-                        {
-                            pushedContactsByRelationship.Add(contact);
-                        }
+                        pushedContactsByRelationship.Add(contact);
+                    }
+                    else if (contactRelation == "Close" || contactRelation == "Friend")
+                    {
+                        pushedContactsByRelationship.Add(contact);
                     }
                 }
                
@@ -170,7 +197,6 @@ namespace Rolory.Controllers
             {
                 foreach (bool coolDownBool in coolDownProperty)
                 {
-                    //contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).SingleOrDefault();
                     contact.CoolDown = coolDownBool;
                     db.Entry(contact).State = EntityState.Modified;
                     db.SaveChanges();

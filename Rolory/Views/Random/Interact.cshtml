@@ -1,5 +1,7 @@
 ﻿@model Rolory.Models.Contact
 @{
+    /**/
+
     ViewBag.Title = "Interact";
     <style>
         .w3-btn, .w3 button {
@@ -53,16 +55,20 @@
 </div>
 
 <br />
+@if (Model.ImagePath != null)
+{
+    <img class="img-rounded center-block" src="@Url.Content(Model.ImagePath)" width="150" lengh="150" />
+}
 
-    <img class="text-center" src="@Html.DisplayFor(model => model.ImagePath)" width: 150px lengh: 150px />
-    <h3 class="text-center" style="align-content:center"> @Html.DisplayFor(model => model.Prefix) @Html.DisplayFor(model => model.GivenName)  @Html.DisplayFor(model => model.FamilyName)</h3>
-
+<h3 class="text-center" style="align-content:center"> @Html.DisplayFor(model => model.Prefix) @Html.DisplayFor(model => model.GivenName)  @Html.DisplayFor(model => model.FamilyName)</h3>
+<h4 class="text-center">@Html.DisplayFor(model => model.PhoneNumber)</h4>
+<h5 class="text-center">@Html.DisplayFor(model => model.Email)</h5>
 
 <br />
 
-<div class="col-md-4"><button class="w3-button w3-round-xlarge">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button></div>
-<div class="col-md-4"><p><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Ice-Breaker","GetInTouch", "Random", new { id = Model.Id }, null)</a></p></div>
-<div class="col-md-4"><button class="w3-button w3-round-xlarge">@Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = Model.Id }, null)</button></div>
+<div class="col-md-4"><button class="w3-button w3-round-xlarge center-block">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button></div>
+<div class="col-md-4"><p><a class="btn btn-primary btn-lg center-block" src=@Html.ActionLink("Ice-Breaker", "GetInTouch", "Random", new { id = Model.Id }, null)</a></p></div>
+<div class="col-md-4"><button class="w3-button w3-round-xlarge center-block">@Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = Model.Id }, null)</button></div>
 @*<button class="w3-button w3-round-xlarge">@Html.ActionLink("Ice-Breaker", "GetInTouch", "Random", new { id = Model.Id }, null)</button>*@
 
 

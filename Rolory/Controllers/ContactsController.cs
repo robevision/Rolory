@@ -132,8 +132,9 @@ namespace Rolory.Controllers
         // GET: Contacts
         public ActionResult Index(string sortOrder, string searchString)
         {
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.FirstNameSortParm = sortOrder == "givenName" ? "givenName_desc" : "givenName";
+            ViewBag.LastNameSortParm = String.IsNullOrEmpty(sortOrder) ? "familyName_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "date" ? "date_desc" : "date";
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
             var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
@@ -158,10 +159,16 @@ namespace Rolory.Controllers
             
             switch (sortOrder)
             {
-                case "name_desc":
+                case "givenName_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.GivenName);
+                    break;
+                case "givenName":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.GivenName);
+                    break;
+                case "familyName_desc":
                     contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.FamilyName);
                     break;
-                case "Date":
+                case "date":
                     contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.LastUpdated);
                     break;
                 case "date_desc":
@@ -466,6 +473,7 @@ namespace Rolory.Controllers
                 ContactDescriptionViewModel contactDescription = new ContactDescriptionViewModel();
                 contactDescription.Contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
                 contactDescription.Description = db.Descriptions.Where(d => d.Id == contactDescription.Contact.DescriptionId).Select(d => d).SingleOrDefault();
+                var nullDateTime = new DateTime();
                 var currentId = id;
                 var recent = DateTime.Today.AddMonths(-3);
                 var description = contactDescription.Description;
@@ -507,7 +515,11 @@ namespace Rolory.Controllers
                 if (moment <= recent)
                 {
                     contactDescription.Contact.InContact = false;
-                    contactDescription.Contact.InContactCountDown = moment;
+                    if (moment != nullDateTime)
+                    {
+                        contactDescription.Contact.InContactCountDown = moment;
+                    }
+            
                     db.SaveChanges();
                 }
                     if (contactDescription.Description == null)
