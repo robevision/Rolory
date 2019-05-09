@@ -2,9 +2,13 @@
 
 @{
     ViewBag.Title = "UpdateInfo";
-    var message = ViewBag.Message;
+    string message = ViewBag.Message;
+    string question = ViewBag.Question;
+    string isQuestion = ViewBag.IsQuestion;
+    string rawQuestion = ViewBag.RawQuestion;
+    string thisAnswer = "Submit";
 }
-<br/>
+<br />
 <div class="row">
     <div class="breadcrumb">
         <div class="col-md-push-9">
@@ -14,6 +18,19 @@
 </div>
 
 <h4>@message</h4>
+@if (isQuestion == "false" || isQuestion == null)
+{
+    <a class="btn btn-primary btn-lg" src="@Html.ActionLink("Yes", "UpdateInfo", new { question = question }, new {answer = thisAnswer})"></a>
+    <p><a class="btn btn-primary btn-lg" @Html.ActionLink("No", "UpdateInfo", new {question = rawQuestion})></a></p>
+}
+else
+{
+    <p>
+        @Html.TextBox("input")
+        <input type="submit" value="Submit" />
+    </p>
+    <p><a class="btn btn-primary btn-lg" @Html.ActionLink("Go Back", "UpdateInfo")></a></p>
+}
 
 
 

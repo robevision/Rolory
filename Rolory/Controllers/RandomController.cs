@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -325,13 +327,76 @@ namespace Rolory.Controllers
         }
         public ActionResult UpdateInfo(int? id, string question=null, string answer=null)
         {
+            List<PropertyInfo> nullPropertiesList = new List<PropertyInfo>();
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            Description description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+            Address address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
             //Update Info. Will be recursive in adding info about the person to log. Have a button for when they want to go to the next person.
-            if (question != null && answer != null)
+            if (contact!= null)
             {
-                ViewBag.Message = "hi";
+                if (answer == null)
+                {
+                    foreach (PropertyInfo property in contact.GetType().GetProperties())
+                {
+                    if(property.Name != "ImageTitle" && property.Name != "ImagePath" && property.Name != "Id" && property.Name != "InContract" && property.Name != "LastUpdated" && property.Name != "PhoneType" && property.Name != "AltPhoneType" && property.Name != "Description" && property.Name != "DescriptionId" && property.Name != "NetworkerId" && property.Name != "Networker" && property.Name != "AddressId" && property.Name != "AltAddressId" && property.Name != "InContact" && property.Name != "InContactCountDown" && property.Name != "CoolDown" && property.Name != "Reminder")
+                    {
+                        if (property.GetValue(contact) == null && property.Name != question)
+                        {
+                            nullPropertiesList.Add(property);
+                        }
+                    }
+                   
+                }
+                foreach(PropertyInfo property in description.GetType().GetProperties())
+                {
+                    if(property.Name != "ContactId" && property.Name != "Id" && property.Name != "DeathDate" && property.Name != "Notes")
+                    {
+                            //if (property.PropertyType.Name.Contains("Int") && property.GetValue(description) == 0)
+                            //{
+                            //    nullPropertiesList.Add(property);
+                            //}
+                            if (property.GetValue(description) == null && property.Name != question)
+                        {
+                            nullPropertiesList.Add(property);
+                        }
+                    }
+                }
+                foreach(PropertyInfo property in address.GetType().GetProperties())
+                    {
+                        if(property.Name != "Id")
+                        {
+                            if (property.GetValue(address) == null && property.Name != question)
+                            {
+                                nullPropertiesList.Add(property);
+                            }
+                        }
+                    }
+                random = new Random();
+                int r = random.Next(nullPropertiesList.Count);
+                var nullProperty = nullPropertiesList[r];
+                    StringBuilder formattedQuestion = new StringBuilder(nullProperty.Name.Length * 2);
+                    for (int i = 0; i < nullProperty.Name.Length; i++)
+                    {
+                        if (i != 0 && i != nullProperty.Name.Length && Char.IsUpper(nullProperty.Name[i]) == true)
+                        {
+                            formattedQuestion.Append(' ');
+                        }
+                        formattedQuestion.Append(nullProperty.Name[i]);
+                    }
+                    string sentQuestion = formattedQuestion.ToString().ToLower();
+                    ViewBag.RawQuestion = nullProperty.Name.ToString();
+                    ViewBag.Question = sentQuestion;
+                    ViewBag.Message = $"Do you know {contact.GivenName}'s {sentQuestion}?";
+                    ViewBag.IsQuestion = "false";                   
+                }
+                else
+                {
+                    ViewBag.Message = $"What is {contact.GivenName}'s {question}";
+                    ViewBag.IsQuestion = "true";
+                }
+               
             }
-            
+
             return View(contact);
         }
         public ActionResult ConnectQuery(int? id)

@@ -248,12 +248,18 @@ namespace Rolory.Controllers
             ViewBag.MessageId = new SelectList(db.Messages, "Id", "Subject", interaction.MessageId);
             return View(interaction);
         }
-        public ActionResult DisplayRecent()
+        public ActionResult DisplayRecent(int id)
         {
             var twoWeeksAgo = DateTime.Now.AddDays(-13);
             string userId = User.Identity.GetUserId();
                     var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
                     var interactionList = db.Interactions.Where(i => i.Moment >= twoWeeksAgo).Where(i => i.Contact.NetworkerId == networker.Id).Select(m => m).ToList();
+           foreach(Interaction interaction in interactionList)
+            {
+                var contactId = db.Interactions.Where(i => i.ContactId == interaction.ContactId).Select(i=>i.ContactId).SingleOrDefault();
+                var contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
+                interaction.Contact = contact;
+            }
             return View(interactionList);
         }
         // GET: Interactions/Delete/5

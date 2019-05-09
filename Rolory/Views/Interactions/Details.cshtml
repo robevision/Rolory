@@ -16,14 +16,14 @@
 <div>
     <hr />
     <dl class="dl-horizontal">
-        @if (Model.Contact != null && Model.Contact.Image != null)
+        @if (Model.Contact != null && Model.Contact.ImagePath != null)
         {
             <dt>
-                @Html.DisplayFor(model => model.Contact.Image)
+                @Html.DisplayFor(model => model.Contact.ImagePath)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.Contact.Image)
+                @Html.DisplayFor(model => model.Contact.ImagePath)
             </dd>
         }
 
