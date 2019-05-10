@@ -27,191 +27,199 @@ namespace Rolory.Controllers
         // GET: Random
         [Authorize]
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int? id = null)
         {
-            var nextWeek = DateTime.Today.AddDays(6);
-            //instantiated lists
-            List<Contact> pushedContacts = new List<Contact>();
-            List<Contact> newPushedContacts = new List<Contact>();
-            List<Contact> pushedContactsByBirthDate = new List<Contact>();
-            List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
-            List<Contact> pushedContactsByProfession = new List<Contact>();
-            List<Contact> pushedContactsByRelationship = new List<Contact>();
-            List<Contact> pushedContactsBySharedActivities = new List<Contact>();
-
-            List<Contact> filteredContactsBySharedActivities = new List<Contact>();
-
-            //get who is logged in and only their contacts
-            string userId = User.Identity.GetUserId();
-            var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
-
-            //null check for networker profile
-            var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
-            if (networkerNullCheck == false)
+            if (id == null)
             {
-               return RedirectToAction("CreateAccount", "User");
-            }
-            var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
-            try
-            {
-                if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
+                var nextWeek = DateTime.Today.AddDays(6);
+                //instantiated lists
+                List<Contact> pushedContacts = new List<Contact>();
+                List<Contact> newPushedContacts = new List<Contact>();
+                List<Contact> pushedContactsByBirthDate = new List<Contact>();
+                List<Contact> pushedContactsByAnniversaryDate = new List<Contact>();
+                List<Contact> pushedContactsByProfession = new List<Contact>();
+                List<Contact> pushedContactsByRelationship = new List<Contact>();
+                List<Contact> pushedContactsBySharedActivities = new List<Contact>();
+
+                List<Contact> filteredContactsBySharedActivities = new List<Contact>();
+
+                //get who is logged in and only their contacts
+                string userId = User.Identity.GetUserId();
+                var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+
+                //null check for networker profile
+                var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
+                if (networkerNullCheck == false)
                 {
+                    return RedirectToAction("CreateAccount", "User");
+                }
+                var contactsNullCheck = db.Contacts.Where(c => c.NetworkerId == networker.Id).ToList();
+                try
+                {
+                    if (contactsNullCheck[0] == null || contactsNullCheck.Count() == 0)
+                    {
 
+                        return RedirectToAction("Null", "Contacts");
+                    }
+                }
+                catch
+                {
                     return RedirectToAction("Null", "Contacts");
                 }
-            }
-            catch
-            {
-                return RedirectToAction("Null", "Contacts");
-            }
 
-            rndmngmnt.CheckContactCoolDown();
-            var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c=>c.InContact == false).Where(c=>c.CoolDown == false).Where(c=>c.Description.DeathDate == null).ToList();
-            var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
+                rndmngmnt.CheckContactCoolDown();
+                var contactList = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c => c.InContact == false).Where(c => c.CoolDown == false).Where(c => c.Description.DeathDate == null).ToList();
+                var filteredContactList = contactList.Where(c => c.Perpetual == false).ToList();
 
-            pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
-            pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
-            pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
-            pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
+                pushedContactsByBirthDate = rndmngmnt.GetContactsByBirthDate(filteredContactList);
+                pushedContactsByAnniversaryDate = rndmngmnt.GetContactsByAnniversary(filteredContactList);
+                pushedContactsByProfession = rndmngmnt.GetContactsByWorkTitle(filteredContactList);
+                pushedContactsByRelationship = rndmngmnt.GetContactsByRelation(filteredContactList);
 
-            //filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
-            //rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
-            if(pushedContactsByBirthDate != null)
-            {
-                foreach(Contact contact in pushedContactsByBirthDate)
+                //filteredContactsBySharedActivities = rndmngmnt.GetContactsBySharedActivities(filteredContactList);
+                //rndmngmnt.CheckSharedActivitiesWithSeason(filteredContactsBySharedActivities);
+                if (pushedContactsByBirthDate != null)
                 {
-                    pushedContacts.Add(contact);
+                    foreach (Contact contact in pushedContactsByBirthDate)
+                    {
+                        pushedContacts.Add(contact);
+                    }
                 }
-            }
-            if(pushedContactsByAnniversaryDate != null)
-            {
-                foreach(Contact contact in pushedContactsByAnniversaryDate)
+                if (pushedContactsByAnniversaryDate != null)
                 {
-                    pushedContacts.Add(contact);
+                    foreach (Contact contact in pushedContactsByAnniversaryDate)
+                    {
+                        pushedContacts.Add(contact);
+                    }
                 }
-            }
-            if(pushedContactsByProfession != null)
-            {
-                foreach(Contact contact in pushedContactsByProfession)
+                if (pushedContactsByProfession != null)
                 {
-                    pushedContacts.Add(contact);
+                    foreach (Contact contact in pushedContactsByProfession)
+                    {
+                        pushedContacts.Add(contact);
+                    }
                 }
-            }
-            if(pushedContactsByRelationship != null)
-            {
-                foreach(Contact contact in pushedContactsByRelationship)
+                if (pushedContactsByRelationship != null)
                 {
-                    pushedContacts.Add(contact);
+                    foreach (Contact contact in pushedContactsByRelationship)
+                    {
+                        pushedContacts.Add(contact);
+                    }
                 }
-            }
-            pushedContacts.Add(pushedContactsBySharedActivities.SingleOrDefault());
-            foreach(Contact contact in pushedContacts)
-            {
-                if(contact != null)
+                pushedContacts.Add(pushedContactsBySharedActivities.SingleOrDefault());
+                foreach (Contact contact in pushedContacts)
                 {
-                    newPushedContacts.Add(contact);
+                    if (contact != null)
+                    {
+                        newPushedContacts.Add(contact);
+                    }
                 }
-            }
-            if (newPushedContacts.Count == 0)
-            {
-                if(filteredContactList.Count != 0)
+                if (newPushedContacts.Count == 0)
                 {
-                    Contact contact = null;
+                    if (filteredContactList.Count != 0)
+                    {
+                        Contact contact = null;
+                        do
+                        {
+                            int r = random.Next(filteredContactList.Count);
+                            contact = filteredContactList[r];
+                        }
+                        while (contact == null);
+                        contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
+                        contact.CoolDown = true;
+                        contact.CoolDownTime = DateTime.Now;
+                        string timeNow = DateTime.Now.ToString();
+                        DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
+                        contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+                        var thisCoolDownTime = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
+                        thisCoolDownTime = contact.CoolDownTime;
+                        var thisCoolDown = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDown).SingleOrDefault();
+                        thisCoolDown = contact.CoolDown;
+                        var thisDescriptionId = db.Contacts.Where(c => c.Description.Id == contact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
+                        thisDescriptionId = contact.Description.Id;
+                        var thisContactDescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
+                        thisContactDescriptionId = contact.DescriptionId;
+                        db.Entry(contact).State = EntityState.Modified;
+                        db.SaveChanges();
+                        return View(contact);
+                    }
+                    return RedirectToAction("Complete", "Random");
+
+                }
+                Contact filteredContact = null;
+                if (pushedContacts.Count != 0)
+                {
                     do
                     {
-                        int r = random.Next(filteredContactList.Count);
-                        contact = filteredContactList[r];
-                    }
-                    while (contact == null);
-                    contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
-                    contact.CoolDown = true;
-                    contact.CoolDownTime = DateTime.Now;
-                    string timeNow = DateTime.Now.ToString();
-                    DateTime? nullableTimeNow = Convert.ToDateTime(timeNow);
-                    contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
-                    var thisCoolDownTime = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
-                    thisCoolDownTime = contact.CoolDownTime;
-                    var thisCoolDown = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.CoolDown).SingleOrDefault();
-                    thisCoolDown = contact.CoolDown;
-                    var thisDescriptionId = db.Contacts.Where(c => c.Description.Id == contact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
-                    thisDescriptionId = contact.Description.Id;
-                    var thisContactDescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
-                    thisContactDescriptionId = contact.DescriptionId;
-                    db.Entry(contact).State = EntityState.Modified;
-                    db.SaveChanges();
-                    return View(contact);
-                }
-                return RedirectToAction("Complete", "Random");
-              
-            }
-            Contact filteredContact = null;
-            if(pushedContacts.Count != 0)
-            {
-                do
-                {
-                    int r = random.Next(pushedContacts.Count);
-                    if (pushedContacts.Count == 1)
-                    {
-                        filteredContact = pushedContacts.SingleOrDefault();
-                        if(filteredContact == null)
+                        int r = random.Next(pushedContacts.Count);
+                        if (pushedContacts.Count == 1)
                         {
-                            break;
+                            filteredContact = pushedContacts.SingleOrDefault();
+                            if (filteredContact == null)
+                            {
+                                break;
+                            }
                         }
+                        filteredContact = pushedContacts[r];
                     }
-                    filteredContact = pushedContacts[r];
+                    while (filteredContact == null);
                 }
-                while (filteredContact == null);
-            }
-           
-            if(pushedContactsByBirthDate.Select(p => p.Id).Contains(filteredContact.Id))
-            {
-                DateTime thisBirthDate = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d.BirthDate).SingleOrDefault().Value;
-                int age = DateTime.Today.Year - thisBirthDate.Year;
-                if(thisBirthDate.Day < DateTime.Today.Day)
+
+                if (pushedContactsByBirthDate.Select(p => p.Id).Contains(filteredContact.Id))
                 {
-                    ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
+                    DateTime thisBirthDate = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d.BirthDate).SingleOrDefault().Value;
+                    int age = DateTime.Today.Year - thisBirthDate.Year;
+                    if (thisBirthDate.Day < DateTime.Today.Day)
+                    {
+                        ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
+                    }
+                    if (age / 10 == Convert.ToInt32(age.ToString().IndexOf("0")))
+                    {
+                        ViewBag.Message = $"{filteredContact.GivenName} is turning {age}. Why not reach out?";
+                    }
+                    if (thisBirthDate.Day == DateTime.Today.Day)
+                    {
+                        ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday today!";
+                    }
+                    if (thisBirthDate.Day > DateTime.Today.Day)
+                    {
+                        ViewBag.Message = $"{filteredContact.GivenName} had their birthday recently. You should check in.";
+                    }
+
                 }
-                if(age/10 == Convert.ToInt32(age.ToString().IndexOf("0")))
+                else if (pushedContactsByAnniversaryDate.Select(p => p.Id).Contains(filteredContact.Id))
                 {
-                    ViewBag.Message = $"{filteredContact.GivenName} is turning {age}. Why not reach out?";
+                    ViewBag.Message = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?";
                 }
-                if (thisBirthDate.Day == DateTime.Today.Day)
+                else if (pushedContactsByProfession.Select(p => p.Id).Contains(filteredContact.Id))
                 {
-                    ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday today!";
+                    ViewBag.Message = $"{filteredContact.GivenName} and you share a career. Why not reach out?";
                 }
-                if(thisBirthDate.Day > DateTime.Today.Day)
+                else if (pushedContactsByRelationship.Select(p => p.Id).Contains(filteredContact.Id))
                 {
-                    ViewBag.Message = $"{filteredContact.GivenName} had their birthday recently. You should check in.";
+                    ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
                 }
-                
+                filteredContact = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c).SingleOrDefault();
+                filteredContact.CoolDown = true;
+                filteredContact.CoolDownTime = DateTime.Now;
+                filteredContact.Description = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d).SingleOrDefault();
+                var descriptionId = db.Contacts.Where(c => c.Description.Id == filteredContact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
+                descriptionId = filteredContact.Description.Id;
+                var contactDescriptionId = db.Contacts.Where(c => c.DescriptionId == filteredContact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
+                contactDescriptionId = filteredContact.DescriptionId;
+                var coolDownTime = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
+                coolDownTime = filteredContact.CoolDownTime;
+                var coolDown = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDown).SingleOrDefault();
+                coolDown = filteredContact.CoolDown;
+                db.Entry(filteredContact).State = EntityState.Modified;
+                db.SaveChanges();
+                return View(filteredContact);
             }
-            else if (pushedContactsByAnniversaryDate.Select(p => p.Id).Contains(filteredContact.Id))
+            else
             {
-                ViewBag.Message = $"It is {filteredContact.GivenName}'s anniversary soon. Why not reach out?";
+                Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+                return View(contact);
             }
-            else if (pushedContactsByProfession.Select(p => p.Id).Contains(filteredContact.Id))
-            {
-                ViewBag.Message = $"{filteredContact.GivenName} and you share a career. Why not reach out?";
-            }
-            else if (pushedContactsByRelationship.Select(p => p.Id).Contains(filteredContact.Id))
-            {
-                ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
-            }
-            filteredContact = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c).SingleOrDefault();
-            filteredContact.CoolDown = true;
-            filteredContact.CoolDownTime = DateTime.Now;
-            filteredContact.Description = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d).SingleOrDefault();
-            var descriptionId = db.Contacts.Where(c => c.Description.Id == filteredContact.Description.Id).Select(c => c.Description.Id).SingleOrDefault();
-            descriptionId = filteredContact.Description.Id;
-            var contactDescriptionId = db.Contacts.Where(c => c.DescriptionId == filteredContact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
-            contactDescriptionId = filteredContact.DescriptionId;
-            var coolDownTime = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDownTime).SingleOrDefault();
-            coolDownTime = filteredContact.CoolDownTime;
-            var coolDown = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDown).SingleOrDefault();
-            coolDown = filteredContact.CoolDown;
-            db.Entry(filteredContact).State = EntityState.Modified;
-            db.SaveChanges();
-            return View(filteredContact);
         }
         [HttpPost]
         public ActionResult Index(Contact contact)
@@ -363,7 +371,7 @@ namespace Rolory.Controllers
                 }
                 foreach(PropertyInfo property in address.GetType().GetProperties())
                     {
-                        if(property.Name != "Id")
+                        if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude")
                         {
                             if (property.GetValue(address) == null && property.Name != question)
                             {
@@ -374,25 +382,101 @@ namespace Rolory.Controllers
                 random = new Random();
                 int r = random.Next(nullPropertiesList.Count);
                 var nullProperty = nullPropertiesList[r];
-                    StringBuilder formattedQuestion = new StringBuilder(nullProperty.Name.Length * 2);
-                    for (int i = 0; i < nullProperty.Name.Length; i++)
+                    if(nullProperty != null)
                     {
-                        if (i != 0 && i != nullProperty.Name.Length && Char.IsUpper(nullProperty.Name[i]) == true)
+                        StringBuilder formattedQuestion = new StringBuilder(nullProperty.Name.Length * 2);
+                        for (int i = 0; i < nullProperty.Name.Length; i++)
+                        {
+                            if (i != 0 && i != nullProperty.Name.Length && Char.IsUpper(nullProperty.Name[i]) == true)
+                            {
+                                formattedQuestion.Append(' ');
+                            }
+                            formattedQuestion.Append(nullProperty.Name[i]);
+                        }
+                        string sentQuestion = formattedQuestion.ToString().ToLower();
+                        ViewBag.RawQuestion = nullProperty.Name.ToString();
+                        ViewBag.Question = sentQuestion;
+                        ViewBag.Message = $"Do you know {contact.GivenName}'s {sentQuestion}?";
+                        ViewBag.IsQuestion = "false";
+                    }
+                                
+                }
+                else if(answer == "Submit")
+                {
+                    StringBuilder formattedQuestion = new StringBuilder(question.Length * 2);
+                    for (int i = 0; i < question.Length; i++)
+                    {
+                        if (i != 0 && i != question.Length && Char.IsUpper(question[i]) == true)
                         {
                             formattedQuestion.Append(' ');
                         }
-                        formattedQuestion.Append(nullProperty.Name[i]);
+                        formattedQuestion.Append(question[i]);
                     }
                     string sentQuestion = formattedQuestion.ToString().ToLower();
-                    ViewBag.RawQuestion = nullProperty.Name.ToString();
-                    ViewBag.Question = sentQuestion;
-                    ViewBag.Message = $"Do you know {contact.GivenName}'s {sentQuestion}?";
-                    ViewBag.IsQuestion = "false";                   
+                    ViewBag.Message = $"What is {contact.GivenName}'s {sentQuestion}?";
+                    ViewBag.IsQuestion = "true";
+                    ViewBag.RawQuestion = question;
                 }
                 else
                 {
-                    ViewBag.Message = $"What is {contact.GivenName}'s {question}";
-                    ViewBag.IsQuestion = "true";
+                    bool found = false;
+                    foreach (PropertyInfo property in contact.GetType().GetProperties())
+                    {
+                        if (property.Name.ToString() == question)
+                        {
+                            var passedProperty = "{" + contact + "." + question + "}";
+                            passedProperty = answer;
+                            found = true;
+                            property.SetValue(contact, answer);
+                            db.Entry(contact).State = EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                    if(found == false)
+                    {
+                        foreach (PropertyInfo property in description.GetType().GetProperties())
+                        {
+                            if (property.Name.ToString() == question)
+                            {
+                                var passedProperty = "{" + contact + "." + description + "." + question + "}";
+                                passedProperty = answer;
+                                found = true;
+                                property.SetValue(description, answer);
+                                db.Entry(description).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                        }
+                        if(found == false)
+                        {
+                            foreach (PropertyInfo property in address.GetType().GetProperties())
+                            {
+                                if (property.Name.ToString() == question)
+                                {
+                                    if (property.PropertyType.ToString().Contains("Int"))
+                                    {
+                                        var newAnswer = Convert.ToInt32(answer);
+                                        var passedProperty = "{" + contact + "." + address + "." + question + "}";
+                                        passedProperty = answer;
+                                        found = true;
+                                        property.SetValue(address, newAnswer);
+                                        db.Entry(address).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        var passedProperty = "{" + contact + "." + address + "." + question + "}";
+                                        passedProperty = answer;
+                                        found = true;
+                                        property.SetValue(address, answer);
+                                        db.Entry(address).State = EntityState.Modified;
+                                        db.SaveChanges();
+                                    }
+                               
+                                }
+                            }
+                        }
+                        return RedirectToAction("UpdateInfo", id = contact.Id);
+                    }
                 }
                
             }

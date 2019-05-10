@@ -7,7 +7,9 @@
     string isQuestion = ViewBag.IsQuestion;
     string rawQuestion = ViewBag.RawQuestion;
     string thisAnswer = "Submit";
+    var yesAnswer = Html.ActionLink("Yes", "UpdateInfo", new { id = Model.Id, question = rawQuestion, answer = thisAnswer }, htmlAttributes: new { @class = "btn btn-primary btn-lg" });
 }
+
 <br />
 <div class="row">
     <div class="breadcrumb">
@@ -16,21 +18,36 @@
         </div>
     </div>
 </div>
-
-<h4>@message</h4>
-@if (isQuestion == "false" || isQuestion == null)
+@using (Html.BeginForm())
 {
-    <a class="btn btn-primary btn-lg" src="@Html.ActionLink("Yes", "UpdateInfo", new { question = question }, new {answer = thisAnswer})"></a>
-    <p><a class="btn btn-primary btn-lg" @Html.ActionLink("No", "UpdateInfo", new {question = rawQuestion})></a></p>
-}
-else
-{
-    <p>
-        @Html.TextBox("input")
-        <input type="submit" value="Submit" />
-    </p>
-    <p><a class="btn btn-primary btn-lg" @Html.ActionLink("Go Back", "UpdateInfo")></a></p>
-}
+    <h4>@message</h4>
+    if (isQuestion == "false" || isQuestion == null)
+    {
+        @yesAnswer
 
+        @Html.ActionLink("No", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" });
+    }
+    else
+    {
+        if (rawQuestion == "Anniversary" || rawQuestion == "BirthDate")
+        {
+            <p>
+                <input type="date" value="" data-content="answer"/>
+               
+              
+                <input type="submit" value="Submit" />
+            </p>
+        }
+        else
+        {
+            <p>
+                @Html.TextBox("answer")
+                <input type="submit" value="Submit" />
+            </p>
+        }
+
+        @Html.ActionLink("Go Back", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+    }
+}
 
 
