@@ -51,7 +51,11 @@
         </div>
     </div>
 </div>
+<div>
+    <button class="w3-button w3-round-xlarge">@Html.ActionLink("Update Info", "UpdateInfo", new { id = Model.Id }, null)</button>
+    <button class="w3-button w3-round-xlarge">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button>
+</div>
+<br />
+<br />
 
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("Update Info", "Expand", "Contacts", new { passedId = Model.Id }, null)</button>
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = Model.Id }, null)</button>
-@Html.ActionLink("Go Back", "Index", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+@Html.ActionLink("Go Back", "Index", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })

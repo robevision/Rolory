@@ -13,10 +13,10 @@
 </div>
 <div class="col-md-11"><h1 class="text-center">@ViewBag.Message</h1></div>
 
-<button class="w3-button w3-round-xlarge">@Html.ActionLink("View Another", "GetInTouch", "Random", new { id = Model.Id }, null)</button>
+@Html.ActionLink("View Another", "GetInTouch", "Random", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
 <hr />
-<h4 class="text-left">Add More Information For Better Results</h4>
-<button class="w3-button w3-round-xlarge text-center">@Html.ActionLink("Update Info", "UpdateInfo", "Random", new { id = Model.Id }, null)</button>
+<h4 class="text-center">Add More Information For Better Results</h4>
+<button class="w3-button w3-round-xlarge center-block">@Html.ActionLink("Update Info", "UpdateInfo", "Random", new { id = Model.Id }, null)</button>
 <br/>
 <br/>
-@Html.ActionLink("Go Back", "Interact", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+@Html.ActionLink("Go Back", "Interact", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })

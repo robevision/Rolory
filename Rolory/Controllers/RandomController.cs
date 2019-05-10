@@ -230,7 +230,7 @@ namespace Rolory.Controllers
         {
             return View();
         }
-        public ActionResult GetInTouch(int? id)
+        public ActionResult GetInTouch(int? id, string message = null)
         {
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
@@ -244,7 +244,23 @@ namespace Rolory.Controllers
             {
                 if (contact.WorkTitle == networker.WorkTitle || contact.WorkTitle.Contains(networker.WorkTitle))
                 {
-                    ViewBag.Message = $"You and {contact.GivenName} may have a similar occupation. Why not set up a coffee to share your experiences?";
+                    string[] workTitleMessages = new string[]
+                {
+                    $"You and {contact.GivenName} may have a similar occupation. Why not set up a coffee to share your experiences?",
+                    $"'Hey {contact.GivenName}, I heard you are working at {contact.Organization}. How has that been?'", $"'Hi {contact.GivenName}, how has it been since...'",
+                    "'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
+                    "'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
+                    $"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
+                    "'What are you up to these days? We should grab coffee to catch up!'"
+                };
+                    random = new Random();
+                    var newRandom = random.Next(8);
+                    if(workTitleMessages[newRandom] != message)
+                    {
+                        ViewBag.Message = workTitleMessages[newRandom];
+                        return View(contact);
+                    }
+                    
                 }
             }
             if(contact.Description != null && contact.Description.Relationship != null)
@@ -352,7 +368,11 @@ namespace Rolory.Controllers
                         {
                             nullPropertiesList.Add(property);
                         }
-                    }
+                            else if (Convert.ToString(property.GetValue(contact)) == String.Empty && property.Name != question)
+                            {
+                                nullPropertiesList.Add(property);
+                            }
+                        }
                    
                 }
                 foreach(PropertyInfo property in description.GetType().GetProperties())
@@ -367,6 +387,10 @@ namespace Rolory.Controllers
                         {
                             nullPropertiesList.Add(property);
                         }
+                            else if(Convert.ToString(property.GetValue(description)) == String.Empty && property.Name != question)
+                            {
+                                nullPropertiesList.Add(property);
+                            }
                     }
                 }
                 foreach(PropertyInfo property in address.GetType().GetProperties())
@@ -374,6 +398,10 @@ namespace Rolory.Controllers
                         if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude")
                         {
                             if (property.GetValue(address) == null && property.Name != question)
+                            {
+                                nullPropertiesList.Add(property);
+                            }
+                            else if (Convert.ToString(property.GetValue(address)) == String.Empty && property.Name != question)
                             {
                                 nullPropertiesList.Add(property);
                             }
@@ -398,24 +426,39 @@ namespace Rolory.Controllers
                         ViewBag.Question = sentQuestion;
                         ViewBag.Message = $"Do you know {contact.GivenName}'s {sentQuestion}?";
                         ViewBag.IsQuestion = "false";
+                        if(nullProperty.Name.ToString() == "AltPhoneNumber")
+                        {
+                            ViewBag.Message = $"Does {contact.GivenName} have a secondary phone number?";
+                        }
+                        else if(nullProperty.Name.ToString() == "AltAddress")
+                        {
+                            ViewBag.Message = $"Does {contact.GivenName} have another address?";
+                        }
                     }
                                 
                 }
                 else if(answer == "Submit")
                 {
-                    StringBuilder formattedQuestion = new StringBuilder(question.Length * 2);
-                    for (int i = 0; i < question.Length; i++)
+                    if (question != null)
                     {
-                        if (i != 0 && i != question.Length && Char.IsUpper(question[i]) == true)
+                        StringBuilder formattedQuestion = new StringBuilder(question.Length * 2);
+                        for (int i = 0; i < question.Length; i++)
                         {
-                            formattedQuestion.Append(' ');
+                            if (i != 0 && i != question.Length && Char.IsUpper(question[i]) == true)
+                            {
+                                formattedQuestion.Append(' ');
+                            }
+                            formattedQuestion.Append(question[i]);
                         }
-                        formattedQuestion.Append(question[i]);
+                        string sentQuestion = formattedQuestion.ToString().ToLower();
+                        ViewBag.Message = $"What is {contact.GivenName}'s {sentQuestion}?";
+                        ViewBag.IsQuestion = "true";
+                        ViewBag.RawQuestion = question;
+                        if (question == "AltPhoneNumber")
+                        {
+                            ViewBag.Message = $"What is {contact.GivenName}'s alternate phone number?";
+                        }
                     }
-                    string sentQuestion = formattedQuestion.ToString().ToLower();
-                    ViewBag.Message = $"What is {contact.GivenName}'s {sentQuestion}?";
-                    ViewBag.IsQuestion = "true";
-                    ViewBag.RawQuestion = question;
                 }
                 else
                 {
@@ -424,12 +467,69 @@ namespace Rolory.Controllers
                     {
                         if (property.Name.ToString() == question)
                         {
-                            var passedProperty = "{" + contact + "." + question + "}";
-                            passedProperty = answer;
-                            found = true;
-                            property.SetValue(contact, answer);
-                            db.Entry(contact).State = EntityState.Modified;
-                            db.SaveChanges();
+                            if(question == "AltPhoneNumber" || question == "PhoneNumber")
+                            {
+                                List<string> phoneNumberResult = new List<string>();
+                                List<char> areaCode = new List<char>();
+                                List<char> body = new List<char>();
+                                var phoneNumber = answer;
+                                for (int i = 0; i < phoneNumber.Count(); i++)
+                                {
+                                    if (Char.IsNumber(phoneNumber[i]) == true)
+                                    {
+                                        if (i == 0)
+                                        {
+                                            areaCode.Add(Convert.ToChar("("));
+                                            areaCode.Add(phoneNumber[i]);
+                                        }
+                                        else if (i == 1)
+                                        {
+                                            areaCode.Add(phoneNumber[i]);
+                                        }
+                                        else if (i == 2)
+                                        {
+                                            areaCode.Add(phoneNumber[i]);
+                                            areaCode.Add(Convert.ToChar(")"));
+                                            areaCode.Add(Convert.ToChar(" "));
+                                        }
+                                        else if (i > 2)
+                                        {
+                                            if (body.LongCount() == 3)
+                                            {
+                                                body.Add(Convert.ToChar("-"));
+                                            }
+                                            if (body.LongCount() < 8)
+                                            {
+                                                body.Add(phoneNumber[i]);
+                                            }
+
+                                        }
+
+                                    }
+                                }
+                                foreach (char index in areaCode)
+                                {
+                                    phoneNumberResult.Add(Convert.ToString(index));
+                                }
+                                foreach (char index in body)
+                                {
+                                    phoneNumberResult.Add(Convert.ToString(index));
+                                }
+                                answer = String.Join("", phoneNumberResult.ToArray());
+                                property.SetValue(contact, answer);
+                                db.Entry(contact).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                var passedProperty = "{" + contact + "." + question + "}";
+                                passedProperty = answer;
+                                found = true;
+                                property.SetValue(contact, answer);
+                                db.Entry(contact).State = EntityState.Modified;
+                                db.SaveChanges();
+                            }
+                       
                         }
                     }
                     if(found == false)

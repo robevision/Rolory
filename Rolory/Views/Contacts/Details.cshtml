@@ -305,7 +305,7 @@
                 }
 
 
-                @if (Model.AltPhoneNumberType != null && Model.AltPhoneNumber != null)
+                @if (String.IsNullOrEmpty(Model.AltPhoneNumberType) == false && Model.AltPhoneNumber != null)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.AltPhoneNumberType)
@@ -319,7 +319,7 @@
                 @if (Model.AltPhoneNumber != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.AltPhoneNumber)
+                        @Html.DisplayName("Alternate Phone Number")
                     </dt>
 
                     <dd>

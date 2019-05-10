@@ -20,21 +20,30 @@
 </div>
 @using (Html.BeginForm())
 {
-    <h4>@message</h4>
+    <h2 class="text-center">@message</h2>
+    <br/>
     if (isQuestion == "false" || isQuestion == null)
     {
+    <div class="text-center">
         @yesAnswer
+        <br/>
+        <br/>
+        @Html.ActionLink("No", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+    </div>
+     <br/>
+    <div class="col-sm-5">
+       
+    </div>
 
-        @Html.ActionLink("No", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" });
     }
     else
     {
         if (rawQuestion == "Anniversary" || rawQuestion == "BirthDate")
         {
             <p>
-                <input type="date" value="" data-content="answer"/>
-               
-              
+                <input type="date" value="" data-content="answer" />
+
+
                 <input type="submit" value="Submit" />
             </p>
         }
@@ -46,8 +55,13 @@
             </p>
         }
 
-        @Html.ActionLink("Go Back", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+
     }
+    <br/>
+    <br/>
+    <p><button class="w3-button w3-round-xlarge center-block">@Html.ActionLink("Review All Info", "Expand", "Contacts", new { passedId = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })</button></p>
+ 
+    <p>@Html.ActionLink("Go Back", "GetInTouch", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sml" })</p>
 }
 
 
