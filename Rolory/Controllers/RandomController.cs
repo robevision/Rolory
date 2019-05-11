@@ -16,6 +16,7 @@ namespace Rolory.Controllers
         private ApplicationDbContext db;
         private readonly MessageManagement msg;
         private RandomManagement rndmngmnt;
+        private ContactsManagement cm;
         Random random;
         public RandomController()
         {
@@ -23,13 +24,15 @@ namespace Rolory.Controllers
             random = new Random();
             msg = new MessageManagement();
             rndmngmnt = new RandomManagement();
+            cm = new ContactsManagement();
+
         }
         // GET: Random
         [Authorize]
         [HttpGet]
         public ActionResult Index(int? id = null)
         {
-            if (id == null)
+            if (id == null || id == 0)
             {
                 var nextWeek = DateTime.Today.AddDays(6);
                 //instantiated lists
@@ -169,7 +172,7 @@ namespace Rolory.Controllers
                 {
                     DateTime thisBirthDate = db.Descriptions.Where(d => d.Id == filteredContact.DescriptionId).Select(d => d.BirthDate).SingleOrDefault().Value;
                     int age = DateTime.Today.Year - thisBirthDate.Year;
-                    if (thisBirthDate.Day < DateTime.Today.Day)
+                    if (thisBirthDate.Day > DateTime.Today.Day)
                     {
                         ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday soon. Why not reach out?";
                     }
@@ -181,7 +184,7 @@ namespace Rolory.Controllers
                     {
                         ViewBag.Message = $"It is {filteredContact.GivenName}'s birthday today!";
                     }
-                    if (thisBirthDate.Day > DateTime.Today.Day)
+                    if (thisBirthDate.Day < DateTime.Today.Day)
                     {
                         ViewBag.Message = $"{filteredContact.GivenName} had their birthday recently. You should check in.";
                     }
@@ -234,13 +237,38 @@ namespace Rolory.Controllers
         {
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+            var nullDateTime = new DateTime();
             var today = DateTime.Now.Day;
             var week = DateTime.Now.AddDays(6);
             DateTime weekAgo = DateTime.Now.AddDays(-6);
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
-           
+            var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+            string firstPronoun = null;
+            string secondPronoun = null;
+            random = new Random();
+            var chance = random.Next(2);
+            var secondChance = random.Next(2);
+            if (contact.Prefix != null)
+            {
+                if (contact.Prefix == "Mr." || contact.Prefix == "Master")
+                {
+                    firstPronoun = "Him";
+                    secondPronoun = "He";
+                }
+                if (contact.Prefix == "Mrs.")
+                {
+                    firstPronoun = "Her";
+                    secondPronoun = "She";
+                }
+                else
+                {
+                    firstPronoun = "Them";
+                    secondPronoun = "They";
+                }
+            }
 
-            if(contact.WorkTitle != null && networker.WorkTitle != null)
+
+            if (contact.WorkTitle != null && networker.WorkTitle != null)
             {
                 if (contact.WorkTitle == networker.WorkTitle || contact.WorkTitle.Contains(networker.WorkTitle))
                 {
@@ -255,87 +283,141 @@ namespace Rolory.Controllers
                 };
                     random = new Random();
                     var newRandom = random.Next(8);
-                    if(workTitleMessages[newRandom] != message)
+                    if (workTitleMessages[newRandom] != message)
                     {
                         ViewBag.Message = workTitleMessages[newRandom];
                         return View(contact);
                     }
-                    
-                }
-            }
-            if(contact.Description != null && contact.Description.Relationship != null)
-            {
-                if (contact.Description.Relationship == "Friend")
-                {
-                    
-                }
-                if(contact.Description.Relationship == "Family")
-                {
-
-                }
-                if(contact.Description.Relationship == "Classmate")
-                {
 
                 }
             }
-            if (contact.Description != null && contact.Description.Anniversary.Value != null)
+            if (description.Relationship != null || Convert.ToString(description.Relationship) != String.Empty)
             {
-                if (contact.Description.Anniversary.Value.Month == DateTime.Now.Month)
+                if (description.Relationship == "Friend")
                 {
-                    if (contact.Description.Anniversary.Value.Day == today)
+                    ViewBag.Message = "friend";
+                }
+                if (description.Relationship == "Family")
+                {
+                    ViewBag.Message = "family";
+                }
+                if (contact.Description.Relationship == "Classmate")
+                {
+                    ViewBag.Message = "classmate";
+                }
+            }
+            if (description.Anniversary != null && description.Anniversary.ToString() != String.Empty && description.Anniversary != nullDateTime)
+            {
+                random = new Random();
+                DateTime contactAnniversary = description.Anniversary.Value;
+                if (contactAnniversary.Month == DateTime.Now.Month && secondChance == 1)
+                {
+                    if (description.Anniversary.Value.Day == today)
                     {
-                        ViewBag.Message = $"It is {contact.GivenName}'s Wedding Anniversary today! Just a simple 'Happy Anniversary' can get a conversation going about how both of you have been!";
+                        ViewBag.Message = $"It is {contact.GivenName}'s wedding Anniversary today! Just a simple 'Happy Anniversary' can get a conversation going about how both of you have been!";
                     }
-                    else if (contact.Description.Anniversary.Value.Day > today && contact.Description.Anniversary.Value <= weekAgo)
+                    else if (today - description.Anniversary.Value.Day < 7 && today - description.Anniversary.Value.Day > 0 /*&& lateBirthDayMessages.Where(w => w == message).Any() != true*/)
                     {
-                        ViewBag.Message = $"It was {contact.GivenName}'s Wedding Anniversary on {contact.Description.Anniversary.Value.DayOfWeek}! Just a simple 'Happy Anniversary' shows you're thinking of them.";
+                        ViewBag.Message = $"It was {contact.GivenName}'s wedding Anniversary on {contact.Description.Anniversary.Value.DayOfWeek}! Just a simple 'Happy Anniversary' shows you're thinking of them.";
                     }
-                    else if (contact.Description.Anniversary.Value.Day < today && contact.Description.Anniversary.Value >= week)
+                    else if (today - description.Anniversary.Value.Day > -7 && today - description.Anniversary.Value.Day < 0)
                     {
-                        ViewBag.Message = $"{contact.GivenName}'s Anniversary is coming up! It's on {contact.Description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Anniversary' shows you're thinking of them.";
+                        ViewBag.Message = $"{contact.GivenName}'s Anniversary is coming up! It's on {description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Anniversary' shows you're thinking of them.";
                     }
                 }
             }
-            if (contact.Description != null && contact.Description.BirthDate.Value != null)
+            if (description.BirthDate != null && description.BirthDate.Value.ToString() != String.Empty && description.BirthDate != nullDateTime /*&& messageCooldown.Select(m => m.Contains("Birth")).Any() != true*/)
             {
-                if (contact.Description.BirthDate.Value.Month == DateTime.Now.Month)
+                random = new Random();
+                DateTime contactBirthDate = description.BirthDate.Value;
+
+                if (contactBirthDate.Month == DateTime.Now.Month && chance == 1)
                 {
-                    if (contact.Description.BirthDate.Value.Day == today)
+                    string[] birthDayMessages = new string[]
+                     {
+                             $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can get a conversation going about how both of you have been!"
+                     };
+                    string[] lateBirthDayMessages = new string[]
+                        {
+                            "test",
+                            $"It was {contact.GivenName}'s Birthday on {description.BirthDate.Value.DayOfWeek} the {description.BirthDate.Value.Day}! Just a simple 'Happy Belated Birthday' shows you're thinking of {firstPronoun.ToLower()}.",
+                            $"{contact.GivenName} {contact.FamilyName} just had their birthday. Not to worry. It was just the other day. Send your best wishes to let {firstPronoun.ToLower()} know that {secondPronoun.ToLower()} is on your mind."
+                        }; //suffix variable needed for after number
+                    string[] earlyBirthDayMessages = new string[]
                     {
-                        ViewBag.Message = $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can get a conversation going about how both of you have been!";
+                            $"{contact.GivenName}'s Birthday is coming up! It's on {description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Birthday' shows you're thinking of them."
+                    };
+
+                    if (contactBirthDate.Day == today && birthDayMessages.Where(w => w == message).Any() != true)
+                    {
+                       
+                        random = new Random();
+                        var newRandom = random.Next(birthDayMessages.Count());
+                        ViewBag.Message = birthDayMessages[newRandom];
+
                     }
-                    else if (contact.Description.BirthDate.Value.Day > today && contact.Description.BirthDate.Value <= weekAgo)
+                    else if (today - contactBirthDate.Day < 7 && today - contactBirthDate.Day > 0 && lateBirthDayMessages.Where(w => w == message).Any() != true)
                     {
-                        ViewBag.Message = $"It was {contact.GivenName}'s Birthday on {contact.Description.BirthDate.Value.DayOfWeek}! Just a simple 'Happy Belated Birthday' shows you're thinking of them.";
+                        random = new Random();
+                        var newRandom = random.Next(lateBirthDayMessages.Count());
+                        ViewBag.Message = lateBirthDayMessages[newRandom];
                     }
-                    else if (contact.Description.BirthDate.Value.Day < today && contact.Description.BirthDate.Value >= week)
+                    else if (today - description.BirthDate.Value.Day > -7 && today - description.BirthDate.Value.Day < 0 && earlyBirthDayMessages.Where(w => w == message).Any() != true)
                     {
-                        ViewBag.Message = $"{contact.GivenName}'s Birthday is coming up! It's on {contact.Description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Birthday' shows you're thinking of them.";
+                        random = new Random();
+                        var newRandom = random.Next(earlyBirthDayMessages.Count());
+                        ViewBag.Message = earlyBirthDayMessages[newRandom];
+                    }
+                }
+                else if (contactBirthDate.Month - DateTime.Now.Month == 1 || DateTime.Now.Month - contactBirthDate.Month == 11)
+                {
+                    if (today - description.BirthDate.Value.Day < 7 && today - description.BirthDate.Value.Day > 0)
+                    {
+                        ViewBag.Message = $"It was {contact.GivenName}'s Birthday on {description.BirthDate.Value.DayOfWeek} the {description.BirthDate.Value.Day}! Just a simple 'Happy Belated Birthday' shows you're thinking of them."; //suffix variable needed for after number
+                    }
+                    else if (today - description.BirthDate.Value.Day > -7 && today - description.BirthDate.Value.Day < 0)
+                    {
+                        ViewBag.Message = $"{contact.GivenName}'s Birthday is coming up! It's on {description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Birthday' shows you're thinking of them.";
                     }
                 }
             }
-            else if(contact.Description == null)
+
             {
                 WeatherManagement weath = new WeatherManagement();
                 var season = weath.GetCurrentSeason();
-                string[] dateRelevantMessages = new string[]
-                {
 
-                };
-                string[] genericMessages = new string[]
+                if (ViewBag.Message == null)
                 {
+                    string[] dateRelevantMessages = new string[]
+        {
+
+        };
+                    string[] genericMessages = new string[]
+                    {
                     $"How about, 'Hey {contact.GivenName}, I saw something the other day that made me think of you...'",
                     "'What have you been up to lately?'", $"'Hi {contact.GivenName}, how has it been since...'",
                     "'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
                     "'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
                     $"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
                     "'What are you up to these days? We should grab coffee to catch up!'"
-                };
-                random = new Random();
-                var newRandom = random.Next(8);
-                ViewBag.Message = genericMessages[newRandom];
+                    };
+                    random = new Random();
+                    var newRandom = random.Next(genericMessages.Count());
+                    if (genericMessages[newRandom] != message)
+                    {
+                        ViewBag.Message = genericMessages[newRandom];
+                    }
+                    else
+                    {
+                        random = new Random();
+                        newRandom = random.Next(genericMessages.Count());
+                        ViewBag.Message = genericMessages[newRandom];
+                    }
 
-              
+                }
+
+
+
 
             }
             return View(contact);
@@ -349,6 +431,7 @@ namespace Rolory.Controllers
             return View(contact);
 
         }
+
         public ActionResult UpdateInfo(int? id, string question=null, string answer=null)
         {
             List<PropertyInfo> nullPropertiesList = new List<PropertyInfo>();
@@ -434,6 +517,35 @@ namespace Rolory.Controllers
                         {
                             ViewBag.Message = $"Does {contact.GivenName} have another address?";
                         }
+                        else if(nullProperty.Name.ToString() == "Organization")
+                        {
+                            ViewBag.Message = $"Do you know the company that {contact.GivenName} works for?";
+                        }
+                        else if(nullProperty.Name.ToString() == "WorkTitle")
+                        {
+                            ViewBag.Message = $"Do you know what {contact.GivenName}'s position is?";
+                        }
+                        else if(nullProperty.Name.ToString() == "Relationship")
+                        {
+                            ViewBag.Message = $"Do you know how close you are to {contact.GivenName}?";
+                            var relationship = cm.relationshipList;
+                            ViewBag.DropDown = relationship;
+                        }
+                        else if(nullProperty.Name.ToString() == "Category")
+                        {
+                            ViewBag.Message = $"Do you remember how you met {contact.GivenName}?";
+                           
+                        }
+                        else if(nullProperty.Name.ToString() == "Gender")
+                        {
+                            var gender = cm.genderList;
+                            ViewBag.DropDown = gender;
+                        }
+                        else if(nullProperty.Name.ToString() == "Prefix")
+                        {
+                            var prefix = cm.prefixList;
+                            ViewBag.DropDown = prefix;
+                        }
                     }
                                 
                 }
@@ -457,6 +569,18 @@ namespace Rolory.Controllers
                         if (question == "AltPhoneNumber")
                         {
                             ViewBag.Message = $"What is {contact.GivenName}'s alternate phone number?";
+                        }
+                        if(question == "Category")
+                        {
+                            ViewBag.Message = $"How did you meet {contact.GivenName}?";
+                            var category = cm.categoryList;
+                            ViewBag.DropDown = category;
+                        }
+                        if (question == "Relationship")
+                        {
+                            ViewBag.Message = $"How well do you know {contact.GivenName}?";
+                            var relationship = cm.relationshipList;
+                            ViewBag.DropDown = relationship;
                         }
                     }
                 }
@@ -519,15 +643,19 @@ namespace Rolory.Controllers
                                 property.SetValue(contact, answer);
                                 db.Entry(contact).State = EntityState.Modified;
                                 db.SaveChanges();
+                                answer = null;
+                                question = null;
                             }
                             else
                             {
                                 var passedProperty = "{" + contact + "." + question + "}";
                                 passedProperty = answer;
                                 found = true;
-                                property.SetValue(contact, answer);
+                                property.SetValue(contact, answer);  
                                 db.Entry(contact).State = EntityState.Modified;
                                 db.SaveChanges();
+                                answer = null;
+                                question = null;
                             }
                        
                         }
@@ -538,12 +666,28 @@ namespace Rolory.Controllers
                         {
                             if (property.Name.ToString() == question)
                             {
-                                var passedProperty = "{" + contact + "." + description + "." + question + "}";
-                                passedProperty = answer;
-                                found = true;
-                                property.SetValue(description, answer);
-                                db.Entry(description).State = EntityState.Modified;
-                                db.SaveChanges();
+                                if(question == "Anniversary" || question == "BirthDate")
+                                {
+                                    DateTime dateAnswer = new DateTime();
+                                    dateAnswer = Convert.ToDateTime(answer);
+                                    property.SetValue(description, dateAnswer);
+                                    db.Entry(description).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                    answer = null;
+                                    question = null;
+                                }
+                                else
+                                {
+                                    var passedProperty = "{" + contact + "." + description + "." + question + "}";
+                                    passedProperty = answer;
+                                    found = true;
+                                    property.SetValue(description, answer);
+                                    db.Entry(description).State = EntityState.Modified;
+                                    db.SaveChanges();
+                                    answer = null;
+                                    question = null;
+                                }
+                          
                             }
                         }
                         if(found == false)
@@ -561,6 +705,8 @@ namespace Rolory.Controllers
                                         property.SetValue(address, newAnswer);
                                         db.Entry(address).State = EntityState.Modified;
                                         db.SaveChanges();
+                                        answer = null;
+                                        question = null;
                                     }
                                     else
                                     {
@@ -570,13 +716,17 @@ namespace Rolory.Controllers
                                         property.SetValue(address, answer);
                                         db.Entry(address).State = EntityState.Modified;
                                         db.SaveChanges();
+                                        answer = null;
+                                        question = null;
                                     }
                                
                                 }
                             }
+                           
                         }
-                        return RedirectToAction("UpdateInfo", id = contact.Id);
+                        
                     }
+                    return RedirectToAction("UpdateInfo", id = contact.Id);
                 }
                
             }

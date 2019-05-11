@@ -13,7 +13,7 @@
 </div>
 <div class="col-md-11"><h1 class="text-center">@ViewBag.Message</h1></div>
 
-@Html.ActionLink("View Another", "GetInTouch", "Random", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+@Html.ActionLink("View Another", "GetInTouch", "Random", new { id = Model.Id, message = ViewBag.Message}, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
 <hr />
 <h4 class="text-center">Add More Information For Better Results</h4>
 <button class="w3-button w3-round-xlarge center-block">@Html.ActionLink("Update Info", "UpdateInfo", "Random", new { id = Model.Id }, null)</button>

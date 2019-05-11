@@ -9,6 +9,7 @@ namespace Rolory.Controllers
 {
     public class RandomManagement
     {
+        //to adhere to Single Responsibility and polymorphism, you should consider making this class generic accessible for its' methods
         ApplicationDbContext db;
         WeatherManagement weath;
         DateTime nullDateTime = new DateTime();

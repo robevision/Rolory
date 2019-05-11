@@ -294,9 +294,9 @@
         <!-- Rounded switch -->
         @Html.Label("Stay In Contact", htmlAttributes: new { @class = "control-label col-md-2" })
         <label class="switch">
-            <input type="checkbox" checked>
-            <span class="slider round">
-                @Html.CheckBoxFor(model => model.Perpetual, new { htmlAttributes = new { @class = "slider round form-control" } })
+            
+            <span class="slider-round">
+                @Html.CheckBoxFor(model => model.Perpetual, new { htmlAttributes = new { type = "checkbox", @class="slider round"} })
                 @Html.ValidationMessageFor(model => model.Perpetual, "", new { @class = "text-danger" })
             </span>
         </label>

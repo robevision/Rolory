@@ -3,11 +3,16 @@
 @{
     ViewBag.Title = "UpdateInfo";
     string message = ViewBag.Message;
+    IEnumerable<SelectListItem> dropDown = ViewBag.DropDown;
     string question = ViewBag.Question;
     string isQuestion = ViewBag.IsQuestion;
     string rawQuestion = ViewBag.RawQuestion;
     string thisAnswer = "Submit";
+    var concat = "Model" + "." + "Description" + "." + rawQuestion;
     var yesAnswer = Html.ActionLink("Yes", "UpdateInfo", new { id = Model.Id, question = rawQuestion, answer = thisAnswer }, htmlAttributes: new { @class = "btn btn-primary btn-lg" });
+    <script type="text/javascript">
+createEditableSelect(document.forms[0].myText);
+    </script>
 }
 
 <br />
@@ -15,25 +20,29 @@
     <div class="breadcrumb">
         <div class="col-md-push-9">
             <h2>Update @Model.GivenName's Information</h2>
+            <p><button class="w3-button w3-round-xlarge media-right">@Html.ActionLink("Review All Info", "Expand", "Contacts", new { passedId = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })</button></p>
         </div>
     </div>
 </div>
 @using (Html.BeginForm())
 {
     <h2 class="text-center">@message</h2>
-    <br/>
+    <br />
     if (isQuestion == "false" || isQuestion == null)
     {
-    <div class="text-center">
-        @yesAnswer
-        <br/>
-        <br/>
-        @Html.ActionLink("No", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
-    </div>
-     <br/>
-    <div class="col-sm-5">
-       
-    </div>
+        <div class="text-center">
+            @yesAnswer
+            <br />
+            <br />
+            @Html.ActionLink("No", "UpdateInfo", new { question = rawQuestion }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })
+        </div>
+        <br />
+        <div class="col-sm-5">
+
+        </div>
+        <div class="row">
+            <h6>@Html.ActionLink("Go Back", "GetInTouch", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sml" })</h6>
+        </div>
 
     }
     else
@@ -41,11 +50,39 @@
         if (rawQuestion == "Anniversary" || rawQuestion == "BirthDate")
         {
             <p>
-                <input type="date" value="" data-content="answer" />
+                @if (rawQuestion == "Anniversary")
+                {
+                    <div class="form-group">
+
+                        @Html.Editor("answer", "Select Date", new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                        <input type="submit" value="Submit" class="btn btn-default" />
+
+                    </div>
 
 
-                <input type="submit" value="Submit" />
+
+                }
+                else if (rawQuestion == "BirthDate")
+                {
+                    <div class="form-group">
+
+                        @Html.Editor("answer", "Select Date", new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                        <input type="submit" value="Submit" class="btn btn-default" />
+
+                    </div>
+                }
             </p>
+        }
+        else if (rawQuestion == "Gender" || rawQuestion == "Prefix" || rawQuestion == "Relationship" || rawQuestion == "Category")
+        {
+            <div class="form-group">
+                @Html.DropDownList("answer", dropDown, "Select Type", htmlAttributes: new { @class = "form-control" })
+                @*@Html.DropDownList(concat, dropDown, new { htmlAttributes = new { @class = "form-control", type = "text", name = question, value = question } })
+                <input type="text" name="@question" value="@question" selectBoxOptions="@dropDown" />*@
+                <input type="submit" value="Submit" class="btn btn-default" />
+
+            </div>
+
         }
         else
         {
@@ -54,14 +91,16 @@
                 <input type="submit" value="Submit" />
             </p>
         }
-
+        <div class="row">
+            <h6>@Html.ActionLink("Go Back", "UpdateInfo", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sml" })</h6>
+        </div>
 
     }
-    <br/>
-    <br/>
-    <p><button class="w3-button w3-round-xlarge center-block">@Html.ActionLink("Review All Info", "Expand", "Contacts", new { passedId = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })</button></p>
- 
-    <p>@Html.ActionLink("Go Back", "GetInTouch", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-primary btn-sml" })</p>
+    <br />
+    <br />
+
+
+
 }
 
 
