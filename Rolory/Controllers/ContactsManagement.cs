@@ -9,6 +9,7 @@ namespace Rolory.Controllers
     public class ContactsManagement
     {
         public List<SelectListItem> stateList = new List<SelectListItem>();
+        public List<SelectListItem> countryList = new List<SelectListItem>();
         public List<SelectListItem> typeList = new List<SelectListItem>();
         public List<SelectListItem> genderList = new List<SelectListItem>();
         public List<SelectListItem> relationshipList = new List<SelectListItem>();
@@ -108,6 +109,42 @@ namespace Rolory.Controllers
             stateList.Add(new SelectListItem() { Text = "West Virginia", Value = "WV" });
             stateList.Add(new SelectListItem() { Text = "Wisconsin", Value = "WI" });
             stateList.Add(new SelectListItem() { Text = "Wyoming", Value = "WY" });
+        }
+        private void GetCountrySelection()
+        {
+            countryList.Add(new SelectListItem() { Text = "Afghanistan", Value = "Afghanistan" });
+            countryList.Add(new SelectListItem() { Text = "Albania", Value = "Albania" });
+            countryList.Add(new SelectListItem() { Text = "Algeria", Value = "Algeria" });
+            countryList.Add(new SelectListItem() { Text = "Andorra", Value = "Andorra" });
+            countryList.Add(new SelectListItem() { Text = "Angola", Value = "Angola" });
+            countryList.Add(new SelectListItem() { Text = "Antigua", Value = "Afghanistan" });
+            countryList.Add(new SelectListItem() { Text = "Argentina", Value = "Argentina" });
+            countryList.Add(new SelectListItem() { Text = "Armenia", Value = "Armenia" });
+            countryList.Add(new SelectListItem() { Text = "Australia", Value = "Australia" });
+            countryList.Add(new SelectListItem() { Text = "Austria", Value = "Austria" });
+            countryList.Add(new SelectListItem() { Text = "Azerbaijan", Value = "Azerbaijan" });
+            countryList.Add(new SelectListItem() { Text = "Bahamas", Value = "The Bahamas" });
+            countryList.Add(new SelectListItem() { Text = "Bahrain", Value = "Bahrain" });
+            countryList.Add(new SelectListItem() { Text = "Bangladesh", Value = "Bangladesh" });
+            countryList.Add(new SelectListItem() { Text = "Barbuda", Value = "Barbuda" });
+            countryList.Add(new SelectListItem() { Text = "Barbados", Value = "Barbados" });
+            countryList.Add(new SelectListItem() { Text = "Belarus", Value = "Belarus" });
+            countryList.Add(new SelectListItem() { Text = "Belgium", Value = "Belgium" });
+            countryList.Add(new SelectListItem() { Text = "Belize", Value = "Belize" });
+            countryList.Add(new SelectListItem() { Text = "Benin", Value = "Benin" });
+            countryList.Add(new SelectListItem() { Text = "Bhutan", Value = "Bhutan" });
+            countryList.Add(new SelectListItem() { Text = "Bolivia", Value = "Bolivia" });
+            countryList.Add(new SelectListItem() { Text = "Bosnia", Value = "Bosnia" });
+            countryList.Add(new SelectListItem() { Text = "Botswana", Value = "Botswana" });
+            countryList.Add(new SelectListItem() { Text = "Brazil", Value = "Brazil" });
+            countryList.Add(new SelectListItem() { Text = "Brunei", Value = "Brunei" });
+            countryList.Add(new SelectListItem() { Text = "Bulgaria", Value = "Bulgaria" });
+            countryList.Add(new SelectListItem() { Text = "Burkina Faso", Value = "Burkina Faso" });
+            countryList.Add(new SelectListItem() { Text = "Burundi", Value = "Burundi" });
+            countryList.Add(new SelectListItem() { Text = "Cabo Verde", Value = "Cabo Verde" });
+            countryList.Add(new SelectListItem() { Text = "Cambodia", Value = "Cambodia" });
+            countryList.Add(new SelectListItem() { Text = "Cameroon", Value = "Cameroon" });
+
         }
         private void GetPrefixSelection()
         {

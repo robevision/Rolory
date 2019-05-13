@@ -17,9 +17,8 @@
     <div class="col-lg-5">
         <h1 class="text-center">@Model.GivenName @Model.FamilyName</h1>
 
-        @if (Model.InContact != null)
-        {
-            if (Model.InContact == true)
+      
+            @if (Model.InContact == true)
             {
                 <dd class="text-center">
                     You are in touch with @Model.GivenName.
@@ -39,21 +38,19 @@
                 }
 
             }
-            if (Model.InContact == false)
+            @if (Model.InContact == false)
             {
                 <dd class="text-center">
                     You are not currently in touch with @Model.GivenName.
                 </dd>
             }
 
-        }
-
         <br />
 
         @if (Model.LastUpdated != null)
         {
             <dt class="text-center">
-                @Html.DisplayNameFor(model => model.LastUpdated)
+                @Html.DisplayName("Profile Last Modified")
             </dt>
 
             <dd class="text-center">
@@ -132,35 +129,35 @@
                     </dd>
                 }
 
-                @if (String.IsNullOrEmpty(Model.PhoneType) == false)
-                {
-                    <dt>
-                        @Html.DisplayNameFor(model => model.PhoneType)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.PhoneType)
-                    </dd>
-                }
 
                 @if (Model.PhoneNumber != null)
                 {
-                    <dt>
-                        @Html.DisplayNameFor(model => model.PhoneNumber)
-                    </dt>
+                    if (String.IsNullOrEmpty(Model.PhoneType) == false)
+                    {
+                        <dt>
+                            @Html.DisplayFor(model => model.PhoneType) Phone
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.PhoneNumber)
+                        </dd>
+                    }
+                    else
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => model.PhoneNumber)
+                        </dd>
+                    }
 
-                    <dd>
-                        @Html.DisplayFor(model => model.PhoneNumber)
-                    </dd>
                 }
+                
+                <br />
                 @if (Model.Address != null && Model.Address.AddressType != null)
                 {
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Address.AddressType)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Address.AddressType)
-                    </dd>
+                    <h4>
+                        @Html.DisplayFor(model => model.Address.AddressType) Address
+                    </h4>
+                    <dd></dd>
                 }
                 @if (Model.Address != null && Model.Address.StreetAddress != null)
                 {
@@ -217,6 +214,8 @@
                         @Html.DisplayFor(model => model.Address.ZipCode)
                     </dd>
                 }
+
+                <br />
 
                 @if (Model.Organization != null)
                 {

@@ -16,37 +16,67 @@
 
     </div>
     <br />
-    
-    @if(Model.Contact.ImagePath != null)
+
+    @if (String.IsNullOrEmpty(Model.Contact.ImagePath) != true)
     {
-    <img src="@Url.Content(Model.Contact.ImagePath)" width="150" height="200" />
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="text-align:center">
+            <h3>
+                @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
+            </h3>
+            <div class="col-lg-2">
+                <br />
+                <h4 style="text-align:center">
+                    @Html.DisplayFor(model => model.Contact.Email)
+                </h4>
+                <h4 style="text-align:center">
+                    @Html.DisplayFor(model => model.Contact.PhoneNumber)
+                </h4>
+            </div>
+        </div>
+        <img src="@Url.Content(Model.Contact.ImagePath)" width="150" height="200" />
     }
 
-
-
-    <div class="col-md-4"></div>
-    <div class="col-md-4" style="text-align:center">
-        <h3>
-            @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
-        </h3>
-        <div class="col-lg-2">
-            <br />
-            <h4 style="text-align:center">
-                @Html.DisplayFor(model => model.Contact.Email)
-            </h4>
-            <h4 style="text-align:center">
-                @Html.DisplayFor(model => model.Contact.PhoneNumber)
-            </h4>
+    else
+    {
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="text-align:center">
+            <h3>
+                @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
+            </h3>
+            <div class="col-lg-2">
+                <br />
+                <h4 style="text-align:center">
+                    @Html.DisplayFor(model => model.Contact.Email)
+                </h4>
+                <h4 style="text-align:center">
+                    @Html.DisplayFor(model => model.Contact.PhoneNumber)
+                </h4>
+            </div>
         </div>
-    </div>
+        <div>
+            <style>
+                em {
+                    background-image: url('/Content/images/empty.png');
+                }
+            </style>
+            <em style="background:center">
+                @Html.ActionLink("Upload Image", "UploadImage", "Contacts", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "media-middle", style = "" })
+            </em>
 
+        </div>
+    }
 </div>
 
 <div class="container">
-    <div class="col-md-12"> @Html.ActionLink("Details", "Details", "Contacts", new { id = Model.Contact.Id }, htmlAttributes: new {@class ="btn btn-primary btn-lg"})</div>
-    <div class="col-lg-8"> <h2>@Html.ActionLink("Interactions", "Index", "Interactions", new { id = Model.Contact.Id }, htmlAttributes: new {@class ="btn btn-primary btn-lg"})</h2></div>
-       
-    </div>
+    <div class="col-md-12"> @Html.ActionLink("Details", "Details", "Contacts", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })</div>
+    <br />
+    <br />
+    <br />
+
+    <div class="col-lg-8"> <h2>@Html.ActionLink("Interactions", "Index", "Interactions", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })</h2></div>
+
+</div>
 
     <div class="container">
 

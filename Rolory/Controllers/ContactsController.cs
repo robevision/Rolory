@@ -298,22 +298,29 @@ namespace Rolory.Controllers
                     List<char> areaCode = new List<char>();
                     List<char> body = new List<char>();
                     var phoneNumber = contact.PhoneNumber;
+                    List<int> intPhoneNumber = new List<int>();
                     for (int i = 0; i < phoneNumber.Count(); i++)
                     {
                         if (Char.IsNumber(phoneNumber[i]) == true)
                         {
+                            intPhoneNumber.Add(phoneNumber[i]);
+                        }
+                    }
+                   
+                    for (int i = 0; i < intPhoneNumber.Count(); i++)
+                    {
                             if (i == 0)
                             {
                                 areaCode.Add(Convert.ToChar("("));
-                                areaCode.Add(phoneNumber[i]);
+                                areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
                             }
                             else if (i == 1)
                             {
-                                areaCode.Add(phoneNumber[i]);
+                                areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
                             }
                             else if (i == 2)
                             {
-                                areaCode.Add(phoneNumber[i]);
+                                areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
                                 areaCode.Add(Convert.ToChar(")"));
                                 areaCode.Add(Convert.ToChar(" "));
                             }
@@ -325,12 +332,11 @@ namespace Rolory.Controllers
                                 }
                                 if (body.LongCount() < 8)
                                 {
-                                    body.Add(phoneNumber[i]);
+                                    body.Add(Convert.ToChar(intPhoneNumber[i]));
                                 }
 
                             }
 
-                        }
                     }
                     foreach (char index in areaCode)
                     {
@@ -440,13 +446,21 @@ namespace Rolory.Controllers
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
             contact.Description.Id = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d=>d.Id).SingleOrDefault();
+            contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+            contact.Address.Id = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a.Id).SingleOrDefault();
             if (contact == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Error", "Contacts");
             }
             if(contact.Description.Gender != null && contact.Description.Category != null && contact.Description.Relationship != null && contact.Description.BirthDate != null)
             {
-                return RedirectToAction("Expand", "Contacts", new { passedId = id });
+                if (contact.Address != null && contact.Address.AddressType != null && contact.Address.StreetAddress != null && contact.Address.Locality != null && contact.Address.Region != null && contact.Address.CountryName != null)
+                {
+                    return RedirectToAction("Expand", "Contacts", new { passedId = id });
+                }
+               
+                return RedirectToAction("BuildAddress", "Contacts", new {passedId = id });
+              
             }
             return View(contact);
         }
@@ -473,33 +487,53 @@ namespace Rolory.Controllers
             return RedirectToAction("Error", "Contacts");
         }
         [HttpGet]
-        public ActionResult BuildAddress(int? id)
+        public ActionResult BuildAddress(int? passedId)
         {
-            ViewBag.Gender = cm.genderList;
-            ViewBag.Category = cm.categoryList;
-            ViewBag.Relationship = cm.relationshipList;
-            ViewBag.States = cm.stateList;
-            ViewBag.Types = cm.typeList;
+            if (passedId != null)
+            {
+                ViewBag.Gender = cm.genderList;
+                ViewBag.Category = cm.categoryList;
+                ViewBag.Relationship = cm.relationshipList;
+                ViewBag.States = cm.stateList;
+                ViewBag.Types = cm.typeList;
 
-            var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
-            return View(contact);
+                Contact contact = db.Contacts.Where(c => c.Id == passedId).Select(c => c).SingleOrDefault();
+                int addressId = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a.Id).SingleOrDefault();
+                contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+
+                return View(contact.Address);
+            }
+            return RedirectToAction("Index", "Home");
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult BuildAddress([Bind(Include = "Id,Image,Email,Prefix,GivenName,FamilyName,PhoneType,PhoneNumber,Organization,WorkTitle,AltPhoneNumberType,AltPhoneNumber,LastUpdated,InContact,AddressId,AltAddressId,DescriptionId,NetworkerId")] Contact contact)
+        public ActionResult BuildAddress(Address address)
         {
+            Contact contact = db.Contacts.Where(c => c.AddressId == address.Id).Select(c => c).SingleOrDefault();
+            //if(address.Id != 0)
+            //{
+            //    contact = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c).SingleOrDefault();
+            //    contact.Address.Id = contact.AddressId;
+            //    contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+            //    db.SaveChanges();
+            //}
+            //contact.Address.Id = contact.AddressId;
+            //contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+            //db.SaveChanges();
             if (ModelState.IsValid)
             {
-                string userId = User.Identity.GetUserId();
-                var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
-                contact.NetworkerId = networker.Id;
+                
+                Address addressInDb = db.Addresses.Where(c => c.Id == address.Id).FirstOrDefault();
                 contact.LastUpdated = DateTime.Now;
-                db.Addresses.Add(contact.Address);
-                db.SaveChanges();
+
+                if (contact.Address != null)
+                {
+                    contact.Address = address;
+                }
+     
                 db.Entry(contact).State = EntityState.Modified;
                 db.SaveChanges();
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Details", "Contacts", new {id = contact.Id});
 
         }
         [HttpGet]
@@ -526,9 +560,6 @@ namespace Rolory.Controllers
         [HttpPost]
         public ActionResult Expand(Contact contact)
         {
-            contact.Description.Id = contact.DescriptionId;
-            contact.Description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
-            db.SaveChanges();
             if (ModelState.IsValid)
             {
                 //    var description = contact.Description;
@@ -536,8 +567,12 @@ namespace Rolory.Controllers
                 //db.SaveChanges();
                 Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
                 //WeatherManagement weath = new WeatherManagement();
-                //weath.SetLatLong(contact.Address);  
-                if(String.IsNullOrEmpty(contact.Prefix) != true)
+                if(contact.Address != null)
+                {
+                    //weath.SetLatLong(contact.Address);  
+                }
+
+                if (String.IsNullOrEmpty(contact.Prefix) != true)
                 {
                     contactInDB.Prefix = contact.Prefix;
                 }
@@ -557,55 +592,117 @@ namespace Rolory.Controllers
                 {
                     contactInDB.PhoneType = contact.PhoneType;
                 }
-                if(String.IsNullOrEmpty(contact.PhoneNumber) != true)
+                if (String.IsNullOrEmpty(contact.PhoneNumber) != true)
                 {
-                    List <string> phoneNumberResult = new List <string>();
-                    List <char> areaCode = new List<char>();
+                    List<string> phoneNumberResult = new List<string>();
+                    List<char> areaCode = new List<char>();
                     List<char> body = new List<char>();
                     var phoneNumber = contact.PhoneNumber;
+                    List<int> intPhoneNumber = new List<int>();
                     for (int i = 0; i < phoneNumber.Count(); i++)
                     {
-                        if(Char.IsNumber(phoneNumber[i]) == true)
+                        if (Char.IsNumber(phoneNumber[i]) == true)
                         {
-                            if (i == 0)
-                            {
-                                areaCode.Add(Convert.ToChar("("));
-                                areaCode.Add(phoneNumber[i]);
-                            }
-                            else if (i == 1)
-                            {
-                                areaCode.Add(phoneNumber[i]);
-                            }
-                            else if (i == 2)
-                            {
-                                areaCode.Add(phoneNumber[i]);
-                                areaCode.Add(Convert.ToChar(")"));
-                                areaCode.Add(Convert.ToChar(" "));
-                            }
-                            else if (i > 2)
-                            {
-                                if (body.LongCount() == 3)
-                                {
-                                    body.Add(Convert.ToChar("-"));
-                                }
-                                if (body.LongCount() < 8)
-                                {
-                                    body.Add(phoneNumber[i]);
-                                }
+                            intPhoneNumber.Add(phoneNumber[i]);
+                        }
+                    }
 
+                    for (int i = 0; i < intPhoneNumber.Count(); i++)
+                    {
+                        if (i == 0)
+                        {
+                            areaCode.Add(Convert.ToChar("("));
+                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                        }
+                        else if (i == 1)
+                        {
+                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                        }
+                        else if (i == 2)
+                        {
+                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                            areaCode.Add(Convert.ToChar(")"));
+                            areaCode.Add(Convert.ToChar(" "));
+                        }
+                        else if (i > 2)
+                        {
+                            if (body.LongCount() == 3)
+                            {
+                                body.Add(Convert.ToChar("-"));
+                            }
+                            if (body.LongCount() < 8)
+                            {
+                                body.Add(Convert.ToChar(intPhoneNumber[i]));
                             }
 
                         }
+
                     }
-                foreach(char index in areaCode)
+                    foreach (char index in areaCode)
                     {
                         phoneNumberResult.Add(Convert.ToString(index));
                     }
-                foreach(char index in body)
+                    foreach (char index in body)
                     {
                         phoneNumberResult.Add(Convert.ToString(index));
                     }
-              contactInDB.PhoneNumber = String.Join("", phoneNumberResult.ToArray());
+                    contactInDB.PhoneNumber = String.Join("", phoneNumberResult.ToArray());
+                }
+                if (String.IsNullOrEmpty(contact.AltPhoneNumber) != true)
+                {
+                    List<string> altPhoneNumberResult = new List<string>();
+                    List<char> areaCode = new List<char>();
+                    List<char> body = new List<char>();
+                    var phoneNumber = contact.PhoneNumber;
+                    List<int> intPhoneNumber = new List<int>();
+                    for (int i = 0; i < phoneNumber.Count(); i++)
+                    {
+                        if (Char.IsNumber(phoneNumber[i]) == true)
+                        {
+                            intPhoneNumber.Add(phoneNumber[i]);
+                        }
+                    }
+
+                    for (int i = 0; i < intPhoneNumber.Count(); i++)
+                    {
+                        if (i == 0)
+                        {
+                            areaCode.Add(Convert.ToChar("("));
+                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                        }
+                        else if (i == 1)
+                        {
+                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                        }
+                        else if (i == 2)
+                        {
+                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                            areaCode.Add(Convert.ToChar(")"));
+                            areaCode.Add(Convert.ToChar(" "));
+                        }
+                        else if (i > 2)
+                        {
+                            if (body.LongCount() == 3)
+                            {
+                                body.Add(Convert.ToChar("-"));
+                            }
+                            if (body.LongCount() < 8)
+                            {
+                                body.Add(Convert.ToChar(intPhoneNumber[i]));
+                            }
+
+                        }
+
+                    }
+                    foreach (char index in areaCode)
+                    {
+                        altPhoneNumberResult.Add(Convert.ToString(index));
+                    }
+                    foreach (char index in body)
+                    {
+                        altPhoneNumberResult.Add(Convert.ToString(index));
+                    }
+                    contactInDB.AltPhoneNumber = String.Join("", altPhoneNumberResult.ToArray());
                 }
                 contactInDB.DescriptionId = contact.DescriptionId;
                 contactInDB.Description = contact.Description;

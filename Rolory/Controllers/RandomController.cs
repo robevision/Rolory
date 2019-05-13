@@ -582,6 +582,10 @@ namespace Rolory.Controllers
                             var relationship = cm.relationshipList;
                             ViewBag.DropDown = relationship;
                         }
+                        if (question == "Address")
+                        {
+                            RedirectToAction("BuildAddress", "Contacts", new { passedId = id });
+                        }
                     }
                 }
                 else
@@ -591,45 +595,51 @@ namespace Rolory.Controllers
                     {
                         if (property.Name.ToString() == question)
                         {
-                            if(question == "AltPhoneNumber" || question == "PhoneNumber")
+                            if (question == "AltPhoneNumber" || question == "PhoneNumber")
                             {
                                 List<string> phoneNumberResult = new List<string>();
                                 List<char> areaCode = new List<char>();
                                 List<char> body = new List<char>();
-                                var phoneNumber = answer;
+                                var phoneNumber = contact.PhoneNumber;
+                                List<int> intPhoneNumber = new List<int>();
                                 for (int i = 0; i < phoneNumber.Count(); i++)
                                 {
                                     if (Char.IsNumber(phoneNumber[i]) == true)
                                     {
-                                        if (i == 0)
-                                        {
-                                            areaCode.Add(Convert.ToChar("("));
-                                            areaCode.Add(phoneNumber[i]);
-                                        }
-                                        else if (i == 1)
-                                        {
-                                            areaCode.Add(phoneNumber[i]);
-                                        }
-                                        else if (i == 2)
-                                        {
-                                            areaCode.Add(phoneNumber[i]);
-                                            areaCode.Add(Convert.ToChar(")"));
-                                            areaCode.Add(Convert.ToChar(" "));
-                                        }
-                                        else if (i > 2)
-                                        {
-                                            if (body.LongCount() == 3)
-                                            {
-                                                body.Add(Convert.ToChar("-"));
-                                            }
-                                            if (body.LongCount() < 8)
-                                            {
-                                                body.Add(phoneNumber[i]);
-                                            }
+                                        intPhoneNumber.Add(phoneNumber[i]);
+                                    }
+                                }
 
+                                for (int i = 0; i < intPhoneNumber.Count(); i++)
+                                {
+                                    if (i == 0)
+                                    {
+                                        areaCode.Add(Convert.ToChar("("));
+                                        areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                                    }
+                                    else if (i == 1)
+                                    {
+                                        areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                                    }
+                                    else if (i == 2)
+                                    {
+                                        areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                                        areaCode.Add(Convert.ToChar(")"));
+                                        areaCode.Add(Convert.ToChar(" "));
+                                    }
+                                    else if (i > 2)
+                                    {
+                                        if (body.LongCount() == 3)
+                                        {
+                                            body.Add(Convert.ToChar("-"));
+                                        }
+                                        if (body.LongCount() < 8)
+                                        {
+                                            body.Add(Convert.ToChar(intPhoneNumber[i]));
                                         }
 
                                     }
+
                                 }
                                 foreach (char index in areaCode)
                                 {
@@ -639,25 +649,32 @@ namespace Rolory.Controllers
                                 {
                                     phoneNumberResult.Add(Convert.ToString(index));
                                 }
-                                answer = String.Join("", phoneNumberResult.ToArray());
-                                property.SetValue(contact, answer);
-                                db.Entry(contact).State = EntityState.Modified;
-                                db.SaveChanges();
-                                answer = null;
-                                question = null;
+                                if (question == "PhoneNumber")
+                                {
+                                    contact.PhoneNumber = String.Join("", phoneNumberResult.ToArray());
+                                    answer = null;
+                                    question = null;
+                                }
+                                else if (question == "AltPhoneNumber")
+                                {
+                                    contact.AltPhoneNumber = String.Join("", phoneNumberResult.ToArray());
+                                    answer = null;
+                                    question = null;
+                                }
+
                             }
                             else
                             {
                                 var passedProperty = "{" + contact + "." + question + "}";
                                 passedProperty = answer;
                                 found = true;
-                                property.SetValue(contact, answer);  
+                                property.SetValue(contact, answer);
                                 db.Entry(contact).State = EntityState.Modified;
                                 db.SaveChanges();
                                 answer = null;
                                 question = null;
+
                             }
-                       
                         }
                     }
                     if(found == false)
