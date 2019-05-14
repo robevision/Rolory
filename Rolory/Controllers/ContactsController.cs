@@ -704,9 +704,33 @@ namespace Rolory.Controllers
                     }
                     contactInDB.AltPhoneNumber = String.Join("", altPhoneNumberResult.ToArray());
                 }
-                contactInDB.DescriptionId = contact.DescriptionId;
-                contactInDB.Description = contact.Description;
-                contactInDB.Description.Id = contact.Description.Id;
+                if (String.IsNullOrEmpty(Convert.ToString(contact.Description.Anniversary)) != true)
+                {
+                    contactInDB.Description.Anniversary = contact.Description.Anniversary;
+                }
+                if (String.IsNullOrEmpty(Convert.ToString(contact.Description.BirthDate)) != true)
+                {
+                    contactInDB.Description.BirthDate = contact.Description.BirthDate;
+                }
+                //if(String.IsNullOrEmpty(contact.Description.Gender) != true)
+                //{
+                //    contactInDB.Description.Gender = contact.Description.Gender;
+                //}
+                //if(String.IsNullOrEmpty(contact.Description.Category) != true)
+                //{
+                //    contactInDB.Description.Category = contact.Description.Category;
+                //}
+                //if(String.IsNullOrEmpty(contact.Description.Relationship) != true)
+                //{
+                //    contactInDB.Description.Relationship = contact.Description.Relationship;
+                //}
+                //if(String.IsNullOrEmpty(contact.Description.Notes) != true)
+                //{
+                //    contactInDB.Description.Notes = contact.Description.Notes;
+                //}
+                //contactInDB.DescriptionId = contact.DescriptionId;
+                //contactInDB.Description = contact.Description;
+                //contactInDB.Description.Id = contact.Description.Id;
                 //contactInDB.AddressId = contact.AddressId.Value;
                 if(contact.Address != null)
                 {

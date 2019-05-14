@@ -1,11 +1,12 @@
 ﻿@model Rolory.Models.Contact
 
 @{
-                ViewBag.Title = "Expand";
-                IEnumerable<SelectListItem> types = ViewBag.Types;
-                IEnumerable<SelectListItem> states = ViewBag.States;
-                IEnumerable<SelectListItem> genders = ViewBag.Gender;
-                IEnumerable<SelectListItem> prefixes = ViewBag.Prefix;
+    ViewBag.Title = "Expand";
+    IEnumerable<SelectListItem> types = ViewBag.Types;
+    IEnumerable<SelectListItem> states = ViewBag.States;
+    IEnumerable<SelectListItem> genders = ViewBag.Gender;
+    IEnumerable<SelectListItem> prefixes = ViewBag.Prefix;
+    
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .switch {
@@ -44,8 +45,24 @@
                 -webkit-transition: .4s;
                 transition: .4s;
             }
+        /* include generated hidden field here */
+        input[type="checkbox"]:checked + input[type="hidden"] + .slider,
+        input[type="checkbox"]:checked + .slider {
+            background-color: #2196F3;
+        }
 
-        input:checked + .slider {
+        /* include generated hidden field here */
+        input[type="checkbox"]:focus + input[type="hidden"] + .slider,
+        input[type="checkbox"]:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        /* include generated hidden field here */
+        input[type="checkbox"]:checked + input[type="hidden"] + .slider:before,
+        input[type="checkbox"]:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        /*input:checked + .slider {
             background-color: #2196F3;
         }
 
@@ -57,7 +74,7 @@
             -webkit-transform: translateX(26px);
             -ms-transform: translateX(26px);
     transform: translateX(26px);
-        }
+        }*/
 
         /* Rounded sliders */
         .slider.round {
@@ -135,17 +152,22 @@
             </div>
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.InContact, htmlAttributes: new { @class = "control-label col-md-2" })
-        <label class="switch">
 
-            <input type="checkbox" value="model.Contact.InContact">
-            <span class="slider round">
-                @Html.EditorFor(model => model.InContact, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InContact, "", new { @class = "text-danger" })
-            </span>
-        </label>
-    </div>
+    @Html.LabelFor(model => model.InContact, htmlAttributes: new { @class = "control-label col-md-2" })
+
+
+
+    @*<span class="slider-td">*@
+    <label class="switch">
+        @Html.CheckBoxFor(model => model.InContact, new { htmlAttributes = new { @checked = "checked" } })
+        @*<input name="@Model.InContact" id="IsEnabled" type="checkbox" value="true" data-val-required="The IsEnabled field is required." data-val="true" data-bind="checked: IsEnabled">*@
+        <div class="slider round"></div>
+    </label>
+    @*</span>*@
+
+
+
+
     <div class="container-fluid">
         <h4>Address</h4>
         <div class="form-group">
@@ -256,7 +278,7 @@
         <div class="col-md-10">
             @if (Model.Description != null && Model.Description.BirthDate != null)
             {
-                @Html.EditorFor(model => model.Description.BirthDate, Model.Description.BirthDate.Value.ToString(), "Select Date", new { htmlAttributes = new { @class = "form-control", type = "datetime"} })
+                @Html.EditorFor(model => model.Description.BirthDate, Model.Description.BirthDate.Value.ToString(), "Select Date", new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
                 @Html.ValidationMessageFor(model => model.Description.BirthDate, "", new { @class = "text-danger" })
             }
             else
@@ -297,17 +319,50 @@
             @Html.ValidationMessageFor(model => model.Description.Notes, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="form-group">
-        <!-- Rounded switch -->
-        @Html.Label("Stay In Contact", htmlAttributes: new { @class = "control-label col-md-2" })
-        <label class="switch">
-            
-            <span class="slider-round">
-                @Html.CheckBoxFor(model => model.Perpetual, new { htmlAttributes = new { type = "checkbox", @class="slider round"} })
-                @Html.ValidationMessageFor(model => model.Perpetual, "", new { @class = "text-danger" })
-            </span>
-        </label>
-    </div>
+
+    @if (@Model.Perpetual == false)
+    {
+        var factor = true;
+        <div class="form-group">
+            <!-- Rounded switch -->
+            @Html.Label("Stay In Contact", htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="switch" data-bind="checked: IsDisabled">
+                @Html.CheckBoxFor(model => model.Perpetual, new { @checked = factor })
+                @*<input name="@Model.InContact" id="IsEnabled" type="checkbox" value="true" data-val-required="The IsEnabled field is required." data-val="true" data-bind="checked: IsEnabled">*@
+                <div class="slider round"></div>
+            </label>
+            @*<label class="switch">
+
+                    <span class="slider-round">
+                        @Html.CheckBoxFor(model => model.Perpetual, new { htmlAttributes = new { type = "checkbox", @class = "slider round" } })
+                        @Html.ValidationMessageFor(model => model.Perpetual, "", new { @class = "text-danger" })
+                    </span>
+                </label>*@
+        </div>
+
+    }
+    else
+    {
+        var factor = false;
+        <div class="form-group">
+            <!-- Rounded switch -->
+            @Html.Label("Stay In Contact", htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="switch" data-bind="checked: IsDisabled">
+                @Html.CheckBoxFor(model => model.Perpetual)
+                @*<input name="@Model.InContact" id="IsEnabled" type="checkbox" value="true" data-val-required="The IsEnabled field is required." data-val="true" data-bind="checked: IsEnabled">*@
+                <div class="slider round"></div>
+            </label>
+            @*<label class="switch">
+
+                    <span class="slider-round">
+                        @Html.CheckBoxFor(model => model.Perpetual, new { htmlAttributes = new { type = "checkbox", @class = "slider round" } })
+                        @Html.ValidationMessageFor(model => model.Perpetual, "", new { @class = "text-danger" })
+                    </span>
+                </label>*@
+        </div>
+
+    }
+
 
     <br />
     <br />
