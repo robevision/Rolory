@@ -32,7 +32,7 @@ namespace Rolory.Controllers
             {
                 return View("Empty");
             }
-            var messagesNullCheck = db.Messages.Where(m => m.NetworkerId == networker.Id).Where(m => m.IsEmail == false).Where(m => m.IsInteraction == false).Select(m => m).Any();
+            var messagesNullCheck = db.Messages.Where(m => m.NetworkerId == networker.Id).Where(m => m.IsEmail == false).Where(m => m.IsInteraction == false).Where(m=>m.IsActive == false).Select(m => m).Any();
             if (messagesNullCheck == false)
             {
                 return View("Empty");
@@ -137,19 +137,21 @@ namespace Rolory.Controllers
             {
                 return HttpNotFound();
             }
+           
+            db.Messages.Remove(message);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+
             return View(message);
         }
 
         // POST: Messages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Message message = db.Messages.Find(id);
-            db.Messages.Remove(message);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+       
+        //}
 
         protected override void Dispose(bool disposing)
         {

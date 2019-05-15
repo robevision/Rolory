@@ -4,63 +4,69 @@
     ViewBag.Title = "Index";
 }
 
-<br/>
+<br />
 <div class="row">
     <div class="breadcrumb">
         <div class="col-md-push-9">
             <h2>Interactions</h2>
         </div>
-     </div>
+    </div>
 </div>
-
 <div class="row">
     <div class="col-md-4" style="width:auto; margin:auto;">
         <h4><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Log A Moment", "Create", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })</a></h4>
-        
+
     </div>
     <div class="col-md-4" style="width:auto; margin:auto;">
         <h4><a class="btn btn-primary btn-lg" src=@Html.ActionLink("View Recent From All Contacts", "DisplayRecent", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })</a></h4>
-       
+
     </div>
-    <div class="col-md-4"style="width:auto; margin:auto;">
+    <div class="col-md-4" style="width:auto; margin:auto;">
         <h4><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Schedule A Moment", "CreatePlan", "Interactions", new { id = ViewBag.Id }, htmlAttributes: new { @class = "" })</a></h4>
-        
+
     </div>
 </div>
+@if (ViewBag.Message == null)
+{
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Moment)
-        </th>
-        <th>
-            @Html.DisplayName("Name")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Message.Subject)
-        </th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Moment)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Contact.GivenName) 
-            @Html.DisplayFor(modelItem => item.Contact.FamilyName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Message.Subject)
-        </td>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Moment)
+            </th>
+            <th>
+                @Html.DisplayName("Name")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Message.Subject)
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Moment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contact.GivenName)
+                    @Html.DisplayFor(modelItem => item.Contact.FamilyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message.Subject)
+                </td>
 
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id, messageId = item.Message.Id }, null) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-        </td>
-    </tr>
-    }
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id, messageId = item.Message.Id }, null) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+}
+
+<h2>
+    @ViewBag.Message
+</h2>

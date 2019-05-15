@@ -48,6 +48,15 @@ namespace Rolory.Controllers
 
             }
             var interactions = db.Interactions.Where(i => i.ContactId == contactId).Include(i => i.Message);
+            var interactionsNullCheck = interactions.Where(i => i.Message != null).ToList();
+            if (interactionsNullCheck.Count == 0)
+            {
+                ViewBag.Message = $"You have not logged any interactions with {contact.GivenName}";
+            }
+            else
+            {
+                ViewBag.Message = null;
+            }
             ViewBag.Id = contactId;
             return View(interactions.ToList());
         }
@@ -68,6 +77,12 @@ namespace Rolory.Controllers
             {
                 return HttpNotFound();
             }
+            var contactId = db.Interactions.Where(i => i.ContactId == id).Select(i => i.ContactId).FirstOrDefault();
+            var contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
+            messageId = db.Interactions.Where(i => i.MessageId == messageId).Select(i => i.MessageId).FirstOrDefault();
+            var message = db.Messages.Where(m => m.Id == messageId).Select(m => m).SingleOrDefault();
+            interaction.Contact = contact;
+            interaction.Message = message;
             return View(interaction);
         }
 
@@ -253,13 +268,26 @@ namespace Rolory.Controllers
             var twoWeeksAgo = DateTime.Now.AddDays(-13);
             string userId = User.Identity.GetUserId();
                     var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
-                    var interactionList = db.Interactions.Where(i => i.Moment >= twoWeeksAgo).Where(i => i.Contact.NetworkerId == networker.Id).Select(m => m).ToList();
+                    var interactionList = db.Interactions.Where(i => i.Moment >= twoWeeksAgo).Where(i => i.Contact.NetworkerId == networker.Id).Select(i => i).OrderByDescending(i => i.Moment).ToList();
            foreach(Interaction interaction in interactionList)
             {
-                var contactId = db.Interactions.Where(i => i.ContactId == interaction.ContactId).Select(i=>i.ContactId).SingleOrDefault();
+
+                var contactId = db.Interactions.Where(i=>i.ContactId == interaction.ContactId).Select(i=>i.ContactId).FirstOrDefault();
                 var contact = db.Contacts.Where(c => c.Id == contactId).Select(c => c).SingleOrDefault();
+                var messageId = db.Interactions.Where(i => i.MessageId == interaction.MessageId).Select(i => i.MessageId).FirstOrDefault();
+                var message = db.Messages.Where(m => m.Id == messageId).Select(m => m).SingleOrDefault();
                 interaction.Contact = contact;
+                interaction.Message = message;
             }
+            if (interactionList.Count == 0)
+            {
+                ViewBag.Message = $"You have no recent interactions";
+            }
+            else
+            {
+                ViewBag.Message = null;
+            }
+
             return View(interactionList);
         }
         // GET: Interactions/Delete/5
