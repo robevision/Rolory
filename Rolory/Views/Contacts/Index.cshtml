@@ -2,8 +2,34 @@
 
 @{
     ViewBag.Title = "Index";
+
 }
-<br/>
+<style>
+    .notification {
+        background-color: #555;
+        color: white;
+        text-decoration: none;
+        padding: 15px 26px;
+        position: relative;
+        display: inline-block;
+        border-radius: 2px;
+    }
+
+        .notification:hover {
+            background: blue;
+        }
+    .notification .badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        padding: 5px 10px;
+        border-radius: 50%;
+        background: blue;
+        color: white;
+    }
+</style>
+
+<br />
 <div class="row">
     <div class="breadcrumb">
         <div class="col-md-push-9">
@@ -18,10 +44,10 @@
         <input type="submit" value="Search" />
     </p>
 }
-<p>@Html.ActionLink("Create New","Create", null, htmlAttributes: new {@class ="btn btn-primary btn-lg"})</p>
+<p>@Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary btn-lg" })</p>
 <table class="table">
     <tr>
-        <th>   
+        <th>
             @Html.DisplayName("Photo")
         </th>
         <th>
@@ -31,57 +57,73 @@
             @Html.ActionLink("First Name", "Index", new { sortOrder = ViewBag.FirstNameSortParm })
         </th>
         <th>
-            @Html.ActionLink("Last Name","Index", new { sortOrder = ViewBag.LastNameSortParm })
+            @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.LastNameSortParm })
         </th>
         <th>
-            @Html.ActionLink("Last Modified","Index", new { sortOrder = ViewBag.DateSortParm })
+            @Html.ActionLink("Last Modified", "Index", new { sortOrder = ViewBag.DateSortParm })
         </th>
-        @*<th>
-            @Html.DisplayNameFor(model => model.InContact)
-        </th>*@
+        <th>
+                @Html.ActionLink("In Touch","Index", new { sortOrder = ViewBag.InContactParm })
+        </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-       
-    <tr>
-        @if (item.ImagePath != null)
-        {
-            <td>
-                <img src="@Url.Content(item.ImagePath)" width="100" height="100" />
-            </td>
-        }
-        else
-        {
-            <td>
-                <img src="@Html.DisplayFor(modelItem => item.ImagePath)" width="100" height="100" />
-            </td> 
-        }
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Prefix)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GivenName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FamilyName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastUpdated)
-        </td>
-        <td>
-            @*@if (Html.DisplayTextFor(modelItem => item.InContact) == Html.DisplayText("True")) { ViewBag.InTouch = "Yes"; }
-            @if (Html.DisplayTextFor(modelItem => item.InContact) == Html.DisplayText("False")) { ViewBag.InTouch = "No"; }
-            @Html.ViewBag.InTouch*@
-            @*@Html.DisplayTextFor(modelItem => item.InContact)*@
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
-            @Html.ActionLink("More Info", "About", new { Id = item.Id }) |
-        </td>
-    </tr>
+        <tr class="">
+            @if (item.ImagePath != null)
+            {
+                <td>
+                    <img class="img-circle" src="@Url.Content(item.ImagePath)" width="100" height="100" />
+                </td>
+            }
+            else
+            {
+                <td>
+                    @*@Html.ActionLink("Upload Image", "UploadImage", "Contacts", new { id = item.Id }, htmlAttributes: new { width="100", height="100" })*@
+                    <img src="@Url.Content("~/Content/images/empty.png")" width="100" height="130" />
+
+                </td>
+            }
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Prefix)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GivenName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FamilyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdated)
+            </td>
+            <td>
+                @if (item.InContact == true)
+                {
+                    <body>
+                        
+                      
+                        <div class="text-center"style="color: #158cba">&#10004;</div>
+                      
+
+                    </body>
+                    @*<span class="badge">
+                       
+                    </span>*@
+                }
+
+                @*@if (Html.DisplayTextFor(modelItem => item.InContact) == Html.DisplayText("True")) { ViewBag.InTouch = "Yes"; }
+        @if (Html.DisplayTextFor(modelItem => item.InContact) == Html.DisplayText("False")) { ViewBag.InTouch = "No"; }
+        @Html.ViewBag.InTouch*@
+                @*@Html.DisplayTextFor(modelItem => item.InContact)*@
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
+                @Html.ActionLink("More Info", "About", new { Id = item.Id }) |
+            </td>
+        </tr>
     }
 
 </table>

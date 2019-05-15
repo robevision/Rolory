@@ -437,12 +437,22 @@ namespace Rolory.Controllers
             List<PropertyInfo> nullPropertiesList = new List<PropertyInfo>();
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             Description description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+            List<SharedActivity> sharedActivity = new List<SharedActivity>();
+            //I want to query all shared activities from every contact that the networker has
+            sharedActivity = db.SharedActivities.Where(s => s.DescriptionId == contact.Id).ToList();
+            string userId = User.Identity.GetUserId();
+            Networker networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
             Address address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+    
             //Update Info. Will be recursive in adding info about the person to log. Have a button for when they want to go to the next person.
             if (contact!= null)
             {
                 if (answer == null)
                 {
+                    //if(sharedActivity != 0)
+                    //{
+                    //if(weather == summer ...)
+                    //}
                     foreach (PropertyInfo property in contact.GetType().GetProperties())
                 {
                     if(property.Name != "ImageTitle" && property.Name != "ImagePath" && property.Name != "Id" && property.Name != "InContract" && property.Name != "LastUpdated" && property.Name != "PhoneType" && property.Name != "AltPhoneType" && property.Name != "Description" && property.Name != "DescriptionId" && property.Name != "NetworkerId" && property.Name != "Networker" && property.Name != "AddressId" && property.Name != "AltAddressId" && property.Name != "InContact" && property.Name != "InContactCountDown" && property.Name != "CoolDown" && property.Name != "Reminder")
@@ -478,7 +488,7 @@ namespace Rolory.Controllers
                 }
                 foreach(PropertyInfo property in address.GetType().GetProperties())
                     {
-                        if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude")
+                        if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude" && property.Name != "Unit")
                         {
                             if (property.GetValue(address) == null && property.Name != question)
                             {
@@ -547,13 +557,33 @@ namespace Rolory.Controllers
                             ViewBag.DropDown = prefix;
                         }
                     }
-                                
+                    if (address != null && address.ZipCode != 0 && address.ZipCode != null && networker.AddressId != null)
+                    {
+                        networker.Address = db.Addresses.Where(a => a.Id == networker.AddressId).SingleOrDefault();
+                        if (networker.Address != null && networker.Address.ZipCode == null || networker.Address.ZipCode == 0)
+                        {
+                            ViewBag.Message = $"Does {contact.GivenName} live near you?";
+                            question = "zipBind";
+                        }
+                        else if(networker.Address == null)
+                        {
+                            Address networkerAddress = new Address();
+                            networker.Address = networkerAddress;
+                            ViewBag.Message = $"Does {contact.GivenName} live near you?";
+                            question = "zipBind";
+                        }
+                    }
+
                 }
                 else if(answer == "Submit")
                 {
-                    if (question != null)
+                    if (question != null && question != "zipBind")
                     {
                         StringBuilder formattedQuestion = new StringBuilder(question.Length * 2);
+                        if (question == "Address" || question == "ZipCode" || question == "StreetAddress" || question == "AddressType" || question == "CountryName" || question == "Region" || question == "Locality")
+                        {
+                            return RedirectToAction("BuildAddress", "Contacts", new { passedId = id });
+                        }
                         for (int i = 0; i < question.Length; i++)
                         {
                             if (i != 0 && i != question.Length && Char.IsUpper(question[i]) == true)
@@ -582,10 +612,33 @@ namespace Rolory.Controllers
                             var relationship = cm.relationshipList;
                             ViewBag.DropDown = relationship;
                         }
-                        if (question == "Address")
+                       
+                    }
+                    else if(question == "zipBind")
+                    {
+                        if(networker.Address != null && contact.Address != null)
                         {
-                            RedirectToAction("BuildAddress", "Contacts", new { passedId = id });
+                            networker.Address.ZipCode = contact.Address.ZipCode;
+                            db.Entry(networker).State = EntityState.Modified;
+                            db.SaveChanges();
+                            question = null;
+                            answer = null;
                         }
+                        else if(networker.AddressId != null)
+                        {
+                            networker.Address = db.Addresses.Where(a => a.Id == networker.AddressId).SingleOrDefault();
+                            if(contact.AddressId != 0)
+                            {
+                                contact.Address = db.Addresses.Where(a => a.Id == contact.AddressId).SingleOrDefault();
+                                networker.Address.ZipCode = contact.Address.ZipCode;
+                                db.Entry(networker).State = EntityState.Modified;
+                                db.SaveChanges();
+                                question = null;
+                                answer = null;
+                            }
+                        }
+                        
+                        return RedirectToAction("UpdateInfo", new { id = contact.Id });
                     }
                 }
                 else

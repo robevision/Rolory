@@ -31,9 +31,11 @@ namespace Rolory.Controllers
             ViewBag.FirstNameSortParm = sortOrder == "givenName" ? "givenName_desc" : "givenName";
             ViewBag.LastNameSortParm = String.IsNullOrEmpty(sortOrder) ? "familyName_desc" : "";
             ViewBag.DateSortParm = sortOrder == "date" ? "date_desc" : "date";
+            ViewBag.InContactParm = sortOrder == "inTouch" ? "inTouch_desc" : "inTouch";
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
             var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
+            List <DateTime> interactionMoments = new List<DateTime>();
             if (networkerNullCheck == false)
             {
                 return RedirectToAction("CreateAccount", "User");
@@ -52,7 +54,13 @@ namespace Rolory.Controllers
                 return RedirectToAction("Null", "Contacts");
             }
             var contacts = db.Contacts.Where(c=>c.NetworkerId == networker.Id).Include(c => c.Address).Include(c => c.AlternateAddress).Include(c => c.Description).Include(c => c.Networker);
-            
+            //foreach(Contact contact in contacts)
+            //{
+            //    DateTime interactionMoment = db.Interactions.Where(i => i.ContactId == contact.Id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
+            //    interactionMoments.Add(interactionMoment);
+            //}
+  
+
             switch (sortOrder)
             {
                 case "givenName_desc":
@@ -65,10 +73,18 @@ namespace Rolory.Controllers
                     contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.FamilyName);
                     break;
                 case "date":
+                    interactionMoments = interactionMoments.OrderBy(i => i.Date).ToList();
                     contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.LastUpdated);
                     break;
                 case "date_desc":
+                    interactionMoments = interactionMoments.OrderByDescending(i => i.Date).ToList();
                     contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.LastUpdated);
+                    break;
+                case "inTouch":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.InContact);
+                    break;
+                case "inTouch_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.InContact);
                     break;
                 default:
                     contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.FamilyName);
@@ -79,6 +95,7 @@ namespace Rolory.Controllers
                 contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c => c.FamilyName.Contains(searchString));
             }
 
+            ViewBag.InteractionMoments = interactionMoments;
             ViewBag.InTouch = null;
             ViewBag.True = "True";
             ViewBag.False = "False";
