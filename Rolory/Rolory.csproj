@@ -200,6 +200,10 @@
     <Compile Include="Migrations\201905062055493_NewImageProps.Designer.cs">
       <DependentUpon>201905062055493_NewImageProps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905211346467_Reversal.cs" />
+    <Compile Include="Migrations\201905211346467_Reversal.Designer.cs">
+      <DependentUpon>201905211346467_Reversal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -346,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905062055493_NewImageProps.resx">
       <DependentUpon>201905062055493_NewImageProps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905211346467_Reversal.resx">
+      <DependentUpon>201905211346467_Reversal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 
 namespace Rolory.Controllers
 {
@@ -110,6 +111,35 @@ namespace Rolory.Controllers
 
             return season;
         }
+        private Address GetZipCoordinates(Address address)
+        {
+            try
+            {
+                string zip = Convert.ToString(address.ZipCode);
+                string url = "";
+                url = "http://maps.googleapis.com/maps/api/geocode/xml?components=postal_code:" + zip.Trim() + "&sensor=false";
+
+                var result = new System.Net.WebClient().DownloadString(url);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(result);
+                XmlNodeList parentNode = doc.GetElementsByTagName("location");
+                var lat = "";
+                var lng = "";
+                foreach (XmlNode childrenNode in parentNode)
+                {
+                    lat = childrenNode.SelectSingleNode("lat").InnerText;
+                    lng = childrenNode.SelectSingleNode("lng").InnerText;
+                }
+                address.Latitude = Convert.ToUInt16(lat);
+                address.Longitude = Convert.ToUInt16(lng);
+                return address;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+  
         public async Task<Address> SetLatLong(Address address)
             {
                 // This is the geoDecoderRing 
@@ -140,6 +170,8 @@ namespace Rolory.Controllers
                     var location = root.results[0].geometry.location;
                     address.Latitude = location.lat;
                     address.Longitude = location.lng;
+                    db.Entry(address).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
                     return address;
                 }
                 catch
@@ -150,6 +182,33 @@ namespace Rolory.Controllers
         public async Task<string> FindWeatherToday(int? id)
         {
             string weatherToday;
+            Address contactAddress = db.Addresses.Where(a => a.Id == id).Select(a => a).SingleOrDefault();
+            if(contactAddress.Latitude == null || contactAddress.Longitude == null)
+            {
+                if(contactAddress.StreetAddress != null && contactAddress.Region != null && contactAddress.Locality != null && contactAddress.ZipCode != null)
+                {
+                    var newAddress = SetLatLong(contactAddress);
+                    if (newAddress.IsCompleted)
+                    {
+                        db.Entry(newAddress).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                    }
+               
+                }
+                else if(contactAddress.ZipCode != null)
+                {
+                    var newAddress = GetZipCoordinates(contactAddress);
+                    if (newAddress != null)
+                    {
+                        db.Entry(newAddress).State = System.Data.Entity.EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return("Not enough information to find coordinates.");
+                }
+            }
             var latitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Latitude).SingleOrDefault();
             var longitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
             StringBuilder stringBuilder = new StringBuilder();

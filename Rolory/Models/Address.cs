@@ -27,5 +27,6 @@ namespace Rolory.Models
         public string CountryName { get; set; }
         public float? Latitude { get; set; }
         public float? Longitude { get; set; }
+        public int Distance { get; set; }
     }
 }

@@ -6,8 +6,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Rolory.Controllers
 {
@@ -142,6 +144,20 @@ namespace Rolory.Controllers
                         thisDescriptionId = contact.Description.Id;
                         var thisContactDescriptionId = db.Contacts.Where(c => c.DescriptionId == contact.DescriptionId).Select(c => c.DescriptionId).SingleOrDefault();
                         thisContactDescriptionId = contact.DescriptionId;
+                        Exception thisException = Server.GetLastError();
+                        if (thisException != null)
+                        {
+                            HttpException httpException = thisException as HttpException;
+                            RouteData routeData = new RouteData();
+                            if (httpException.GetHttpCode() == 0)
+                            {
+                                ViewBag.UploadImage = false;
+                            }
+                            if (httpException.GetHttpCode() == 404)
+                            {
+                                ViewBag.UploadImage = true;
+                            }
+                        }
                         db.Entry(contact).State = EntityState.Modified;
                         db.SaveChanges();
                         return View(contact);
@@ -200,7 +216,7 @@ namespace Rolory.Controllers
                 }
                 else if (pushedContactsByRelationship.Select(p => p.Id).Contains(filteredContact.Id))
                 {
-                    ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}.It's been a while.";
+                    ViewBag.Message = $"You should get back in touch with {filteredContact.GivenName}. It's been a while.";
                 }
                 filteredContact = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c).SingleOrDefault();
                 filteredContact.CoolDown = true;
@@ -214,6 +230,24 @@ namespace Rolory.Controllers
                 coolDownTime = filteredContact.CoolDownTime;
                 var coolDown = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.CoolDown).SingleOrDefault();
                 coolDown = filteredContact.CoolDown;
+                var imageCheck = db.Contacts.Where(c => c.Id == filteredContact.Id).Select(c => c.ImagePath).SingleOrDefault();
+                //exception not finding any errors
+                Exception exception = Server.GetLastError();
+                if(exception != null)
+                {
+                    HttpException httpException = exception as HttpException;
+                    RouteData routeData = new RouteData();
+                    if (httpException.GetHttpCode() == 0)
+                    {
+                        ViewBag.UploadImage = false;
+                    }
+                    if (httpException.GetHttpCode() == 404)
+                    {
+                        ViewBag.UploadImage = true;
+                    }
+                }
+                
+
                 db.Entry(filteredContact).State = EntityState.Modified;
                 db.SaveChanges();
                 return View(filteredContact);
@@ -221,25 +255,54 @@ namespace Rolory.Controllers
             else
             {
                 Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+                    Exception exception = Server.GetLastError();
+                    if (exception != null)
+                    {
+                        HttpException httpException = exception as HttpException;
+                        if (httpException.GetHttpCode() == 0)
+                        {
+                            ViewBag.UploadImage = false;
+                        }
+                        if (httpException.GetHttpCode() == 404)
+                        {
+                            ViewBag.UploadImage = true;
+                        }
+                    }
+    
                 return View(contact);
             }
         }
         [HttpPost]
         public ActionResult Index(Contact contact)
         {
+            Exception exception = Server.GetLastError();
+            if (exception != null)
+            {
+                HttpException httpException = exception as HttpException;
+                if (httpException.GetHttpCode() == 0)
+                {
+                    ViewBag.UploadImage = false;
+                }
+                if (httpException.GetHttpCode() == 404)
+                {
+                    ViewBag.UploadImage = true;
+                }
+            }
             return RedirectToAction("Index", "Random");
         }
         public ActionResult Complete()
         {
             return View();
         }
-        public ActionResult GetInTouch(int? id, string message = null)
+        public async Task<ActionResult> GetInTouch(int? id, string message = null)
         {
             string userId = User.Identity.GetUserId();
             var networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
             var nullDateTime = new DateTime();
-            var today = DateTime.Now.Day;
+            var todaysDate = DateTime.Now;
+            int today = DateTime.Now.Day;
             var week = DateTime.Now.AddDays(6);
+            DateTime christmas = new DateTime(2000, 12, 25);
             DateTime weekAgo = DateTime.Now.AddDays(-6);
             var contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             var description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
@@ -248,6 +311,7 @@ namespace Rolory.Controllers
             random = new Random();
             var chance = random.Next(2);
             var secondChance = random.Next(2);
+            var familyMembers = db.FamilyMembers.Where(f => f.DescriptionId == description.Id).Select(f => f).ToList();
             if (contact.Prefix != null)
             {
                 if (contact.Prefix == "Mr." || contact.Prefix == "Master")
@@ -286,7 +350,7 @@ namespace Rolory.Controllers
                     if (workTitleMessages[newRandom] != message)
                     {
                         ViewBag.Message = workTitleMessages[newRandom];
-                        return View(contact);
+                        return  await Task.Run(() => View(contact));
                     }
 
                 }
@@ -328,21 +392,45 @@ namespace Rolory.Controllers
             }
             if (description.BirthDate != null && description.BirthDate.Value.ToString() != String.Empty && description.BirthDate != nullDateTime /*&& messageCooldown.Select(m => m.Contains("Birth")).Any() != true*/)
             {
+                string numberSuffix;
+                string birthDateDay = Convert.ToString(description.BirthDate.Value.Day);
+                if(birthDateDay == "1" || birthDateDay == "21" || birthDateDay == "31")
+                {
+                    numberSuffix = "st";
+                }
+                else if (birthDateDay == "2" || birthDateDay == "22")
+                {
+                    numberSuffix = "nd";
+                }
+                else if(birthDateDay == "3" || birthDateDay == "23")
+                {
+                    numberSuffix = "rd";
+                }
+                else
+                {
+                    numberSuffix = "th";
+                }
                 random = new Random();
                 DateTime contactBirthDate = description.BirthDate.Value;
-
+                int age = DateTime.Today.Year - contactBirthDate.Year;
                 if (contactBirthDate.Month == DateTime.Now.Month && chance == 1)
                 {
                     string[] birthDayMessages = new string[]
                      {
-                             $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can get a conversation going about how both of you have been!"
+                             $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can get a conversation going about how both of you have been!",
+                             $"'Happy Birthday, {contact.GivenName}!'",
+                             $"{contact.GivenName}, hope you are having a grand birthday. Any plans for celebrating this special occasion?",
+                             $"'{contact.GivenName} {contact.FamilyName}! You are {age}!'",
+                             $"It is {contact.GivenName}'s Birthday today! Just a simple 'Happy Birthday' can get a conversation going about how both of you have been!",
+                             $"'Happy Birthday, {contact.GivenName}!'",
+                             $"Can you believe, it has already been another year? Time flies!"
                      };
                     string[] lateBirthDayMessages = new string[]
                         {
                             "test",
-                            $"It was {contact.GivenName}'s Birthday on {description.BirthDate.Value.DayOfWeek} the {description.BirthDate.Value.Day}! Just a simple 'Happy Belated Birthday' shows you're thinking of {firstPronoun.ToLower()}.",
+                            $"It was {contact.GivenName}'s Birthday on {description.BirthDate.Value.DayOfWeek} the {description.BirthDate.Value.Day}{numberSuffix}! Just a simple 'Happy Belated Birthday' shows you're thinking of {firstPronoun.ToLower()}.",
                             $"{contact.GivenName} {contact.FamilyName} just had their birthday. Not to worry. It was just the other day. Send your best wishes to let {firstPronoun.ToLower()} know that {secondPronoun.ToLower()} is on your mind."
-                        }; //suffix variable needed for after number
+                        }; 
                     string[] earlyBirthDayMessages = new string[]
                     {
                             $"{contact.GivenName}'s Birthday is coming up! It's on {description.BirthDate.Value.DayOfWeek}! Reaching out with a 'Happy Birthday' shows you're thinking of them."
@@ -388,36 +476,58 @@ namespace Rolory.Controllers
 
                 if (ViewBag.Message == null)
                 {
-                    string[] dateRelevantMessages = new string[]
-        {
+                    var weatherToday = await weath.FindWeatherToday(contact.AddressId);
+                    if(weatherToday != null)
+                    {
+                        string[] weatherRelevantMessages = new string[]
+                  {
+                      //activity suggestions based on weather
+                      "It is sunny out, why not...."
+                  };
+                        ViewBag.Message = weatherToday;
+                    }
 
-        };
-                    string[] genericMessages = new string[]
-                    {
-                    $"How about, 'Hey {contact.GivenName}, I saw something the other day that made me think of you...'",
-                    "'What have you been up to lately?'", $"'Hi {contact.GivenName}, how has it been since...'",
-                    "'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
-                    "'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
-                    $"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
-                    "'What are you up to these days? We should grab coffee to catch up!'"
-                    };
-                    random = new Random();
-                    var newRandom = random.Next(genericMessages.Count());
-                    if (genericMessages[newRandom] != message)
-                    {
-                        ViewBag.Message = genericMessages[newRandom];
-                    }
-                    else
-                    {
-                        random = new Random();
-                        newRandom = random.Next(genericMessages.Count());
-                        ViewBag.Message = genericMessages[newRandom];
-                    }
+                    //List<string> dateRelevantMessages = new List<string>();
+
+                    //if (todaysDate.Day == christmas.Day && todaysDate.Month == christmas.Month)
+                    //{
+                    //    string [] christmasMessages = new string[]
+                    //    {
+                    //        "Merry Christmas!"
+                    //    };
+                    //    random = new Random();
+                    //    var localRandom = random.Next(dateRelevantMessages.Count());
+                    //    dateRelevantMessages.Add(dateRelevantMessages[localRandom]);
+                    //}
+                    //random = new Random();
+                    //if(dateRelevantMessages.Count != 0)
+                    //{
+                    //   int dateRelevantRandom = random.Next(dateRelevantMessages.Count());
+                    //    ViewBag.Message = dateRelevantMessages[dateRelevantRandom];
+                    //}
+                    
+
+                    //string[] genericMessages = new string[]
+                    //{
+                    //$"How about, 'Hey {contact.GivenName}, I saw something the other day that made me think of you...'",
+                    //"'What have you been up to lately?'", $"'Hi {contact.GivenName}, how has it been since...'",
+                    //"'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
+                    //"'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
+                    //$"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
+                    //"'What are you up to these days? We should grab coffee to catch up!'"
+                    //};
+                    //random = new Random();
+                    //int newRandom = random.Next(genericMessages.Count());
+                    //if (genericMessages[newRandom] != message)
+                    //{
+                    //    ViewBag.Message = genericMessages[newRandom];
+                    //}
+                    //else
+                    //{
+                    //    return RedirectToAction("GetInTouch");
+                    //}
 
                 }
-
-
-
 
             }
             return View(contact);
@@ -455,7 +565,7 @@ namespace Rolory.Controllers
                     //}
                     foreach (PropertyInfo property in contact.GetType().GetProperties())
                 {
-                    if(property.Name != "ImageTitle" && property.Name != "ImagePath" && property.Name != "Id" && property.Name != "InContract" && property.Name != "LastUpdated" && property.Name != "PhoneType" && property.Name != "AltPhoneType" && property.Name != "Description" && property.Name != "DescriptionId" && property.Name != "NetworkerId" && property.Name != "Networker" && property.Name != "AddressId" && property.Name != "AltAddressId" && property.Name != "InContact" && property.Name != "InContactCountDown" && property.Name != "CoolDown" && property.Name != "Reminder")
+                    if(property.Name != "ImageTitle" && property.Name != "ImagePath" && property.Name != "Id" && property.Name != "InContract" && property.Name != "LastUpdated" && property.Name != "PhoneType" && property.Name != "AltPhoneNumberType" && property.Name != "Description" && property.Name != "DescriptionId" && property.Name != "NetworkerId" && property.Name != "Networker" && property.Name != "AddressId" && property.Name != "AltAddressId" && property.Name != "InContact" && property.Name != "InContactCountDown" && property.Name != "CoolDown" && property.Name != "Reminder")
                     {
                         if (property.GetValue(contact) == null && property.Name != question)
                         {
@@ -488,7 +598,7 @@ namespace Rolory.Controllers
                 }
                 foreach(PropertyInfo property in address.GetType().GetProperties())
                     {
-                        if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude" && property.Name != "Unit")
+                        if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude" && property.Name != "Unit" && property.Name != "AddressType")
                         {
                             if (property.GetValue(address) == null && property.Name != question)
                             {

@@ -47,24 +47,43 @@
 
 }
 <br />
-<h2>Contact</h2>
+<div class="row">
+    <div class="breadcrumb">
+        <div class="col-md-push-9">
+            <h2>Connect</h2>
+        </div>
+    </div>
+</div>
 <hr />
 <div class="col-md-4"></div>
 <div class="col-md-4"></div>
 <div class="col-md-4"></div>
 @if (Model.ImagePath != null)
 {
-    <img src="@Url.Content(Model.ImagePath)" width="150" length="150" />
+    if (ViewBag.UploadImage == true)
+    {
+        <h5> @Html.ActionLink("Upload Image", "UploadImage", "Contacts", new { id = Model.Id }, htmlAttributes: new { @class = "media-middle", style = "" })</h5>
+    }
+    else
+    {
+        <img class="center-block img-rounded" src="@Url.Content(Model.ImagePath)" width="150" length="150" />
+    }
+}
+else
+{
+    <h5 class="text-center"> @Html.ActionLink("Upload Image", "UploadImage", "Contacts", new { id = Model.Id }, htmlAttributes: new { @class = "media-middle", style = "" })</h5>
 }
 
-<h3> @Html.DisplayFor(model => model.Prefix) @Html.DisplayFor(model => model.GivenName)  @Html.DisplayFor(model => model.FamilyName)</h3>
-<h4>@message</h4>
-<h4 >@Html.DisplayFor(model => model.PhoneNumber)</h4>
-<h5>@Html.DisplayFor(model => model.Email)</h5>
-<div>
-    <h4>Are you in touch with @Html.DisplayFor(model => model.GivenName)?</h4>
+
+
+<h3 class="text-center"> @Html.DisplayFor(model => model.Prefix) @Html.DisplayFor(model => model.GivenName)  @Html.DisplayFor(model => model.FamilyName)</h3>
+<h4 class="text-center">@message</h4>
+<h4 class="text-center">@Html.DisplayFor(model => model.PhoneNumber)</h4>
+<h5 class="text-center">@Html.DisplayFor(model => model.Email)</h5>
+<div class="text-center">
+    <h4 class="text-center">Are you in touch with @Html.DisplayFor(model => model.GivenName)?</h4>
     <button class="w3-button w3-round-xlarge"> @Html.ActionLink("Yes", "ProvideContext", "Random", new { id = Model.Id }, null)</button>
 
     <button class="w3-button w3-round-xlarge">@Html.ActionLink("Not Really", "ConnectQuery", "Random", new { id = Model.Id }, null)</button>
 </div>
-<h5>@Html.ActionLink("Skip >>", "Index", "Random", new { id = 0 })</h5>
+<h5>@Html.ActionLink("Skip >>", "Index", "Random", new { id = 0 }, new { htmlAttributes = "text-center" })</h5>

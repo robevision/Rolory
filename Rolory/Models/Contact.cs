@@ -27,6 +27,7 @@ namespace Rolory.Models
         [Display(Name = "Phone Type")]
         public string PhoneType { get; set; }
         [DataType(DataType.PhoneNumber)]
+        //[StringLength(10, MinimumLength = 7)]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         [Display(Name = "Organization")]

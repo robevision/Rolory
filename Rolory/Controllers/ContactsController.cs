@@ -575,7 +575,7 @@ namespace Rolory.Controllers
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
-        public ActionResult Expand(Contact contact)
+        public ActionResult Expand(Contact contact, string save = null)
         {
             if (ModelState.IsValid)
             {
@@ -729,6 +729,8 @@ namespace Rolory.Controllers
                 {
                     contactInDB.Description.BirthDate = contact.Description.BirthDate;
                 }
+                contactInDB.InContact = contact.InContact;
+                contactInDB.Perpetual = contact.Perpetual;
                 //if(String.IsNullOrEmpty(contact.Description.Gender) != true)
                 //{
                 //    contactInDB.Description.Gender = contact.Description.Gender;
@@ -758,6 +760,13 @@ namespace Rolory.Controllers
                 //contactInDB.AddressId = db.Contacts.Where(c => c.Id == contact.Id).Select(c => c.AddressId).SingleOrDefault();
                 db.Entry(contactInDB).State = EntityState.Modified;
                 db.SaveChanges();
+
+                //****use AJAX instead
+
+                //if(save = "yes")
+                //{
+                //    return RedirectToAction("Details", "Contacts", new { id = contact.Id });
+                //}
                 return RedirectToAction("Details", "Contacts", new { id = contact.Id });
             }
             return RedirectToAction("Error", "Contacts");

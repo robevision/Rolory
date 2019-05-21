@@ -141,10 +141,7 @@ namespace Rolory.Controllers
             db.Messages.Remove(message);
             db.SaveChanges();
             return RedirectToAction("Index");
-
-            return View(message);
         }
-
         // POST: Messages/Delete/5
         //[HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
