@@ -204,6 +204,10 @@
     <Compile Include="Migrations\201905211346467_Reversal.Designer.cs">
       <DependentUpon>201905211346467_Reversal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905230438525_DistancePropertyAdded.cs" />
+    <Compile Include="Migrations\201905230438525_DistancePropertyAdded.Designer.cs">
+      <DependentUpon>201905230438525_DistancePropertyAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Address.cs" />
@@ -353,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905211346467_Reversal.resx">
       <DependentUpon>201905211346467_Reversal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905230438525_DistancePropertyAdded.resx">
+      <DependentUpon>201905230438525_DistancePropertyAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

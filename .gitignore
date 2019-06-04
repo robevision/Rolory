@@ -331,3 +331,6 @@ ASALocalRun/
 
 # Database Photos
 UserImages/
+
+# API
+Models/Access.cs

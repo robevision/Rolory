@@ -471,65 +471,65 @@ namespace Rolory.Controllers
             }
 
             {
-                WeatherManagement weath = new WeatherManagement();
-                var season = weath.GetCurrentSeason();
+                //WeatherManagement weath = new WeatherManagement();
+                //var season = weath.GetCurrentSeason();
 
-                if (ViewBag.Message == null)
+                //if (ViewBag.Message == null)
+                //{
+                //    var weatherToday = await weath.FindWeatherToday(contact.AddressId);
+                //    if(weatherToday != null)
+                //    {
+                //        string[] weatherRelevantMessages = new string[]
+                //  {
+                //      //activity suggestions based on weather
+                //      "It is sunny out, why not...."
+                //  };
+                //        ViewBag.Message = weatherToday;
+                //    }
+
+                List<string> dateRelevantMessages = new List<string>();
+
+                if (todaysDate.Day == christmas.Day && todaysDate.Month == christmas.Month)
                 {
-                    var weatherToday = await weath.FindWeatherToday(contact.AddressId);
-                    if(weatherToday != null)
+                    string[] christmasMessages = new string[]
                     {
-                        string[] weatherRelevantMessages = new string[]
-                  {
-                      //activity suggestions based on weather
-                      "It is sunny out, why not...."
-                  };
-                        ViewBag.Message = weatherToday;
-                    }
+                            "Merry Christmas!"
+                    };
+                    random = new Random();
+                    var localRandom = random.Next(dateRelevantMessages.Count());
+                    dateRelevantMessages.Add(dateRelevantMessages[localRandom]);
+                }
+                random = new Random();
+                if (dateRelevantMessages.Count != 0)
+                {
+                    int dateRelevantRandom = random.Next(dateRelevantMessages.Count());
+                    ViewBag.Message = dateRelevantMessages[dateRelevantRandom];
+                }
 
-                    //List<string> dateRelevantMessages = new List<string>();
 
-                    //if (todaysDate.Day == christmas.Day && todaysDate.Month == christmas.Month)
-                    //{
-                    //    string [] christmasMessages = new string[]
-                    //    {
-                    //        "Merry Christmas!"
-                    //    };
-                    //    random = new Random();
-                    //    var localRandom = random.Next(dateRelevantMessages.Count());
-                    //    dateRelevantMessages.Add(dateRelevantMessages[localRandom]);
-                    //}
-                    //random = new Random();
-                    //if(dateRelevantMessages.Count != 0)
-                    //{
-                    //   int dateRelevantRandom = random.Next(dateRelevantMessages.Count());
-                    //    ViewBag.Message = dateRelevantMessages[dateRelevantRandom];
-                    //}
-                    
-
-                    //string[] genericMessages = new string[]
-                    //{
-                    //$"How about, 'Hey {contact.GivenName}, I saw something the other day that made me think of you...'",
-                    //"'What have you been up to lately?'", $"'Hi {contact.GivenName}, how has it been since...'",
-                    //"'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
-                    //"'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
-                    //$"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
-                    //"'What are you up to these days? We should grab coffee to catch up!'"
-                    //};
-                    //random = new Random();
-                    //int newRandom = random.Next(genericMessages.Count());
-                    //if (genericMessages[newRandom] != message)
-                    //{
-                    //    ViewBag.Message = genericMessages[newRandom];
-                    //}
-                    //else
-                    //{
-                    //    return RedirectToAction("GetInTouch");
-                    //}
-
+                string[] genericMessages = new string[]
+                {
+                    $"How about, 'Hey {contact.GivenName}, I saw something the other day that made me think of you...'",
+                    "'What have you been up to lately?'", $"'Hi {contact.GivenName}, how has it been since...'",
+                    "'You came up on my feed because of...we should catch up!'", "'I hope you are having a great day!'",
+                    "'How about, 'Hey, It's been a while since we last spoke, what have you been up to?'",
+                    $"'Hey there {contact.GivenName}. Had a memory recently of when... How have you been?'",
+                    "'What are you up to these days? We should grab coffee to catch up!'"
+                };
+                random = new Random();
+                int newRandom = random.Next(genericMessages.Count());
+                if (genericMessages[newRandom] != message)
+                {
+                    ViewBag.Message = genericMessages[newRandom];
+                }
+                else
+                {
+                    return RedirectToAction("GetInTouch");
                 }
 
             }
+
+            //}
             return View(contact);
         }
         // GET: Random/Details/5
