@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Diagnostics;
 
 namespace Rolory.Controllers
 {
@@ -23,6 +24,7 @@ namespace Rolory.Controllers
             GetRelationshipSelection();
             GetCategorySelection();
             GetPrefixSelection();
+            
         }
         private void GetRelationshipSelection()
         {
@@ -34,7 +36,6 @@ namespace Rolory.Controllers
             relationshipList.Add(new SelectListItem() { Text = "Business Equal", Value = "Business Equal" });
             relationshipList.Add(new SelectListItem() { Text = "Teacher", Value = "Teacher" });
             relationshipList.Add(new SelectListItem() { Text = "Classmate", Value = "Classmate" });
-
 
         }
         private void GetCategorySelection()

@@ -25,7 +25,14 @@ namespace Rolory.Controllers
         // GET: Messages
         public ActionResult Index()
         {
+        
             string userId = User.Identity.GetUserId();
+            //null check for networker profile
+            var networkerNullCheck = db.Networkers.Where(n => n.UserId == userId).Any();
+            if (networkerNullCheck == false)
+            {
+                return RedirectToAction("CreateAccount", "User");
+            }
             var networker = db.Networkers.Where(n => n.UserId == userId).Select(n => n).SingleOrDefault();
             Message noMessageCheck = db.Messages.Select(m => m).FirstOrDefault();
             if(noMessageCheck == null) 

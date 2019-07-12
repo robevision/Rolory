@@ -212,7 +212,7 @@ namespace Rolory.Controllers
             var latitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Latitude).SingleOrDefault();
             var longitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
             StringBuilder stringBuilder = new StringBuilder();
-            string url = @"https://api.openweathermap.org/data/2.5/weather?" + "lat=" + latitude + "&lon=" + longitude + "&units=metric" + "&key=" + Models.Access.weath;
+            string url = string.Format("https://api.openweathermap.org/data/2.5/weather?" + "lat=" + latitude + "&lon=" + longitude + "&units=metric" + "&key=" + Models.Access.weath);
             WebRequest request = WebRequest.Create(url);
             WebResponse response = await request.GetResponseAsync();
             System.IO.Stream data = response.GetResponseStream();

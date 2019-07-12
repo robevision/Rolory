@@ -64,7 +64,7 @@
             <dl class="dl-horizontal" style="align-content:center">
                 <h4 class="text-justify">Basic Info</h4>
 
-                @if (Model.Prefix != null)
+                @if (String.IsNullOrEmpty(Model.Prefix) == false)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.Prefix)
@@ -132,7 +132,7 @@
 
                 @if (Model.PhoneNumber != null)
                 {
-                    if (String.IsNullOrEmpty(Model.PhoneType) == false)
+                    if (String.IsNullOrEmpty(Model.PhoneType) == false && String.IsNullOrEmpty(Model.PhoneNumber) == false)
                     {
                         <dt>
                             @Html.DisplayFor(model => model.PhoneType) Phone
@@ -168,7 +168,7 @@
                         @Html.DisplayFor(model => model.Address.StreetAddress)
                     </dd>
                 }
-                @if (Model.Address != null && Model.Address.Unit != null)
+                @if (Model.Address != null && String.IsNullOrEmpty(Model.Address.StreetAddress) == false && Model.Address.Unit != null)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.Address.Unit)
@@ -217,7 +217,7 @@
 
                 <br />
 
-                @if (Model.Organization != null)
+                @if (String.IsNullOrEmpty(Model.Organization) == false)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.Organization)
@@ -228,7 +228,7 @@
                     </dd>
                 }
 
-                @if (Model.WorkTitle != null)
+                @if (String.IsNullOrEmpty(Model.WorkTitle) == false)
                 {
                     <dt>
                         @Html.DisplayNameFor(model => model.WorkTitle)
@@ -315,7 +315,7 @@
                     </dd>
                 }
 
-                @if (Model.AltPhoneNumber != null)
+                @if (String.IsNullOrEmpty(Model.AltPhoneNumber) == false)
                 {
                     <dt>
                         @Html.DisplayName("Alternate Phone Number")
