@@ -694,14 +694,7 @@ namespace Rolory.Controllers
                         {
                             return RedirectToAction("BuildAddress", "Contacts", new { passedId = id });
                         }
-                        for (int i = 0; i < question.Length; i++)
-                        {
-                            if (i != 0 && i != question.Length && Char.IsUpper(question[i]) == true)
-                            {
-                                formattedQuestion.Append(' ');
-                            }
-                            formattedQuestion.Append(question[i]);
-                        }
+                        FormatQuestionFromLength(question, formattedQuestion);
                         string sentQuestion = formattedQuestion.ToString().ToLower();
                         ViewBag.Message = $"What is {contact.GivenName}'s {sentQuestion}?";
                         ViewBag.IsQuestion = "true";
@@ -965,6 +958,17 @@ namespace Rolory.Controllers
             catch
             {
                 return View();
+            }
+        }
+        public void FormatQuestionFromLength(string question, StringBuilder formattedQuestion)
+        {
+            for (int i = 0; i < question.Length; i++)
+            {
+                if (i != 0 && i != question.Length && Char.IsUpper(question[i]) == true)
+                {
+                    formattedQuestion.Append(' ');
+                }
+                formattedQuestion.Append(question[i]);
             }
         }
     }
