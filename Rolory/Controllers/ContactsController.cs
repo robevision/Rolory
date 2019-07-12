@@ -763,7 +763,7 @@ namespace Rolory.Controllers
 
                 //****use AJAX instead
 
-                //if(save = "yes")
+                //if(save == "yes")
                 //{
                 //    return RedirectToAction("Details", "Contacts", new { id = contact.Id });
                 //}
