@@ -73,6 +73,7 @@ namespace Rolory.Controllers
            return RedirectToAction("CreateAccount", "User");
         }
         //GET
+       
         public ActionResult CreateAccount(ApplicationUser user)
         {
             ApplicationDbContext db = new ApplicationDbContext();

@@ -544,6 +544,7 @@ namespace Rolory.Controllers
 
         public ActionResult UpdateInfo(int? id, string question=null, string answer=null)
         {
+            PropertyInfo nullProperty;
             List<PropertyInfo> nullPropertiesList = new List<PropertyInfo>();
             Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
             Description description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
@@ -563,57 +564,12 @@ namespace Rolory.Controllers
                     //{
                     //if(weather == summer ...)
                     //}
-                    foreach (PropertyInfo property in contact.GetType().GetProperties())
-                {
-                    if(property.Name != "ImageTitle" && property.Name != "ImagePath" && property.Name != "Id" && property.Name != "InContract" && property.Name != "LastUpdated" && property.Name != "PhoneType" && property.Name != "AltPhoneNumberType" && property.Name != "Description" && property.Name != "DescriptionId" && property.Name != "NetworkerId" && property.Name != "Networker" && property.Name != "AddressId" && property.Name != "AltAddressId" && property.Name != "InContact" && property.Name != "InContactCountDown" && property.Name != "CoolDown" && property.Name != "Reminder")
-                    {
-                        if (property.GetValue(contact) == null && property.Name != question)
-                        {
-                            nullPropertiesList.Add(property);
-                        }
-                            else if (Convert.ToString(property.GetValue(contact)) == String.Empty && property.Name != question)
-                            {
-                                nullPropertiesList.Add(property);
-                            }
-                        }
-                   
-                }
-                foreach(PropertyInfo property in description.GetType().GetProperties())
-                {
-                    if(property.Name != "ContactId" && property.Name != "Id" && property.Name != "DeathDate" && property.Name != "Notes")
-                    {
-                            //if (property.PropertyType.Name.Contains("Int") && property.GetValue(description) == 0)
-                            //{
-                            //    nullPropertiesList.Add(property);
-                            //}
-                            if (property.GetValue(description) == null && property.Name != question)
-                        {
-                            nullPropertiesList.Add(property);
-                        }
-                            else if(Convert.ToString(property.GetValue(description)) == String.Empty && property.Name != question)
-                            {
-                                nullPropertiesList.Add(property);
-                            }
-                    }
-                }
-                foreach(PropertyInfo property in address.GetType().GetProperties())
-                    {
-                        if(property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude" && property.Name != "Unit" && property.Name != "AddressType")
-                        {
-                            if (property.GetValue(address) == null && property.Name != question)
-                            {
-                                nullPropertiesList.Add(property);
-                            }
-                            else if (Convert.ToString(property.GetValue(address)) == String.Empty && property.Name != question)
-                            {
-                                nullPropertiesList.Add(property);
-                            }
-                        }
-                    }
-                random = new Random();
-                int r = random.Next(nullPropertiesList.Count);
-                var nullProperty = nullPropertiesList[r];
-                    if(nullProperty != null)
+
+                    GetListOfProperties(id, nullPropertiesList, question);
+                
+                    nullProperty = ChooseProperty(nullPropertiesList);
+
+                    if (nullProperty != null)
                     {
                         StringBuilder formattedQuestion = new StringBuilder(nullProperty.Name.Length * 2);
                         for (int i = 0; i < nullProperty.Name.Length; i++)
@@ -663,6 +619,7 @@ namespace Rolory.Controllers
                         }
                         else if(nullProperty.Name.ToString() == "Prefix")
                         {
+                            answer = "prefix";
                             var prefix = cm.prefixList;
                             ViewBag.DropDown = prefix;
                         }
@@ -970,6 +927,66 @@ namespace Rolory.Controllers
                 }
                 formattedQuestion.Append(question[i]);
             }
+        }
+        public void GetListOfProperties(int? id, List <PropertyInfo> nullPropertiesList, string question)
+        {
+            Contact contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
+            Description description = db.Descriptions.Where(d => d.Id == contact.DescriptionId).Select(d => d).SingleOrDefault();
+            List<SharedActivity> sharedActivity = new List<SharedActivity>();
+            sharedActivity = db.SharedActivities.Where(s => s.DescriptionId == contact.Id).ToList();
+            string userId = User.Identity.GetUserId();
+            Networker networker = db.Networkers.Where(n => n.UserId == userId).SingleOrDefault();
+            Address address = db.Addresses.Where(a => a.Id == contact.AddressId).Select(a => a).SingleOrDefault();
+            foreach (PropertyInfo property in contact.GetType().GetProperties())
+            {
+                if (property.Name != "ImageTitle" && property.Name != "ImagePath" && property.Name != "Id" && property.Name != "InContract" && property.Name != "LastUpdated" && property.Name != "PhoneType" && property.Name != "AltPhoneNumberType" && property.Name != "Description" && property.Name != "DescriptionId" && property.Name != "NetworkerId" && property.Name != "Networker" && property.Name != "AddressId" && property.Name != "AltAddressId" && property.Name != "InContact" && property.Name != "InContactCountDown" && property.Name != "CoolDown" && property.Name != "Reminder")
+                {
+                    if (property.GetValue(contact) == null && property.Name != question)
+                    {
+                        nullPropertiesList.Add(property);
+                    }
+                    else if (Convert.ToString(property.GetValue(contact)) == String.Empty && property.Name != question)
+                    {
+                        nullPropertiesList.Add(property);
+                    }
+                }
+
+            }
+            foreach (PropertyInfo property in description.GetType().GetProperties())
+            {
+                if (property.Name != "ContactId" && property.Name != "Id" && property.Name != "DeathDate" && property.Name != "Notes")
+                {
+                    if (property.GetValue(description) == null && property.Name != question)
+                    {
+                        nullPropertiesList.Add(property);
+                    }
+                    else if (Convert.ToString(property.GetValue(description)) == String.Empty && property.Name != question)
+                    {
+                        nullPropertiesList.Add(property);
+                    }
+                }
+            }
+            foreach (PropertyInfo property in address.GetType().GetProperties())
+            {
+                if (property.Name != "Id" && property.Name != "Latitude" && property.Name != "Longitude" && property.Name != "Unit" && property.Name != "AddressType")
+                {
+                    if (property.GetValue(address) == null && property.Name != question)
+                    {
+                        nullPropertiesList.Add(property);
+                    }
+                    else if (Convert.ToString(property.GetValue(address)) == String.Empty && property.Name != question)
+                    {
+                        nullPropertiesList.Add(property);
+                    }
+                }
+            }
+        }
+        public PropertyInfo ChooseProperty(List <PropertyInfo> nullPropertiesList)
+        {
+            random = new Random();
+            int chosenNumber = random.Next(nullPropertiesList.Count);
+            var nullProperty = nullPropertiesList[chosenNumber];
+            return nullProperty;
         }
     }
 }

@@ -334,3 +334,4 @@ UserImages/
 
 # API
 Models/Access.cs
+*.cs

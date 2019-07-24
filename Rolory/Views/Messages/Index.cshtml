@@ -13,6 +13,7 @@
     </div>
 </div>
 <p><a class="btn btn-primary btn-lg" src=@Html.ActionLink("Get Email","Get",new { id = ViewBag.Id },null)</a></p>
+
 <table class="table">
     <tr>
         <th>
@@ -35,7 +36,18 @@
     {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.IsActive)
+            @if (item.IsActive == true)
+            {
+                <div>
+
+
+                    <div class="text-center" style="color: #158cba">&#9679;</div>
+
+
+                </div>
+
+            }
+
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Postmark)
@@ -47,7 +59,7 @@
             @Html.DisplayFor(modelItem => item.Body)
         </td>
 
-        <td>
+        <td class="col-md-3">
             @Html.ActionLink("Details", "Details", new { id = item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>

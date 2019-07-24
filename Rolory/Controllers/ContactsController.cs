@@ -59,37 +59,8 @@ namespace Rolory.Controllers
             //    DateTime interactionMoment = db.Interactions.Where(i => i.ContactId == contact.Id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
             //    interactionMoments.Add(interactionMoment);
             //}
-  
+            contacts = ChooseSortOrder(sortOrder, networker, contacts, interactionMoments);
 
-            switch (sortOrder)
-            {
-                case "givenName_desc":
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.GivenName);
-                    break;
-                case "givenName":
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.GivenName);
-                    break;
-                case "familyName_desc":
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.FamilyName);
-                    break;
-                case "date":
-                    interactionMoments = interactionMoments.OrderBy(i => i.Date).ToList();
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.LastUpdated);
-                    break;
-                case "date_desc":
-                    interactionMoments = interactionMoments.OrderByDescending(i => i.Date).ToList();
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.LastUpdated);
-                    break;
-                case "inTouch":
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.InContact);
-                    break;
-                case "inTouch_desc":
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.InContact);
-                    break;
-                default:
-                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.FamilyName);
-                    break;
-            }
             if (!String.IsNullOrEmpty(searchString))
             {
                 contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).Where(c => c.FamilyName.Contains(searchString));
@@ -789,7 +760,39 @@ namespace Rolory.Controllers
             }
             return View(contact);
         }
-
+        private IQueryable<Contact> ChooseSortOrder(string sortOrder, Networker networker, IQueryable <Contact> contacts, List <DateTime> interactionMoments)
+        {
+            switch (sortOrder)
+            {
+                case "givenName_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.GivenName);
+                    break;
+                case "givenName":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.GivenName);
+                    break;
+                case "familyName_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.FamilyName);
+                    break;
+                case "date":
+                    interactionMoments = interactionMoments.OrderBy(i => i.Date).ToList();
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.LastUpdated);
+                    break;
+                case "date_desc":
+                    interactionMoments = interactionMoments.OrderByDescending(i => i.Date).ToList();
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.LastUpdated);
+                    break;
+                case "inTouch":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.InContact);
+                    break;
+                case "inTouch_desc":
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderByDescending(c => c.InContact);
+                    break;
+                default:
+                    contacts = db.Contacts.Where(c => c.NetworkerId == networker.Id).OrderBy(c => c.FamilyName);
+                    break;
+            }
+            return contacts;
+        }
         // POST: Contacts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
