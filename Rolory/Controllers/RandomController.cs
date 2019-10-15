@@ -710,70 +710,75 @@ namespace Rolory.Controllers
                         {
                             if (question == "AltPhoneNumber" || question == "PhoneNumber")
                             {
+                          
                                 List<string> phoneNumberResult = new List<string>();
                                 List<char> areaCode = new List<char>();
                                 List<char> body = new List<char>();
                                 var phoneNumber = contact.PhoneNumber;
-                                List<int> intPhoneNumber = new List<int>();
-                                for (int i = 0; i < phoneNumber.Count(); i++)
+                                if(phoneNumber != null)
                                 {
-                                    if (Char.IsNumber(phoneNumber[i]) == true)
+                                    List<int> intPhoneNumber = new List<int>();
+                                    for (int i = 0; i < phoneNumber.Count(); i++)
                                     {
-                                        intPhoneNumber.Add(phoneNumber[i]);
-                                    }
-                                }
-
-                                for (int i = 0; i < intPhoneNumber.Count(); i++)
-                                {
-                                    if (i == 0)
-                                    {
-                                        areaCode.Add(Convert.ToChar("("));
-                                        areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
-                                    }
-                                    else if (i == 1)
-                                    {
-                                        areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
-                                    }
-                                    else if (i == 2)
-                                    {
-                                        areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
-                                        areaCode.Add(Convert.ToChar(")"));
-                                        areaCode.Add(Convert.ToChar(" "));
-                                    }
-                                    else if (i > 2)
-                                    {
-                                        if (body.LongCount() == 3)
+                                        if (Char.IsNumber(phoneNumber[i]) == true)
                                         {
-                                            body.Add(Convert.ToChar("-"));
+                                            intPhoneNumber.Add(phoneNumber[i]);
                                         }
-                                        if (body.LongCount() < 8)
+                                    }
+
+                                    for (int i = 0; i < intPhoneNumber.Count(); i++)
+                                    {
+                                        if (i == 0)
                                         {
-                                            body.Add(Convert.ToChar(intPhoneNumber[i]));
+                                            areaCode.Add(Convert.ToChar("("));
+                                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                                        }
+                                        else if (i == 1)
+                                        {
+                                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                                        }
+                                        else if (i == 2)
+                                        {
+                                            areaCode.Add(Convert.ToChar(intPhoneNumber[i]));
+                                            areaCode.Add(Convert.ToChar(")"));
+                                            areaCode.Add(Convert.ToChar(" "));
+                                        }
+                                        else if (i > 2)
+                                        {
+                                            if (body.LongCount() == 3)
+                                            {
+                                                body.Add(Convert.ToChar("-"));
+                                            }
+                                            if (body.LongCount() < 8)
+                                            {
+                                                body.Add(Convert.ToChar(intPhoneNumber[i]));
+                                            }
+
                                         }
 
                                     }
-
+                                    foreach (char index in areaCode)
+                                    {
+                                        phoneNumberResult.Add(Convert.ToString(index));
+                                    }
+                                    foreach (char index in body)
+                                    {
+                                        phoneNumberResult.Add(Convert.ToString(index));
+                                    }
+                                    if (question == "PhoneNumber")
+                                    {
+                                        contact.PhoneNumber = String.Join("", phoneNumberResult.ToArray());
+                                        answer = null;
+                                        question = null;
+                                    }
+                                    else if (question == "AltPhoneNumber")
+                                    {
+                                        contact.AltPhoneNumber = String.Join("", phoneNumberResult.ToArray());
+                                        answer = null;
+                                        question = null;
+                                    }
                                 }
-                                foreach (char index in areaCode)
-                                {
-                                    phoneNumberResult.Add(Convert.ToString(index));
-                                }
-                                foreach (char index in body)
-                                {
-                                    phoneNumberResult.Add(Convert.ToString(index));
-                                }
-                                if (question == "PhoneNumber")
-                                {
-                                    contact.PhoneNumber = String.Join("", phoneNumberResult.ToArray());
-                                    answer = null;
-                                    question = null;
-                                }
-                                else if (question == "AltPhoneNumber")
-                                {
-                                    contact.AltPhoneNumber = String.Join("", phoneNumberResult.ToArray());
-                                    answer = null;
-                                    question = null;
-                                }
+                               
 
                             }
                             else

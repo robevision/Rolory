@@ -156,6 +156,87 @@ namespace Rolory.Controllers
             prefixList.Add(new SelectListItem() { Text = "Miss", Value = "Miss" });
             prefixList.Add(new SelectListItem() { Text = "Master", Value = "Master" });
         }
+        public string ReturnOnlyIntegers(string number)
+        {
+            string newNumber = "";
+            var openParentheses = "(";
+            var closedParentheses = ")";
+            var dash = "-";
+            var space = " ";
+            //attempting to build alternative option to where all values are in an array. Need to research how to store an array of char 
+            var characters = " )(-".ToCharArray();
+            for (int i = 0; i < number.Length; i++)
+            {
+
+                if (number[i] != openParentheses[0] && number[i] != closedParentheses[0] && number[i] != dash[0] && number[i] != space[0])
+                {
+                    newNumber = newNumber + number[i];
+
+                }
+                //if (number[i] != openParentheses[0] || number[i] != closedParentheses[0] || number[i] != dash[0] || number[i] != space[0])
+                //{
+                //    newNumber = newNumber + number[i];
+
+                //}
+            }
+            return newNumber;
+        } 
+        public string PopulatePhoneNumber(string number)
+        {
+            if (String.IsNullOrEmpty(number) != true)
+            {
+                List<string> phoneNumberResult = new List<string>();
+                List<char> areaCode = new List<char>();
+                List<char> body = new List<char>();
+                //you may need to move this to the method that it is being called from
+                //var phoneNumber = contact.PhoneNumber;
+                var phoneNumber = number;
+                for (int i = 0; i < phoneNumber.Count(); i++)
+                {
+                    if (Char.IsNumber(phoneNumber[i]) == true)
+                    {
+                        if (i == 0)
+                        {
+                            areaCode.Add(Convert.ToChar("("));
+                            areaCode.Add(phoneNumber[i]);
+                        }
+                        else if (i == 1)
+                        {
+                            areaCode.Add(phoneNumber[i]);
+                        }
+                        else if (i == 2)
+                        {
+                            areaCode.Add(phoneNumber[i]);
+                            areaCode.Add(Convert.ToChar(")"));
+                            areaCode.Add(Convert.ToChar(" "));
+                        }
+                        else if (i > 2)
+                        {
+                            if (body.LongCount() == 3)
+                            {
+                                body.Add(Convert.ToChar("-"));
+                            }
+                            if (body.LongCount() < 8)
+                            {
+                                body.Add(phoneNumber[i]);
+                            }
+
+                        }
+
+                    }
+                }
+                foreach (char index in areaCode)
+                {
+                    phoneNumberResult.Add(Convert.ToString(index));
+                }
+                foreach (char index in body)
+                {
+                    phoneNumberResult.Add(Convert.ToString(index));
+                }
+                return String.Join("", phoneNumberResult.ToArray());
+            }
+            return number;
+        }
 
     }
 }
