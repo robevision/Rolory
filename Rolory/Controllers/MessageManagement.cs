@@ -1,10 +1,14 @@
-﻿using Rolory.Models;
+﻿using Microsoft.AspNet.Identity;
+using Rolory.Models;
 using System;
+using System.Security;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
+using System.Net;
+using System.Web.Mvc;
 
 namespace Rolory.Controllers
 {
@@ -13,6 +17,7 @@ namespace Rolory.Controllers
         private ApplicationDbContext db;
         private Message errorMessage;
         private Random random;
+        
         // GET: Message
         public MessageManagement()
         {
@@ -129,25 +134,33 @@ namespace Rolory.Controllers
         public bool CycleMessages()
         {
             bool activeMessageFound = false;
-            var messageList = db.Messages.Where(m=>m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m=>m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m).ToList();
-            var isActiveList = db.Messages.Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
-            if(isActiveList.Contains(null))
+            bool userStatus = System.Web.HttpContext.Current.User.Identity.IsAuthenticated;
+            var userExistence = System.Web.HttpContext.Current.User;
+            if (userExistence != null && userStatus == true)
             {
-                activeMessageFound = true;
-            }
-            for (int i = 0; i < isActiveList.Count(); i++)
-            {
-                isActiveList[i] = true;
-            }
-            foreach (Message message in messageList)
-            {
-                foreach (bool? isActive in isActiveList)
+                string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
+                int userId = db.Networkers.Where(n => n.UserId == user).Select(n => n.Id).SingleOrDefault();
+                var messageList = db.Messages.Where(m=> m.NetworkerId == userId).Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m).ToList();
+                var isActiveList = db.Messages.Where(m => m.NetworkerId == userId).Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+                if (isActiveList.Contains(null))
                 {
-                    message.IsActive = isActive;
-                    db.Entry(message).State = EntityState.Modified;
-                    db.SaveChanges();
+                    activeMessageFound = true;
+                }
+                for (int i = 0; i < isActiveList.Count(); i++)
+                {
+                    isActiveList[i] = true;
+                }
+                foreach (Message message in messageList)
+                {
+                    foreach (bool? isActive in isActiveList)
+                    {
+                        message.IsActive = isActive;
+                        db.Entry(message).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
                 }
             }
+
             return activeMessageFound;
         }
         public void GenerateAllUserEmails()

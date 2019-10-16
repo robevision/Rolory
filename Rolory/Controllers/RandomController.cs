@@ -712,6 +712,7 @@ namespace Rolory.Controllers
                             {
                                 if(question == "PhoneNumber")
                                 {
+                                    contact.PhoneType = "Home";
                                     contact.PhoneNumber = cm.PopulatePhoneNumber(answer);
                                     db.Entry(contact).State = EntityState.Modified;
                                     db.SaveChanges();
