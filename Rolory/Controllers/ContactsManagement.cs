@@ -159,26 +159,26 @@ namespace Rolory.Controllers
         public string ReturnOnlyIntegers(string number)
         {
             string newNumber = "";
-            var openParentheses = "(";
-            var closedParentheses = ")";
-            var dash = "-";
-            var space = " ";
-            //attempting to build alternative option to where all values are in an array. Need to research how to store an array of char 
-            var characters = " )(-".ToCharArray();
-            for (int i = 0; i < number.Length; i++)
+            if(number != null)
             {
-
-                if (number[i] != openParentheses[0] && number[i] != closedParentheses[0] && number[i] != dash[0] && number[i] != space[0])
+                var openParentheses = "(";
+                var closedParentheses = ")";
+                var dash = "-";
+                var space = " ";
+                //attempting to build alternative option to where all values are in an array. Need to research how to store an array of char 
+                var characters = " )(-".ToCharArray();
+                for (int i = 0; i < number.Length; i++)
                 {
-                    newNumber = newNumber + number[i];
 
+                    if (number[i] != openParentheses[0] && number[i] != closedParentheses[0] && number[i] != dash[0] && number[i] != space[0])
+                    {
+                        newNumber = newNumber + number[i];
+
+                    }
                 }
-                //if (number[i] != openParentheses[0] || number[i] != closedParentheses[0] || number[i] != dash[0] || number[i] != space[0])
-                //{
-                //    newNumber = newNumber + number[i];
 
-                //}
             }
+           
             return newNumber;
         } 
         public string PopulatePhoneNumber(string number)
