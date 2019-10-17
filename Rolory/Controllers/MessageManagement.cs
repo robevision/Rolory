@@ -140,8 +140,9 @@ namespace Rolory.Controllers
             {
                 string user = System.Web.HttpContext.Current.User.Identity.GetUserId();
                 int userId = db.Networkers.Where(n => n.UserId == user).Select(n => n.Id).SingleOrDefault();
-                var messageList = db.Messages.Where(m=> m.NetworkerId == userId).Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m).ToList();
-                var isActiveList = db.Messages.Where(m => m.NetworkerId == userId).Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now).Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute).Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
+                var networkerMessages = db.Messages.Where(m => m.NetworkerId == userId).ToList();
+                var messageList = networkerMessages.Where(m => m.NetworkerId == userId).Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now)/*.Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute)*/.Where(m => m.IsActive == null).Select(m => m).ToList();
+                var isActiveList = db.Messages.Where(m => m.NetworkerId == userId).Where(m => m.IsInteraction == false).Where(m => m.IsEmail == false).Where(m => m.Postmark <= DateTime.Now)/*.Where(m => m.Postmark.Hour <= DateTime.Now.Hour).Where(m => m.Postmark.Minute <= DateTime.Now.Minute)*/.Where(m => m.IsActive == null).Select(m => m.IsActive).ToList();
                 if (isActiveList.Contains(null))
                 {
                     activeMessageFound = true;
