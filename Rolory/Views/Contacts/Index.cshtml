@@ -39,10 +39,19 @@
 </div>
 @using (Html.BeginForm())
 {
-    <p>
-        Lookup Contact by Name: @Html.TextBox("searchString")
-        <input type="submit" value="Search" />
-    </p>
+
+<p>
+    @if (ViewBag.ContactCount > 1)
+    {
+        <div>
+            Look Through Your @ViewBag.ContactAmount by Name: @Html.TextBox("searchString")
+            <input type="submit" value="Search" />
+
+        </div>
+    }
+
+
+</p>
 }
 <p>@Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary btn-lg" })</p>
 <table class="table">

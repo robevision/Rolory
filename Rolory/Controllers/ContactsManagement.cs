@@ -237,6 +237,5 @@ namespace Rolory.Controllers
             }
             return number;
         }
-
     }
 }

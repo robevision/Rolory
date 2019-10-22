@@ -183,6 +183,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\RandomController.cs" />
     <Compile Include="Controllers\RandomManagement.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WeatherManagement.cs" />
     <Compile Include="Global.asax.cs">
@@ -330,6 +331,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\" />
+    <Folder Include="Views\Statistics\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
