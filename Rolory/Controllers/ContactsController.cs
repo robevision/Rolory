@@ -17,12 +17,14 @@ namespace Rolory.Controllers
     {
         private ApplicationDbContext db;
         private ContactsManagement cm;
-       
+        //delete, this is temporary to test
+        private WeatherManagement wm;
 
         public ContactsController()
         {
             db = new ApplicationDbContext();
             cm = new ContactsManagement();
+            wm = new WeatherManagement();
         }
       
         // GET: Contacts
@@ -273,6 +275,7 @@ namespace Rolory.Controllers
                 contactDescription.Description = db.Descriptions.Where(d => d.Id == contactDescription.Contact.DescriptionId).Select(d => d).SingleOrDefault();
                 var nullDateTime = new DateTime();
                 var currentId = id;
+                ViewBag.Temperature = wm.GetInitialWeatherStream(currentId);
                 var recent = DateTime.Today.AddMonths(-3);
                 var description = contactDescription.Description;
                 if (description.Relationship != null)
@@ -330,6 +333,7 @@ namespace Rolory.Controllers
                 }
                 return View(contactDescription);
             }
+        
             return RedirectToAction("Index", "Home");
         }
         [HttpGet]

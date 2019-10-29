@@ -217,6 +217,7 @@
     <Compile Include="Models\Description.cs" />
     <Compile Include="Models\FamilyMember.cs" />
     <Compile Include="Models\Geography.cs" />
+    <Compile Include="Models\GovWeatherData.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Models\Image.cs" />

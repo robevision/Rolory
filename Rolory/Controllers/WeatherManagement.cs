@@ -244,6 +244,61 @@ namespace Rolory.Controllers
             weatherInFourDays = weekWeather[4].main;
             return weatherInFourDays;
         }
+        public string GetInitialWeatherStream(int? id)
+        {
+            var contact = db.Contacts.Where(c => c.Id == id).SingleOrDefault();
+            var addressId = contact.AddressId;
+            double latitude = 0;
+            double longitude = 0;
+            var rawLatitude = db.Addresses.Where(a => a.Id == addressId).Select(a => a.Latitude).SingleOrDefault();
+            if(rawLatitude != null)
+            {
+                latitude = Convert.ToDouble(rawLatitude.Value);
+                latitude = Math.Round(latitude);
+            }
+            var rawLongitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
+            if (rawLongitude != null)
+            {
+                longitude = Convert.ToDouble(rawLongitude.Value);
+                longitude= Math.Round(longitude);
+            }
+            string url = @"https://api.weather.gov/points/" + latitude + "," + longitude;
+            if(latitude != 0 && longitude != 0)
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.UserAgent = Access.email;
+                request.Method = "GET";
+                request.ContentType = "application/x-www-form-urlencoded";
+                WebResponse response = request.GetResponse();
+                System.IO.Stream data = response.GetResponseStream();
+                StreamReader reader = new StreamReader(data);
+                string responseFromServer = reader.ReadToEnd();
+                response.Close();
+
+                var root = JsonConvert.DeserializeObject<GovWeatherData.Context>(responseFromServer);
+                string observationStations = root.properties.observationStations;
+                int coordOne = root.properties.gridX;
+                int coordTwo = root.properties.gridY;
+                return FindCurrentTemperature(coordOne, coordTwo);
+            }
+            return "Add An Address For The Current Temperature In Their Area";
+
+        }
+        public string FindCurrentTemperature(int coordOne, int coordTwo)
+        {
+            string url = @"https://api.weather.gov/gridpoints/" + "TOP/" + coordOne + "," + coordTwo + "/forecast/hourly/";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.UserAgent = Access.email;
+            WebResponse response = request.GetResponse();
+           
+            System.IO.Stream data = response.GetResponseStream();
+            StreamReader reader = new StreamReader(data);
+            string responseFromServer = reader.ReadToEnd();
+            response.Close();
+            var root = JsonConvert.DeserializeObject<GovWeatherData.GetHourlyForecastContext>(responseFromServer);
+            string temperatureWithUnit = root.properties.periods.Where(p=>p.startTime.Hour == DateTime.Now.Hour).Select(p=>p.temperature).FirstOrDefault() + " " + "°" + root.properties.periods.Where(p => p.startTime.Hour == DateTime.Now.Hour).Select(p => p.temperatureUnit).FirstOrDefault();
+            return temperatureWithUnit;
+        }
         public string GetWeatherConditions(string weather)
         {
             string condition;
