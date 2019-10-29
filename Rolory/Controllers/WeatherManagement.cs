@@ -246,17 +246,36 @@ namespace Rolory.Controllers
         }
         public string GetInitialWeatherStream(int? id)
         {
+            string descriptor = null;
             var contact = db.Contacts.Where(c => c.Id == id).SingleOrDefault();
             var addressId = contact.AddressId;
+            Address address = db.Addresses.Where(a => a.Id == addressId).Select(a=>a).SingleOrDefault();
+
             double latitude = 0;
             double longitude = 0;
             var rawLatitude = db.Addresses.Where(a => a.Id == addressId).Select(a => a.Latitude).SingleOrDefault();
+            if(rawLatitude == null)
+            {
+                //if(address.Region != null && address.Locality != null)
+                //{
+                //    //locationapi
+                //}
+                if(address.Region != null)
+                {
+                    ContactsManagement cm = new ContactsManagement();
+                    //string newStateList = Convert.ToString(cm.stateList);
+                    var indexer = cm.stateList.FindIndex(n=>n.Value.Equals(address.Region));
+                    latitude = cm.latLongList[indexer][0];
+                    longitude = cm.latLongList[indexer][1];
+                    descriptor = "~";
+                }
+            }
             if(rawLatitude != null)
             {
                 latitude = Convert.ToDouble(rawLatitude.Value);
                 latitude = Math.Round(latitude);
             }
-            var rawLongitude = db.Addresses.Where(a => a.Id == id).Select(a => a.Longitude).SingleOrDefault();
+            var rawLongitude = db.Addresses.Where(a => a.Id == addressId).Select(a => a.Longitude).SingleOrDefault();
             if (rawLongitude != null)
             {
                 longitude = Convert.ToDouble(rawLongitude.Value);
@@ -277,16 +296,18 @@ namespace Rolory.Controllers
 
                 var root = JsonConvert.DeserializeObject<GovWeatherData.Context>(responseFromServer);
                 string observationStations = root.properties.observationStations;
-                int coordOne = root.properties.gridX;
-                int coordTwo = root.properties.gridY;
-                return FindCurrentTemperature(coordOne, coordTwo);
+                string secondUrl = root.properties.forecastHourly;
+                //int coordOne = root.properties.gridX;
+                //int coordTwo = root.properties.gridY;
+                return FindCurrentTemperature(descriptor, secondUrl);
             }
             return "Add An Address For The Current Temperature In Their Area";
 
         }
-        public string FindCurrentTemperature(int coordOne, int coordTwo)
+        public string FindCurrentTemperature(string descriptor, string forecastHourly)
         {
-            string url = @"https://api.weather.gov/gridpoints/" + "TOP/" + coordOne + "," + coordTwo + "/forecast/hourly/";
+            //string url = @"https://api.weather.gov/gridpoints/" + "TOP/" + coordOne + "," + coordTwo + "/forecast/hourly/";
+            string url = forecastHourly;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.UserAgent = Access.email;
             WebResponse response = request.GetResponse();
@@ -296,7 +317,7 @@ namespace Rolory.Controllers
             string responseFromServer = reader.ReadToEnd();
             response.Close();
             var root = JsonConvert.DeserializeObject<GovWeatherData.GetHourlyForecastContext>(responseFromServer);
-            string temperatureWithUnit = root.properties.periods.Where(p=>p.startTime.Hour == DateTime.Now.Hour).Select(p=>p.temperature).FirstOrDefault() + " " + "°" + root.properties.periods.Where(p => p.startTime.Hour == DateTime.Now.Hour).Select(p => p.temperatureUnit).FirstOrDefault();
+            string temperatureWithUnit = descriptor + root.properties.periods.Where(p=>p.startTime.Hour == DateTime.Now.Hour).Select(p=>p.temperature).FirstOrDefault() + " " + "°" + root.properties.periods.Where(p => p.startTime.Hour == DateTime.Now.Hour).Select(p => p.temperatureUnit).FirstOrDefault();
             return temperatureWithUnit;
         }
         public string GetWeatherConditions(string weather)

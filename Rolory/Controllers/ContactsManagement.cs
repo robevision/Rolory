@@ -16,6 +16,7 @@ namespace Rolory.Controllers
         public List<SelectListItem> relationshipList = new List<SelectListItem>();
         public List<SelectListItem> categoryList = new List<SelectListItem>();
         public List<SelectListItem> prefixList = new List<SelectListItem>();
+        public List<double[]> latLongList = new List<double[]>();
         public ContactsManagement()
         {
             GetStateSelection();
@@ -24,6 +25,7 @@ namespace Rolory.Controllers
             GetRelationshipSelection();
             GetCategorySelection();
             GetPrefixSelection();
+            GetLatLongFromRegion();
             
         }
         private void GetRelationshipSelection()
@@ -83,7 +85,7 @@ namespace Rolory.Controllers
             stateList.Add(new SelectListItem() { Text = "Massachusetts", Value = "MA" });
             stateList.Add(new SelectListItem() { Text = "Michigan", Value = "MI" });
             stateList.Add(new SelectListItem() { Text = "Minnesota", Value = "MN" });
-            stateList.Add(new SelectListItem() { Text = "Connecticut", Value = "MS" });
+            stateList.Add(new SelectListItem() { Text = "Mississippi", Value = "MS" });
             stateList.Add(new SelectListItem() { Text = "Missouri", Value = "MO" });
             stateList.Add(new SelectListItem() { Text = "Montana", Value = "MT" });
             stateList.Add(new SelectListItem() { Text = "Nebraska", Value = "NE" });
@@ -146,6 +148,59 @@ namespace Rolory.Controllers
             countryList.Add(new SelectListItem() { Text = "Cambodia", Value = "Cambodia" });
             countryList.Add(new SelectListItem() { Text = "Cameroon", Value = "Cameroon" });
 
+        }
+        private void GetLatLongFromRegion()
+        {
+            latLongList.Add(new double[2] {32.3182, -86.9023 });//alabama1
+            latLongList.Add(new double[2] { 64.2008, -149.4937 });//alaska2
+            latLongList.Add(new double[2] { 34.0489, -111.0937 });//3
+            latLongList.Add(new double[2] { 35.2010, -91.8318 });//4
+            latLongList.Add(new double[2] { 36.7783, -119.4179 });//5
+            latLongList.Add(new double[2] { 39.5501, -105.7821 });//6
+            latLongList.Add(new double[2] { 41.6032, -73.0877 });//7
+            latLongList.Add(new double[2] { 38.9108, -75.5277 });//8
+            latLongList.Add(new double[2] { 27.6648, -81.5158 });//9
+            latLongList.Add(new double[2] { 32.1656, -82.9001 });//10
+            latLongList.Add(new double[2] { 19.8968, -155.5828 });//11
+            latLongList.Add(new double[2] { 44.0682, -114.7420 });//12
+            latLongList.Add(new double[2] { 40.6331, -89.3985 });//13
+            latLongList.Add(new double[2] { 40.2672, -86.1349 });//14
+            latLongList.Add(new double[2] { 41.8780, -93.0977 });//15
+            latLongList.Add(new double[2] { 39.0119, -98.4842 });//16
+            latLongList.Add(new double[2] { 37.8393, -84.2700 });//17
+            latLongList.Add(new double[2] { 30.9843, -91.9623 });//18
+            latLongList.Add(new double[2] { 45.2538, -69.4455 });//19
+            latLongList.Add(new double[2] { 39.0458, -76.6413 });//20
+            latLongList.Add(new double[2] { 42.4072, -71.3824 });//21
+            latLongList.Add(new double[2] { 44.3148, -85.6024 });//22
+            latLongList.Add(new double[2] { 46.7296, -94.6859 });//23
+            latLongList.Add(new double[2] { 32.3547, -89.3985 });//24
+            latLongList.Add(new double[2] { 37.9643, -91.8318 });//25
+            latLongList.Add(new double[2] { 46.8797, -110.3626 });//26
+            latLongList.Add(new double[2] { 41.4925, -99.9018 });//27
+            latLongList.Add(new double[2] { 38.8026, -116.4194 });
+            latLongList.Add(new double[2] { 43.1939, -71.5724 });
+            latLongList.Add(new double[2] { 40.0583, -74.4057 });
+            latLongList.Add(new double[2] { 40.7128, -74.0060 });
+            latLongList.Add(new double[2] { 34.5199, -105.8701 });
+            latLongList.Add(new double[2] { 35.7596, -79.0193 });
+            latLongList.Add(new double[2] { 47.5515, -101.0020 });
+            latLongList.Add(new double[2] { 40.4173, -82.9071});
+            latLongList.Add(new double[2] { 35.0078, -97.0929 });
+            latLongList.Add(new double[2] { 43.8041, -120.5542 });
+            latLongList.Add(new double[2] { 41.2033, -77.1945 });
+            latLongList.Add(new double[2] { 41.5801, -71.4774 });
+            latLongList.Add(new double[2] { 33.8361, -81.1637 });
+            latLongList.Add(new double[2] { 43.9695, -99.9018});
+            latLongList.Add(new double[2] { 35.5175, -86.5804 });
+            latLongList.Add(new double[2] { 31.9686, -99.9018 });
+            latLongList.Add(new double[2] { 39.3210, -111.0937 });
+            latLongList.Add(new double[2] { 44.5588, -72.5778 });
+            latLongList.Add(new double[2] { 37.4316, -78.6569 });
+            latLongList.Add(new double[2] { 47.7511, -120.7401});
+            latLongList.Add(new double[2] { 38.5976, -80.4549 });
+            latLongList.Add(new double[2] { 43.7844, -88.7879 });
+            latLongList.Add(new double[2] { 43.0760, -107.2903 });
         }
         private void GetPrefixSelection()
         {
