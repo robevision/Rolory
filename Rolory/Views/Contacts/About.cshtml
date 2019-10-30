@@ -76,7 +76,10 @@
 
     <div class="col-lg-8"> <h2>@Html.ActionLink("Interactions", "Index", "Interactions", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })</h2></div>
     <h5>
-        @ViewBag.Temperature
+        @ViewBag.Temperature[0]
+    </h5>
+    <h5>
+        @ViewBag.Temperature[1]
     </h5>
 </div>
 
