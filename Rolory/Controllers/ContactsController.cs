@@ -17,9 +17,7 @@ namespace Rolory.Controllers
     {
         private ApplicationDbContext db;
         private ContactsManagement cm;
-        //delete, this is temporary to test
         private WeatherManagement wm;
-
         public ContactsController()
         {
             db = new ApplicationDbContext();
@@ -427,6 +425,7 @@ namespace Rolory.Controllers
 
                 if (contact.Address != null)
                 {
+                    wm.SetLatLong(address);
                     contact.Address = address;
                 }
      
@@ -466,10 +465,9 @@ namespace Rolory.Controllers
                 //    db.Entry(description).State = EntityState.Modified;
                 //db.SaveChanges();
                 Contact contactInDB = db.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
-                //WeatherManagement weath = new WeatherManagement();
                 if(contact.Address != null)
                 {
-                    //weath.SetLatLong(contact.Address);  
+                    wm.SetLatLong(contact.Address);
                 }
 
                 if (String.IsNullOrEmpty(contact.Prefix) != true)

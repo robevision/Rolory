@@ -7,6 +7,7 @@ namespace Rolory.Models
 {
     public class Geography
     {
+        //Google Geocode
         public class AddressAPIData
         {
             public Result[] results { get; set; }
@@ -59,5 +60,6 @@ namespace Rolory.Models
             public string short_name { get; set; }
             public string[] types { get; set; }
         }
+      
     }
 }

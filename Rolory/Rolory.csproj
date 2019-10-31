@@ -216,6 +216,7 @@
     <Compile Include="Models\ContactDetailsViewModels.cs" />
     <Compile Include="Models\Description.cs" />
     <Compile Include="Models\FamilyMember.cs" />
+    <Compile Include="Models\GeneratedXmlLocationData.cs" />
     <Compile Include="Models\Geography.cs" />
     <Compile Include="Models\GovWeatherData.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Interaction.cs" />
     <Compile Include="Models\Access.cs" />
+    <Compile Include="Models\LocationData.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Networker.cs" />

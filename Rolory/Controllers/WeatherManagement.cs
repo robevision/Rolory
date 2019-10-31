@@ -139,8 +139,36 @@ namespace Rolory.Controllers
                 return null;
             }
         }
-  
-        public async Task<Address> SetLatLong(Address address)
+        public double[] FindLatLongFromLocalityAndRegion(string locality, string region)
+        {
+            
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(locality);
+                stringBuilder.Append(",");
+                stringBuilder.Append(region);
+                string url = @"https://us1.locationiq.com/v1/search.php?key=" + "&key=" + Models.Access.loc + "&q=" + stringBuilder.ToString() + "&format=json";
+
+                WebRequest request = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();
+                System.IO.Stream data = response.GetResponseStream();
+
+                StreamReader reader = new StreamReader(data);
+                string responseFromServer = reader.ReadToEnd();
+                response.Close();
+    
+                var root = JsonConvert.DeserializeObject<List<LocationData>>(responseFromServer);
+                double latitude = root.Select(r => r.Lat).FirstOrDefault();
+                double longitude = root.Select(r => r.Lon).FirstOrDefault();
+                double[] coord = new double[2]
+                {
+                    latitude,longitude
+                };
+                return coord;
+            
+            
+
+        }
+        public Address SetLatLong(Address address)
             {
                 // This is the geoDecoderRing 
                 try
@@ -151,14 +179,14 @@ namespace Rolory.Controllers
                     stringBuilder.Append(address.Locality.Replace(" ", "+"));
                     stringBuilder.Append(";");
                     stringBuilder.Append(address.Region.Replace(" ", "+"));
-                    // example: string url = @"https://maps.googleapis.com/maps/api/geocode/json?address={stringBuilder.ToString()}1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY";
-                    string url = @"https://maps.googleapis.com/maps/api/geocode/json?address=" +
-                        stringBuilder.ToString() + "&key=" + Models.Access.geo;
+               
+                string url = @"https://us1.locationiq.com/v1/search.php?key=" +
+                    "&key=" + Models.Access.loc + "&q=" + stringBuilder.ToString() + "&format=json";
 
                     // httpclient
 
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = await request.GetResponseAsync();
+                WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
                     System.IO.Stream data = response.GetResponseStream();
                     // tried this System.IO.Stream data = await GetGoogleGeocodeResponse(url);
                     StreamReader reader = new StreamReader(data);
@@ -166,10 +194,9 @@ namespace Rolory.Controllers
                     string responseFromServer = reader.ReadToEnd();
                     response.Close();
 
-                    var root = JsonConvert.DeserializeObject<Geography.AddressAPIData>(responseFromServer);
-                    var location = root.results[0].geometry.location;
-                    address.Latitude = location.lat;
-                    address.Longitude = location.lng;
+                    var root = JsonConvert.DeserializeObject<List<LocationData>>(responseFromServer);
+                    address.Latitude = Convert.ToInt32(root[0].Lat);
+                    address.Longitude = Convert.ToInt32(root[0].Lon);
                     db.Entry(address).State = System.Data.Entity.EntityState.Modified;
                     db.SaveChanges();
                     return address;
@@ -179,6 +206,7 @@ namespace Rolory.Controllers
                     return null;
                 }
             }
+       
         public async Task<string> FindWeatherToday(int? id)
         {
             string weatherToday;
@@ -188,7 +216,7 @@ namespace Rolory.Controllers
                 if(contactAddress.StreetAddress != null && contactAddress.Region != null && contactAddress.Locality != null && contactAddress.ZipCode != null)
                 {
                     var newAddress = SetLatLong(contactAddress);
-                    if (newAddress.IsCompleted)
+                    if (newAddress != null)
                     {
                         db.Entry(newAddress).State = System.Data.Entity.EntityState.Modified;
                         db.SaveChanges();
@@ -250,32 +278,41 @@ namespace Rolory.Controllers
             var contact = db.Contacts.Where(c => c.Id == id).SingleOrDefault();
             var addressId = contact.AddressId;
             string[] noWeatherData = new string[2] { "", "Add An Address For The Current Temperature In Their Area" };
-            Address address = db.Addresses.Where(a => a.Id == addressId).Select(a=>a).SingleOrDefault();
+            Address address = db.Addresses.Where(a => a.Id == addressId).Select(a => a).SingleOrDefault();
 
             double latitude = 0;
             double longitude = 0;
             var rawLatitude = db.Addresses.Where(a => a.Id == addressId).Select(a => a.Latitude).SingleOrDefault();
-            if(rawLatitude == null)
+            var rawLongitude = db.Addresses.Where(a => a.Id == addressId).Select(a => a.Longitude).SingleOrDefault();
+            if (rawLatitude == null && rawLongitude == null)
             {
-                //if(address.Region != null && address.Locality != null)
-                //{
-                //    //locationapi
-                //}
-                if(address.Region != null)
+                if (address.StreetAddress != null && address.Region != null && address.Locality != null && address.ZipCode != null)
+                {
+                    Address updatedAddress = SetLatLong(address);
+                    rawLatitude = db.Addresses.Where(a => a.Id == updatedAddress.Id).Select(a => a.Latitude).SingleOrDefault();
+                    rawLongitude = db.Addresses.Where(a => a.Id == updatedAddress.Id).Select(a => a.Longitude).SingleOrDefault();
+                }
+                if (address.Region != null && address.Locality != null)
+                {
+                    latitude = Convert.ToDouble(FindLatLongFromLocalityAndRegion(address.Locality, address.Region)[0]);
+                    longitude = Convert.ToDouble(FindLatLongFromLocalityAndRegion(address.Locality, address.Region)[1]);
+                }
+                else if (address.Region != null)
                 {
                     ContactsManagement cm = new ContactsManagement();
-                    var indexer = cm.stateList.FindIndex(n=>n.Value.Equals(address.Region));
+                    var indexer = cm.stateList.FindIndex(n => n.Value.Equals(address.Region));
                     latitude = cm.latLongList[indexer][0];
                     longitude = cm.latLongList[indexer][1];
                     descriptor = "~";
                 }
             }
+        
             if(rawLatitude != null)
             {
                 latitude = Convert.ToDouble(rawLatitude.Value);
                 latitude = Math.Round(latitude);
             }
-            var rawLongitude = db.Addresses.Where(a => a.Id == addressId).Select(a => a.Longitude).SingleOrDefault();
+           
             if (rawLongitude != null)
             {
                 longitude = Convert.ToDouble(rawLongitude.Value);
