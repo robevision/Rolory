@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Diagnostics;
+using Rolory.Models;
 
 namespace Rolory.Controllers
 {
@@ -235,7 +236,40 @@ namespace Rolory.Controllers
             }
            
             return newNumber;
-        } 
+        }
+
+        public string FindLastTimeInTouch(int? id, ApplicationDbContext db)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+            string moment;
+            var lastWeek = DateTime.Today.AddDays(-6);
+            var nullDateTime = new DateTime();
+            var interactions = db.Interactions.Where(i => i.ContactId == id).Select(i => i);
+            var interactionMomentsBool = interactions.Select(i => i.Moment >= lastWeek).Any();
+            DateTime interactionMoment = interactionMoment = db.Interactions.Where(i => i.ContactId == id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
+            if (interactionMomentsBool == true)
+            {
+
+                if (interactionMoment.Date == nullDateTime)
+                {
+                    interactionMoment = db.Interactions.Where(i => i.ContactId == id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
+                    moment = interactionMoment.ToString();
+                    return moment;
+                }
+                else
+                {
+                    var dayAmount = DateTime.Today - interactionMoment.Date;
+                    moment = dayAmount.Days.ToString();
+                    return moment;
+                }
+            }
+           return moment = null;
+
+        }
+
         public string PopulatePhoneNumber(string number)
         {
             if (String.IsNullOrEmpty(number) != true)

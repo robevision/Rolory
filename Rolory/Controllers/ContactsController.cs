@@ -82,6 +82,7 @@ namespace Rolory.Controllers
             var nullDateTime = new DateTime();
             if (ModelState.IsValid)
             {
+                var moment = cm.FindLastTimeInTouch(id, db);
                 if (id == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -91,17 +92,17 @@ namespace Rolory.Controllers
                 DateTime interactionMoment = interactionMoment = db.Interactions.Where(i => i.ContactId == id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
                 if (interactionMomentsBool == true)
                 {
-                    if(interactionMoment.Date == nullDateTime)
+                    if (interactionMoment.Date == nullDateTime)
                     {
                         interactionMoment = db.Interactions.Where(i => i.ContactId == id).OrderByDescending(i => i.Moment).Select(i => i.Moment).FirstOrDefault();
                     }
                     else
                     {
                         var dayAmount = DateTime.Today - interactionMoment.Date;
-                        ViewBag.Moment = dayAmount.Days.ToString();
+                        //ViewBag.Moment = dayAmount.Days.ToString();
                     }
-
-                }
+                    ViewBag.Moment = moment;
+            }
                 Contact contact = db.Contacts.Find(id);
                 if (contact == null)
                 {
@@ -271,9 +272,11 @@ namespace Rolory.Controllers
                 ContactDescriptionViewModel contactDescription = new ContactDescriptionViewModel();
                 contactDescription.Contact = db.Contacts.Where(c => c.Id == id).Select(c => c).SingleOrDefault();
                 contactDescription.Description = db.Descriptions.Where(d => d.Id == contactDescription.Contact.DescriptionId).Select(d => d).SingleOrDefault();
+                contactDescription.Contact.Address = db.Addresses.Where(a => a.Id == contactDescription.Contact.AddressId).Select(a => a).SingleOrDefault();
                 var nullDateTime = new DateTime();
                 var currentId = id;
                 ViewBag.Temperature = wm.GetInitialWeatherStream(currentId);
+                ViewBag.Moment = cm.FindLastTimeInTouch(id, db);
                 var recent = DateTime.Today.AddMonths(-3);
                 var description = contactDescription.Description;
                 if (description.Relationship != null)
