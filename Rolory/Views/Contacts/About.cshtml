@@ -243,48 +243,72 @@
             <div class="additional">
                 <div class="user-card">
                     <div class="level center">
-                      
+
                         @if (Model.Contact.InContact == true)
                         {
                             <div>
                                 You are in touch with @Model.Contact.GivenName.
                             </div>
                         }
-                            else
-                            {
-                                <div> Last connected @ViewBag.Moment days ago</div>
+                        else
+                        {
+                            <div> Last connected @ViewBag.Moment days ago</div>
 
 
-                            }
+                        }
                     </div>
                     <div class="points center">
                         <div>  @Html.DisplayFor(model => model.Contact.Email)</div>
-
-                        <div>@Html.DisplayFor(model => model.Contact.PhoneType): @Html.DisplayFor(model => model.Contact.PhoneNumber)</div>
+                        @if (Model.Contact.PhoneType != null && Model.Contact.PhoneNumber != null)
+                        {
+                            <div>@Html.DisplayFor(model => model.Contact.PhoneType): @Html.DisplayFor(model => model.Contact.PhoneNumber)</div>
+                        }
                     </div>
-                    <svg width="110" height="110" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" class="center">
-                        <title id="title">@Html.DisplayFor(model => model.Description.Relationship)</title>
-                        <desc id="desc">Cartoon of a Caucasian woman smiling, and wearing black glasses and a purple shirt with white collar drawn by Alvaro Montoro.</desc>
+                    @if (Model.Contact.ImagePath != null)
+                    {
+                        <img src="@Url.Content(Model.Contact.ImagePath)" width="110" height="110" viewBox="0 0 250 250" role="img" aria-labelledby="title desc" class="center" title="@Html.DisplayFor(model => model.Description.Relationship)"/>
                        
-                        
-                        <circle cx="125" cy="125" r="120" @*fill="rgba(0,0,0,0.15)"*@ />
-                        <g stroke="none" stroke-width="0" clip-path=   @*<img src="@Url.Content(Model.Contact.ImagePath)" width="150" height="200" />*@>
-                            <rect x="0" y="0" width="250" height="250" @*fill="#b0d2e5"*@ />
-                           
-                        </g>
+                    }
+                    else
+                    {
+                        <div>
+                            <style>
+                                em {
+                                    background-image: url('/Content/images/empty.png');
+                                }
+                            </style>
+                            <em style="background:center">
+                                @Html.ActionLink("Upload Image", "UploadImage", "Contacts", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "media-middle", style = "" })
+                            </em>
+
+                        </div>
+                    }
+
+                    @*<svg width="110" height="110" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" class="center">*@
+
+                    @*<desc id="desc">Cartoon of a Caucasian woman smiling, and wearing black glasses and a purple shirt with white collar drawn by Alvaro Montoro.</desc>*@
+
+
+                    <circle cx="125" cy="125" r="120" @*fill="rgba(0,0,0,0.15)"*@ />
+                    <g stroke="none" stroke-width="0" clip-path=@*<img src="@Url.Content(Model.Contact.ImagePath)" width="150" height="200" />
+                        <rect x="0" y="0" width="250" height="250" @*fill="#b0d2e5"*@ />
+
+                    </g>
                     </svg>
                 </div>
                 <div class="more-info">
+                    <!--contact name inside container - white -->
                     <h1>@Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)</h1>
                     <div class="coords">
                         <span>Company: @Html.DisplayFor(model => model.Contact.Organization)</span>
                         <span>Added January 2019</span>
                     </div>
+                    <!--Add if statement for items that have null value-->
                     <div class="coords">
                         <span>Role: @Html.DisplayFor(model => model.Contact.WorkTitle)</span>
                         <span>@Html.DisplayFor(model => model.Contact.Address.Locality), @Html.DisplayFor(model => model.Contact.Address.Region)</span>
                     </div>
-                    <div class="stats">
+                    @*<div class="stats">
                         <div>
                             <div class="title">Placeholder 1</div>
                             <i class="fa fa-trophy"></i>
@@ -305,10 +329,11 @@
                             <i class="fa fa-coffee"></i>
                             <div class="value infinity">∞</div>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
             <div class="general">
+                <!--contact name in container - black-->
                 <h1>@Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a volutpat mauris, at molestie lacus. Nam vestibulum sodales odio ut pulvinar.</p>
                 <span class="more">Mouse over the card for more info</span>
@@ -348,9 +373,10 @@
     {
         <div class="col-md-4"></div>
         <div class="col-md-4" style="text-align:center">
-            <h3>
+            <!--contact name outside of container-->
+            @*<h3>
                 @Html.DisplayFor(model => model.Contact.Prefix) @Html.DisplayFor(model => model.Contact.GivenName)  @Html.DisplayFor(model => model.Contact.FamilyName)
-            </h3>
+            </h3>*@
             <div class="col-lg-2">
                 <br />
                 @*<h4 style="text-align:center">
@@ -361,17 +387,7 @@
                 </h4>*@
             </div>
         </div>
-        <div>
-            <style>
-                em {
-                    background-image: url('/Content/images/empty.png');
-                }
-            </style>
-            <em style="background:center">
-                @Html.ActionLink("Upload Image", "UploadImage", "Contacts", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "media-middle", style = "" })
-            </em>
-
-        </div>
+       
     }
 </div>
 
@@ -382,12 +398,16 @@
     <br />
 
     <div class="col-lg-8"> <h2>@Html.ActionLink("Interactions", "Index", "Interactions", new { id = Model.Contact.Id }, htmlAttributes: new { @class = "btn btn-primary btn-lg" })</h2></div>
-    <h5>
+    <h4>
         @ViewBag.Temperature[0]
-    </h5>
+    </h4>
     <h5>
-        @ViewBag.Temperature[1]
+        <span>@Html.DisplayFor(model => model.Contact.Address.Locality), @Html.DisplayFor(model => model.Contact.Address.Region)</span>
+     
     </h5>
+    <h6>
+        @ViewBag.Temperature[1]
+    </h6>
 </div>
 
 
